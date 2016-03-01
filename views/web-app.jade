@@ -1,0 +1,69 @@
+doctype html5
+html
+    head
+        title= title
+
+        link(rel='stylesheet' href='/css/font-awesome.min.css')
+        link(rel='stylesheet' href='/css/ah-styles.min.css')
+        link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
+        link(rel='stylesheet' href='/css/borderContainer.css')
+        script(src="/app/angular.js")
+        script(src="/app/smart-table.js")
+        script(src="/app/angular-route.js")
+        script(src="/app/ui-bootstrap.js")
+        script(src="/app/app.js")
+        block include
+
+    body.claro.fullaccess(ng-app="identity")
+        div.modal.fade.bs-example-modal-lg(id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" style="height: 200px;")
+            div.modal-header
+                h4.modal-title(id="modalLabel" style="text-transform: capitalize") Modal title
+            div.modal-body(id="modalBody")
+            div.modal-footer(id="modalFooter" style="position: absolute; bottom: 0px; width: 100%;")
+        div.modal.fade.bs-example-modal-lg(id="modalAD" tabindex="-1" role="dialog" aria-labelledby="modalLabelAD" style="height: 200px;")
+            div.modal-header
+                h4.modal-title(id="modalLabelAD" style="text-transform: capitalize") Account details
+            div.modal-body(id="modalBodyAD")
+                table
+                    tbody
+                        tr
+                            th(style="padding: 5px 10px;") HMNG Server:
+                            td(style="padding: 5px 10px;")= server
+                        tr
+                            th(style="padding: 5px 10px;") Owner ID:
+                            td(style="padding: 5px 10px;")= ownerId
+                        tr
+                            th(style="padding: 5px 10px;") Access Token:
+                            td(style="padding: 5px 10px;")= accessToken
+            div.modal-footer(id="modalFooterAD" style="position: absolute; bottom: 0px; width: 100%;")
+                a(href="javascript:void(0)" class="btn btn-primary" onclick="$('#modalAD').modal('hide')") Close
+        div.header(id="header" ng-controller="HeaderCtrl")
+            div.head-inner
+                h1.logo
+                    img.app-logo(src="/images/logo_nav.png" alt="Aerohive")
+                div.login-area(id="appHeader")
+                    ul.head-nav
+                div.login-area
+                    ul.head-nav
+                        li(class = "nav-item" ng-class="{cur: nav.isActive('/credentials')}")
+                            a.nav-dashboard(href="#/credentials/") Credentials
+                        li(class = "nav-item" ng-class="{cur: nav.isActive('/create')}")
+                            a.nav-dashboard(href="#/create/account") Create
+                        li(class = "nav-item" ng-class="{cur: nav.isActive('/import')}")
+                            a.nav-dashboard(href="#/import/") Import
+                    div.head-options.hdrOptions
+                         div.ah-navsprite-icons.ah-navsprite-user
+                            div.head-sta-item.sta-user.hdrUser
+                                div.sta-item-con
+                                    div.sta-item-con-arrow
+                                    ul.user-list
+                                        li.user-list-item-first(onclick="$('#modalAD').modal()") Account Details
+                                        li
+                                            a(href="/logout/") Logout
+                                span.sta-item-bridge
+            div.head-bottom
+                div.sub-tabs
+                    ul.sub-create
+
+        div.clearfix(id="main")
+            ng-view
