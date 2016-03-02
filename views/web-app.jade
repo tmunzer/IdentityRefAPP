@@ -7,11 +7,11 @@ html
         link(rel='stylesheet' href='/css/ah-styles.min.css')
         link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
         link(rel='stylesheet' href='/css/borderContainer.css')
-        script(src="/app/angular.js")
-        script(src="/app/smart-table.js")
-        script(src="/app/angular-route.js")
-        script(src="/app/ui-bootstrap.js")
-        script(src="/app/app.js")
+        script(src="/web-app/angular.js")
+        script(src="/web-app/smart-table.js")
+        script(src="/web-app/angular-route.js")
+        script(src="/web-app/ui-bootstrap.js")
+        script(src="/web-app/app.js")
         block include
 
     body.claro.fullaccess(ng-app="identity")
@@ -20,23 +20,25 @@ html
                 h4.modal-title(id="modalLabel" style="text-transform: capitalize") Modal title
             div.modal-body(id="modalBody")
             div.modal-footer(id="modalFooter" style="position: absolute; bottom: 0px; width: 100%;")
-        div.modal.fade.bs-example-modal-lg(id="modalAD" tabindex="-1" role="dialog" aria-labelledby="modalLabelAD" style="height: 200px;")
-            div.modal-header
-                h4.modal-title(id="modalLabelAD" style="text-transform: capitalize") Account details
-            div.modal-body(id="modalBodyAD")
-                table
-                    tbody
-                        tr
-                            th(style="padding: 5px 10px;") HMNG Server:
-                            td(style="padding: 5px 10px;")= server
-                        tr
-                            th(style="padding: 5px 10px;") Owner ID:
-                            td(style="padding: 5px 10px;")= ownerId
-                        tr
-                            th(style="padding: 5px 10px;") Access Token:
-                            td(style="padding: 5px 10px;")= accessToken
-            div.modal-footer(id="modalFooterAD" style="position: absolute; bottom: 0px; width: 100%;")
-                a(href="javascript:void(0)" class="btn btn-primary" onclick="$('#modalAD').modal('hide')") Close
+        div.modal.fade.bs-example-modal-lg(style="height: 200px;" ng-controller="ModalAboutCtrl")
+            script(type="text/ng-template" id="modalAboutContent.html")
+                div.modal-header
+                    h4.modal-title Account details
+                div.modal-body
+                    table(style="text-align: left;")
+                        tbody
+                            tr
+                                th(style="padding: 5px 10px;") HMNG Server:
+                                td(style="padding: 5px 10px;")= server
+                            tr
+                                th(style="padding: 5px 10px;") Owner ID:
+                                td(style="padding: 5px 10px;")= ownerId
+                            tr
+                                th(style="padding: 5px 10px;") Access Token:
+                                td(style="padding: 5px 10px;")= accessToken
+                div.modal-footer
+                    a(class="btn btn-primary" ng-click="close()") Close
+
         div.header(id="header" ng-controller="HeaderCtrl")
             div.head-inner
                 h1.logo
@@ -57,7 +59,7 @@ html
                                 div.sta-item-con
                                     div.sta-item-con-arrow
                                     ul.user-list
-                                        li.user-list-item-first(onclick="$('#modalAD').modal()") Account Details
+                                        li.user-list-item-first(ng-controller="ModalAboutCtrl" ng-click="open()") Account Details
                                         li
                                             a(href="/logout/") Logout
                                 span.sta-item-bridge

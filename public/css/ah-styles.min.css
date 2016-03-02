@@ -10489,7 +10489,7 @@ table {
     padding:8px;
     line-height:20px;
     text-align:left;
-    vertical-align:top;
+    vertical-align:middle;
     border-top:1px solid #ddd
 }
 .table th {
@@ -10508,7 +10508,7 @@ table {
     background-color:#fff
 }
 .table-condensed th,.table-condensed td {
-    padding:4px 5px
+    padding:1px 5px
 }
 .table-bordered {
     border:1px solid #ddd;

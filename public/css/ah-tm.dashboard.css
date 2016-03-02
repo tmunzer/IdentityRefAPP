@@ -1,6 +1,6 @@
 
 body {
-    font: 12px helvetica,arial,san-serif;
+    font: 12px helvetica,arial,san-serif !important;
 }
 
 .head-inner > .logo {
@@ -374,7 +374,16 @@ span.help-tip {
     height: 25px !important;
 }
 
-.table td, .table th {
-    line-height: 2 !important;
-    padding: 8px 0 !important;
+table {
+    width: 100% !important;
+    font-size: 12px !important;
+
+}
+.table tr:hover {
+    background-color: #fff8ea;
+    transition:all .2s ease-in-out;
+
+}
+table td {
+    cursor: default;
 }

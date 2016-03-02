@@ -1,5 +1,6 @@
 html {
     background-color: #F0F0F4   ;
+    transition:all .2s ease-in-out
 }
 
 body {
