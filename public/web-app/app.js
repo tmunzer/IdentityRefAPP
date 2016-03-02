@@ -83,65 +83,83 @@ identity.factory("userGroupsService", function ($http) {
     }
 });
 
-identity.factory("credentialsService", function ($http, $rootScope, userTypesService, userGroupsService) {
-    var isLoaded = false;
+identity.factory("credentialsService", function ($http, $q, userTypesService, userGroupsService) {
+    var dataLoaded = false;
+
+    function getCredentials() {
+        var params = {
+            credentialType: userTypesService.getArrayForRequest(),
+            userGroup: userGroupsService.getArrayForRequest()
+        };
+
+        dataLoaded = false;
+
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/credentials",
+            method: "GET",
+            params: params,
+            timeout: canceller.promise
+        });
+        var promise = request.then(
+            function (response) {
+                var credentials = [];
+
+                response.data.forEach(function (credential) {
+                    credentials.push(credential);
+                });
+                dataLoaded = true;
+                return credentials;
+            },
+            function (response) {
+                if (response.status >= 0) {
+                    console.log("error");
+                    console.log(response);
+                    return ($q.reject("error"));
+                }
+            });
+
+        promise.abort = function () {
+            canceller.resolve();
+        };
+        promise.finally(function () {
+            console.info("Cleaning up object references.");
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+        });
+
+        return promise;
+    }
+
 
     return {
-        getCredentials: function () {
-            var params = {
-                'credentialType': userTypesService.getArrayForRequest(),
-                'userGroup': userGroupsService.getArrayForRequest()
-            };
-
-            isLoaded = false;
-
-            return $http({
-                url: "/api/credentials",
-                method: "POST",
-                data: params
-            })
-                .then(function (response) {
-                    var credentials = [];
-
-                    response.data.forEach(function (credential) {
-                        credentials.push(credential);
-                    });
-                    isLoaded = true;
-                    return credentials;
-                });
-        },
-        isLoaded: function () {
-            return isLoaded;
+        getCredentials: getCredentials,
+        isLoaded: function isLoaded() {
+            return dataLoaded;
         }
-    };
-});
-
-identity.controller("credentialsRefreshCtrl", function ($scope, credentialsService) {
-    $scope.click = function () {
-        credentialsService.getCredentials();
     }
 });
-identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService) {
 
+
+identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService) {
+    var requestForCredentials = null;
+    var initialized = false;
     $scope.userTypes = userTypesService.getUserTypes();
 
     userGroupsService.init().then(function (promise) {
         $scope.userGroups = promise;
-        credentialsService.getCredentials().then(function (promise) {
+        initialized = true;
+        requestForCredentials = credentialsService.getCredentials();
+        requestForCredentials.then(function (promise) {
             $scope.credentials = promise;
-            $scope.$watch('userTypes', function () {
-                credentialsService.getCredentials().then(function (promise) {
-                    $scope.credentials = promise;
-                });
-            }, true);
-            $scope.$watch('userGroups', function () {
-                credentialsService.getCredentials().then(function (promise) {
-                    $scope.credentials = promise;
-                });
-            }, true);
         });
     });
-
+    $scope.$watch('userTypes', function () {
+        $scope.refresh();
+    }, true);
+    $scope.$watch('userGroups', function () {
+        $scope.refresh();
+    }, true);
     $scope.$watch("userGroups", function () {
         $scope.userGroupsLoaded = function () {
             return userGroupsService.isLoaded();
@@ -152,8 +170,15 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             return credentialsService.isLoaded()
         };
     });
-
-
+    $scope.refresh = function(){
+        if (initialized) {
+            requestForCredentials.abort();
+            requestForCredentials = credentialsService.getCredentials();
+            requestForCredentials.then(function (promise) {
+                $scope.credentials = promise;
+            });
+        }
+    }
 
 });
 identity.filter("ssidStringFromArray", function () {
