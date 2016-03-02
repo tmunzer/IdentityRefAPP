@@ -12,15 +12,12 @@ html
         script(src="/web-app/angular-route.js")
         script(src="/web-app/ui-bootstrap.js")
         script(src="/web-app/app.js")
+        script(src="/web-app/ng-sanitize.js")
+        script(src="/web-app/ng-csv.js")
         block include
 
     body.claro.fullaccess(ng-app="identity")
-        div.modal.fade.bs-example-modal-lg(id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" style="height: 200px;")
-            div.modal-header
-                h4.modal-title(id="modalLabel" style="text-transform: capitalize") Modal title
-            div.modal-body(id="modalBody")
-            div.modal-footer(id="modalFooter" style="position: absolute; bottom: 0px; width: 100%;")
-        div.modal.fade.bs-example-modal-lg(style="height: 200px;" ng-controller="ModalAboutCtrl")
+        div.modal.fade.bs-example-modal-lg(style="height: 200px;" ng-controller="ModalCtrl")
             script(type="text/ng-template" id="modalAboutContent.html")
                 div.modal-header
                     h4.modal-title Account details
@@ -59,7 +56,7 @@ html
                                 div.sta-item-con
                                     div.sta-item-con-arrow
                                     ul.user-list
-                                        li.user-list-item-first(ng-controller="ModalAboutCtrl" ng-click="open()") Account Details
+                                        li.user-list-item-first(ng-controller="ModalCtrl" ng-click="open('about')") Account Details
                                         li
                                             a(href="/logout/") Logout
                                 span.sta-item-bridge

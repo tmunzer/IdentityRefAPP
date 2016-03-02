@@ -1,4 +1,4 @@
-var identity = angular.module("identity", ["ngRoute", 'ui.bootstrap', 'smart-table']);
+var identity = angular.module("identity", ["ngRoute", 'ui.bootstrap', 'smart-table', 'ngSanitize', 'ngCsv']);
 
 identity.config(function ($routeProvider) {
     $routeProvider
@@ -69,6 +69,13 @@ identity.factory("userGroupsService", function ($http) {
         getEmailApprouval: function () {
             return enableEmailApproval;
         },
+        getUserGroupName: function (groupId) {
+            var groupName = "";
+            userGroups.forEach(function (group) {
+                if (group.id === groupId) groupName = group.name;
+            });
+            return groupName;
+        },
         isLoaded: function () {
             return isLoaded;
         },
@@ -79,6 +86,29 @@ identity.factory("userGroupsService", function ($http) {
             });
             if (arrayForRequest.length === userGroups.length) return [];
             else return arrayForRequest;
+        }
+    }
+});
+
+identity.factory("exportService", function () {
+    var exportFields = [
+        {name: 'userName', selected: true, display: "User Name"},
+        {name: 'email', selected: true, display: "Email"},
+        {name: 'phone', selected: true, display: "Phone"},
+        {name: 'organization', selected: true, display: "Organization"},
+        {name: 'groupId', selected: true, display: "Group ID"},
+        {name: 'groupName', selected: true, display: "Group Name"},
+        {name: 'credentialType', selected: true, display: "Credential Type"},
+        {name: 'createTime', selected: true, display: "Create Time"},
+        {name: 'activeTime', selected: true, display: "Active Time"},
+        {name: 'expireTime', selected: true, display: "Expire Time"},
+        {name: 'lifeTime', selected: true, display: "Life Time"},
+        {name: 'ssids', selected: true, display: "SSIDs"},
+        {name: 'visitPurpose', selected: true, display: "Visit Purpose"}
+    ];
+    return {
+        getFields: function(){
+            return exportFields;
         }
     }
 });
@@ -106,6 +136,7 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
                 var credentials = [];
 
                 response.data.forEach(function (credential) {
+                    credential.groupName = userGroupsService.getUserGroupName(credential.groupId);
                     credentials.push(credential);
                 });
                 dataLoaded = true;
@@ -141,9 +172,10 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
 });
 
 
-identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService) {
+identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService, exportService) {
     var requestForCredentials = null;
     var initialized = false;
+    $scope.exportFields = exportService.getFields();
     $scope.userTypes = userTypesService.getUserTypes();
 
     userGroupsService.init().then(function (promise) {
@@ -178,7 +210,28 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
                 $scope.credentials = promise;
             });
         }
-    }
+    };
+    $scope.getExportHeader = function(){
+        var header = [];
+        $scope.exportFields.forEach(function(field){
+            if (field.selected) header.push(field.name);
+        });
+        header[0] = '#'+header[0];
+        return header;
+    };
+    $scope.export = function(){
+      if ($scope.credentials) {
+          var exportData = [];
+          $scope.credentials.forEach(function(credential){
+              var user = {};
+              $scope.exportFields.forEach(function (field){
+                    if (field.selected) user[field.name] = credential[field.name];
+              });
+              exportData.push(user);
+          });
+          return exportData;
+      }
+    };
 
 });
 identity.filter("ssidStringFromArray", function () {
@@ -201,16 +254,7 @@ identity.filter("userType", function () {
         else return "";
     }
 });
-identity.filter("userGroup", function (userGroupsService) {
-    return function (input) {
-        var groups = userGroupsService.getUserGroups();
-        var groupName = "";
-        groups.forEach(function (group) {
-            if (group.id === input) groupName = group.name;
-        });
-        return groupName;
-    }
-});
+
 
 
 identity.directive("sub-create", function () {
@@ -228,16 +272,25 @@ identity.controller("HeaderCtrl", function ($scope, $location) {
 });
 
 
-identity.controller('ModalAboutCtrl', function ($scope, $uibModal) {
+identity.controller('ModalCtrl', function ($scope, $uibModal) {
 
     $scope.animationsEnabled = true;
 
-    $scope.open = function (size) {
-
+    $scope.open = function (template, size) {
+        var modaleTemplateUrl = "";
+        switch (template){
+            case 'about':
+                modaleTemplateUrl = 'modalAboutContent.html';
+                break;
+            case 'export':
+                modaleTemplateUrl = 'views/modalExportContent.html';
+                break;
+        }
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
-            templateUrl: 'modalAboutContent.html',
+            templateUrl: modaleTemplateUrl,
             controller: 'ModalInstanceCtrl',
+            scope: $scope,
             size: size
         });
 
