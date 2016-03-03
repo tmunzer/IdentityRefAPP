@@ -4,7 +4,7 @@ var API = require(appRoot + "/bin/aerohive/api/main");
 /* GET users listing. */
 router.post('/userGroup', function (req, res, next) {
     API.identity.userGroups(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, function (err, result) {
-        if (err) res.json(err);
+        if (err) res.json({error: err});
         else res.json(result);
     });
 });
@@ -21,7 +21,7 @@ router.get('/credentials', function (req, res, next) {
     credentialType.forEach(function (credential) {
         userGroup.forEach(function (group) {
             API.identity.credentials(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
-                if (err) res.json(err);
+                if (err) res.json({error: err});
                 else {
                     result.forEach(function (account) {
                         credentials.push(account);

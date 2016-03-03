@@ -54,13 +54,17 @@ identity.factory("userGroupsService", function ($http) {
             return $http
                 .post("/api/userGroup")
                 .then(function (response) {
-                    enableEmailApproval = response.data.enableEmailApproval;
-                    response.data.userGroups.forEach(function (group) {
-                        group["selected"] = true;
-                        userGroups.push(group);
-                    });
-                    isLoaded = true;
-                    return userGroups;
+                    console.log(response);
+                    if (response.data.error) return response.data;
+                    else {
+                        enableEmailApproval = response.data.enableEmailApproval;
+                        response.data.userGroups.forEach(function (group) {
+                            group["selected"] = true;
+                            userGroups.push(group);
+                        });
+                        isLoaded = true;
+                        return userGroups;
+                    }
                 });
         },
         getUserGroups: function () {
@@ -133,14 +137,17 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
         });
         var promise = request.then(
             function (response) {
-                var credentials = [];
+                if (response.data.error) return response.data;
+                else {
+                    var credentials = [];
 
-                response.data.forEach(function (credential) {
-                    credential.groupName = userGroupsService.getUserGroupName(credential.groupId);
-                    credentials.push(credential);
-                });
-                dataLoaded = true;
-                return credentials;
+                    response.data.forEach(function (credential) {
+                        credential.groupName = userGroupsService.getUserGroupName(credential.groupId);
+                        credentials.push(credential);
+                    });
+                    dataLoaded = true;
+                    return credentials;
+                }
             },
             function (response) {
                 if (response.status >= 0) {
@@ -179,12 +186,16 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     $scope.userTypes = userTypesService.getUserTypes();
 
     userGroupsService.init().then(function (promise) {
-        $scope.userGroups = promise;
-        initialized = true;
-        requestForCredentials = credentialsService.getCredentials();
-        requestForCredentials.then(function (promise) {
-            $scope.credentials = promise;
-        });
+        if (promise.error) $scope.$broadcast("apiError", promise.error);
+        else {
+            $scope.userGroups = promise;
+            initialized = true;
+            requestForCredentials = credentialsService.getCredentials();
+            requestForCredentials.then(function (promise) {
+                if (promise.error) console.log(promise);
+                else $scope.credentials = promise;
+            });
+        }
     });
     $scope.$watch('userTypes', function () {
         $scope.refresh();
@@ -275,7 +286,14 @@ identity.controller("HeaderCtrl", function ($scope, $location) {
 identity.controller('ModalCtrl', function ($scope, $uibModal) {
 
     $scope.animationsEnabled = true;
+    $scope.$on('apiError', function(event, apiError) {
+        $scope.apiErrorStatus = apiError.status;
+        $scope.apiErrorMessage = apiError.message;
+        $scope.apiErrorCode = apiError.code;
+        var modaleTemplateUrl = 'views/modalErrorContent.html';
+        displayModel(modaleTemplateUrl);
 
+    });
     $scope.open = function (template, size) {
         var modaleTemplateUrl = "";
         switch (template){
@@ -286,6 +304,10 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
                 modaleTemplateUrl = 'views/modalExportContent.html';
                 break;
         }
+    displayModel(modaleTemplateUrl, size);
+
+    };
+    function displayModel(modaleTemplateUrl, size){
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
             templateUrl: modaleTemplateUrl,
@@ -293,9 +315,7 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
             scope: $scope,
             size: size
         });
-
-    };
-
+    }
 
 });
 
