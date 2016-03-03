@@ -6,7 +6,7 @@ identity.config(function ($routeProvider) {
             templateUrl: "/web-app/views/credentials.html",
             controller: "CredentialsCtrl"
         })
-        .when("/create/account", {
+        .when("/create/single", {
             templateUrl: "/web-app/views/create.html",
             controller: "NewCtrl"
         })
@@ -186,13 +186,13 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     $scope.userTypes = userTypesService.getUserTypes();
 
     userGroupsService.init().then(function (promise) {
-        if (promise.error) $scope.$broadcast("apiError", promise.error);
+        if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
             $scope.userGroups = promise;
             initialized = true;
             requestForCredentials = credentialsService.getCredentials();
             requestForCredentials.then(function (promise) {
-                if (promise.error) console.log(promise);
+                if (promise && promise.error) console.log(promise);
                 else $scope.credentials = promise;
             });
         }
@@ -277,7 +277,12 @@ identity.controller("HeaderCtrl", function ($scope, $location) {
 
     $scope.nav = {};
     $scope.nav.isActive = function (path) {
-        if (path === $location.path()) return true;
+        if (path === $location.path().toString().split("/")[1]) return true;
+        else return false;
+    };
+    $scope.subnav = {};
+    $scope.subnav.isActive = function (path) {
+        if (path === $location.path().toString().split("/")[2]) return true;
         else return false;
     }
 });

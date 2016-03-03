@@ -17,7 +17,7 @@ html
         block include
 
     body.claro.fullaccess(ng-app="identity")
-        div.modal.fade.bs-example-modal-lg(style="height: 200px;" ng-controller="ModalCtrl")
+        div.modal.fade.bs-example-modal-lg(ng-controller="ModalCtrl")
             script(type="text/ng-template" id="modalAboutContent.html")
                 div.modal-header
                     h4.modal-title Account details
@@ -44,11 +44,11 @@ html
                     ul.head-nav
                 div.login-area
                     ul.head-nav
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('/credentials')}")
+                        li(class = "nav-item" ng-class="{cur: nav.isActive('credentials')}")
                             a.nav-dashboard(href="#/credentials/") Credentials
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('/create')}")
-                            a.nav-dashboard(href="#/create/account") Create
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('/import')}")
+                        li(class = "nav-item" ng-class="{cur: nav.isActive('create')}")
+                            a.nav-dashboard(href="#/create/single") Create
+                        li(class = "nav-item" ng-class="{cur: nav.isActive('import')}")
                             a.nav-dashboard(href="#/import/") Import
                     div.head-options.hdrOptions
                          div.ah-navsprite-icons.ah-navsprite-user
@@ -62,7 +62,13 @@ html
                                 span.sta-item-bridge
             div.head-bottom
                 div.sub-tabs
-                    ul.sub-create
+                    ul.sub-create(ng-show="nav.isActive('create')")
+                        li(ng-class="{cur: subnav.isActive('single')}")
+                            a(href="#/create/single") Single Account
+                            span.arrow
+                        li(ng-class="{cur: subnav.isActive('bulk')}")
+                            a(href="#/create/bulk") Bulk Accounts
+                            span.arrow
 
         div.clearfix(id="main")
             ng-view
