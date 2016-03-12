@@ -30,7 +30,7 @@ module.exports.POST = function (vpcUrl, accessToken, ownerID, memberOf, adUser, 
     var path = "/xapi/v1/identity/credentials?ownerId=" + ownerID;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
-    
+
     for (var key in hmCredentialsRequestVo) {
         if (hmCredentialsRequestVo[key] === '') delete hmCredentialsRequestVo[key];
     }

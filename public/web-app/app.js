@@ -124,7 +124,7 @@ identity.factory("newUser", function ($http, $q) {
     var deliverMethod = ['NO_DELIVERY', 'EMAIL', 'SMS', 'EMAIL_AND_SMS'];
     init();
 
-    function init(){
+    function init() {
         user = {
             'firstName': '',
             'lastName': '',
@@ -150,8 +150,7 @@ identity.factory("newUser", function ($http, $q) {
             function (response) {
                 if (response.data.error) return response.data;
                 else {
-                    console.log(response);
-                    return true;
+                    return response.data;
                 }
             },
             function (response) {
@@ -319,7 +318,7 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
 
 });
 
-identity.controller("NewCtrl", function ($scope, $location, userGroupsService, newUser) {
+identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGroupsService, newUser) {
 
     userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -328,10 +327,16 @@ identity.controller("NewCtrl", function ($scope, $location, userGroupsService, n
         }
     });
 
-    $scope.user = newUser.getUser();
+    var master = newUser.getUser();
     $scope.userFields = newUser.getUserFieldsToDisplay();
     $scope.deliverMethod = newUser.getDeliverMethod();
-
+    $scope.username = {
+        name: false,
+        email: true,
+        phone: false
+    };
+    $scope.disableEmail = false;
+    $scope.disablePhone = false;
     $scope.selectedUserGroup = function (id) {
         if ($scope.user.groupId === id) return true;
         else return false;
@@ -344,16 +349,58 @@ identity.controller("NewCtrl", function ($scope, $location, userGroupsService, n
     $scope.displayUserDetails = function (path) {
         if ((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0) return true;
         else return false;
-
     };
 
-    $scope.reset = function(){
-        $scope.user = newUser.clear();
-    };
-    $scope.save = function(){
-        newUser.saveUser($scope.user);
+    $scope.$watch("user.deliverMethod", function(newVal){
+        $scope.disableEmail = false;
+        $scope.disablePhone = false;
+        if (newVal.toString() === "EMAIL"){
+            $scope.usernameField('email');
+            $scope.username.email = true;
+            $scope.disableEmail = true;
+        } else if (newVal.toString() === "SMS"){
+            $scope.usernameField('phone');
+            $scope.username.phone = true;
+            $scope.disablePhone = true;
+        } else if (newVal.toString() === "EMAIL_AND_SMS"){
+            $scope.usernameField('phone');
+            $scope.username.email = true;
+            $scope.username.phone = true;
+            $scope.disableEmail = true;
+            $scope.disablePhone = true;
+        } else {
+            $scope.deliverMethod = false;
+        }
+    });
+
+    $scope.isNotValid = function(){
+      if ($scope.username.email || $scope.username.phone) return false;
+        else return true;
     };
 
+    $scope.usernameField = function (field){
+        $scope.username[field] = true;
+    };
+    $scope.reset = function () {
+        if ($scope.user && $scope.user.groupId > 0) {
+            var groupId = $scope.user.groupId;
+            $scope.user = angular.copy(master);
+            $scope.user.groupId = groupId;
+        } else {
+            $scope.user = angular.copy(master);
+        }
+    };
+    $scope.save = function () {
+        newUser.saveUser($scope.user).then(function (promise) {
+            if (promise && promise.error) {
+                $rootScope.$broadcast("apiWarning", promise.error);
+            } else {
+                console.log(promise);
+                $rootScope.$broadcast('newSingle', promise);
+            }
+        });
+    };
+    $scope.reset();
 });
 identity.filter("ssidStringFromArray", function () {
     return function (input) {
@@ -410,6 +457,25 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
         $scope.apiErrorMessage = apiError.message;
         $scope.apiErrorCode = apiError.code;
         var modaleTemplateUrl = 'views/modalErrorContent.html';
+        displayModel(modaleTemplateUrl);
+
+    });
+    $scope.$on('apiWarning', function (event, apiWarning) {
+        $scope.apiErrorStatus = apiWarning.status;
+        $scope.apiErrorMessage = apiWarning.message;
+        $scope.apiErrorCode = apiWarning.code;
+        var modaleTemplateUrl = 'views/modalWarningContent.html';
+        displayModel(modaleTemplateUrl);
+
+    });
+    $scope.$on('newSingle', function (event, account) {
+        $scope.loginName = account.loginName;
+        $scope.password = account.password;
+        $scope.ssid = account.ssid;
+        $scope.startTime = account.startTime;
+        $scope.endTime = account.endTime;
+        $scope.authType = account.authType;
+        var modaleTemplateUrl = 'views/modalSingleContent.html';
         displayModel(modaleTemplateUrl);
 
     });

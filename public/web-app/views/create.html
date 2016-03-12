@@ -8,14 +8,14 @@
 
                         <div class="ui-filter-dtl-area">
                             <ul class="ui-select-card-list clearfix line">
-                                <li class="ui-select-card-item" ng-repeat="userGroup in userGroups">
+                                <li class="ui-select-card-item" ng-repeat="userGroup in userGroups  | orderBy:'name'">
                                     <div class="ui-select-card"
                                          ng-class="{'ui-select-card-selected': selectedUserGroup(userGroup.id)}"
                                          ng-click="selectUserGroup(userGroup.id)">
                                         <div class="ui-select-card-con">
                                             <p class="ui-select-card-title">{{userGroup.name}}</p>
 
-                                            <p class="ui-select-card-des">{{userGroup.ssids|ssidStringFromArray}}</p>
+                                            <p class="ui-select-card-des">SSID: {{userGroup.ssids|ssidStringFromArray}}</p>
                                         </div>
                                     </div>
                                 </li>
@@ -25,8 +25,35 @@
                     <div class="clearfix"></div>
                     <div class="ui-sec-tle" ng-show="displayUserDetails('single')">
                             <h3>User Details</h3>
-                            <!-- ngRepeat: field in userFields -->
-                            <div class="line clearfix ng-scope">
+                            <div class="line clearfix">
+                                <div class="grid_2 column">
+                                    <label for="usernameCB">Username</label>
+
+                                    <div class="control">
+                                        <input disabled="" class="ace-switch ace-switch-7" type="checkbox" id="usernameCB" ng-model="username.name"/>
+                                        <span class="lbl switch-label"></span>
+                                    </div>
+                                </div>
+                                <div class="grid_2 column">
+                                    <label for="emailCB">Email address</label>
+
+                                    <div class="control">
+                                        <input ng-disabled="disableEmail" class="ace-switch ace-switch-7" type="checkbox" id="emailCB" ng-model="username.email"/>
+                                        <span class="lbl switch-label"></span>
+                                    </div>
+                                </div>
+
+                                <div class="grid_2 column">
+                                    <label for="phoneCB">Phone number</label>
+
+                                    <div class="control">
+                                        <input ng-disabled="disablePhone" class="ace-switch ace-switch-7" type="checkbox" id="phoneCB" ng-model="username.phone"/>
+                                        <span class="lbl switch-label"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="line clearfix ng-scope" ng-show="username.name">
                                 <div class="grid_4 first column">
                                     <label for="firstName" class="ng-binding">First Name:</label>
                                 </div>
@@ -36,7 +63,7 @@
                                 </div>
                             </div>
                             
-                            <div class="line clearfix ng-scope">
+                            <div class="line clearfix ng-scope" ng-show="username.name">
                                 <div class="grid_4 first column">
                                     <label for="lastName" class="ng-binding">Last Name:</label>
                                 </div>
@@ -46,7 +73,7 @@
                                 </div>
                             </div>
                             
-                            <div class="line clearfix ng-scope">
+                            <div class="line clearfix ng-scope" ng-show="username.email">
                                 <div class="grid_4 first column">
                                     <label for="email" class="ng-binding">Email:</label>
                                 </div>
@@ -56,7 +83,7 @@
                                 </div>
                             </div>
                             
-                            <div class="line clearfix ng-scope">
+                            <div class="line clearfix ng-scope" ng-show="username.phone">
                                 <div class="grid_4 first column">
                                     <label for="phone" class="ng-binding">Phone:</label>
                                 </div>
@@ -93,8 +120,8 @@
                                 </div>
                                 <div class="last column">
                                     <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                                            style="height: 30px;" id="deliverMethod" ng-model="user.deliverMethod">
-                                        <option value="NO_DELIVERY" class="ng-binding ng-scope" ng-selected="user.deliverMethod">No delivery
+                                            style="height: 30px;" id="deliverMethod" ng-model="user.deliverMethod" ng-selected="user.deliverMethod">
+                                        <option value="NO_DELIVERY" class="ng-binding ng-scope" >No delivery
                                         </option>
                                         
                                         <option value="EMAIL"
@@ -114,7 +141,7 @@
                             </div>
                         <div class="clearfix">
                             <button class="btn btn-primary" ng-click="reset()">Reset</button>
-                            <button class="btn btn-primary" ng-click="save()">Save</button>
+                            <input ng-disabled="isNotValid()" type="button" class="btn btn-primary" ng-click="save()" value="Save">
                         </div>
                         </div>
                         </div>
