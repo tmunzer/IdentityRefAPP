@@ -1,7 +1,7 @@
-var apiRequest = require(appRoot + "/bin/aerohive/api/req").apiRequest;
+var api = require(appRoot + "/bin/aerohive/api/req");
 
 
-module.exports = function (vpcUrl, accessToken, ownerID, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
+module.exports.GET = function (vpcUrl, accessToken, ownerID, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
     var path = "/xapi/v1/identity/credentials?ownerId=" + ownerID;
     if (credentialType && credentialType!="") path += '&credentialType=' + credentialType;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
@@ -15,7 +15,26 @@ module.exports = function (vpcUrl, accessToken, ownerID, credentialType, userGro
     if (userGroup && userGroup!="") path += '&userGroup=' + userGroup;
     if (page && page!="") path += '&page=' + page;
     if (pageSize && pageSize!="") path += '&pageSize=' + pageSize;
-    apiRequest(vpcUrl, accessToken, path, function (err, result) {
+    api.GET(vpcUrl, accessToken, path, function (err, result) {
+        if (err) {
+            callback(err, null);
+        } else if (result) {
+            callback(null, result);
+        } else {
+            callback(null, null);
+        }
+    })
+};
+
+module.exports.POST = function (vpcUrl, accessToken, ownerID, memberOf, adUser, hmCredentialsRequestVo, callback) {
+    var path = "/xapi/v1/identity/credentials?ownerId=" + ownerID;
+    if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
+    if (adUser && adUser!="") path += '&adUser=' + adUser;
+    
+    for (var key in hmCredentialsRequestVo) {
+        if (hmCredentialsRequestVo[key] === '') delete hmCredentialsRequestVo[key];
+    }
+    api.POST(vpcUrl, accessToken, path, hmCredentialsRequestVo, function (err, result) {
         if (err) {
             callback(err, null);
         } else if (result) {

@@ -1,20 +1,35 @@
 
 
 module.exports.configuration = {
-    location: require(appRoot + "/bin/aerohive/api/configuration/location")
+    location: {
+        GET: require(appRoot + "/bin/aerohive/api/configuration/location").GET
+    }
 };
 
 module.exports.monitor = {
-    device: require(appRoot + "/bin/aerohive/api/monitor/device")
+    device: {
+        GET: require(appRoot + "/bin/aerohive/api/monitor/device").GET
+    }
 };
 
 module.exports.clientlocation = {
-    clienttimeseries: require(appRoot + "/bin/aerohive/api/clientlocation/clienttimeseries"),
-    clientcount: require(appRoot + "/bin/aerohive/api/clientlocation/clientcount"),
-    clientcountWithEE: require(appRoot + "/bin/aerohive/api/clientlocation/clientcount").withEE
+    clienttimeseries: {
+        GET: require(appRoot + "/bin/aerohive/api/clientlocation/clienttimeseries").GET,
+        GETwithEE: require(appRoot + "/bin/aerohive/api/clientlocation/clienttimeseries").GETwithEE
+
+    },
+    clientcount: {
+        GET: require(appRoot + "/bin/aerohive/api/clientlocation/clientcount").GET,
+        GETwithEE: require(appRoot + "/bin/aerohive/api/clientlocation/clientcount").GETwithEE
+    }
 };
 
 module.exports.identity = {
-    userGroups: require(appRoot + "/bin/aerohive/api/identity/userGroups"),
-    credentials: require(appRoot + "/bin/aerohive/api/identity/credentials")
+    userGroups: {
+        GET: require(appRoot + "/bin/aerohive/api/identity/userGroups").GET
+    },
+    credentials: {
+        GET: require(appRoot + "/bin/aerohive/api/identity/credentials").GET,
+        POST: require(appRoot + "/bin/aerohive/api/identity/credentials").POST
+    }
 };

@@ -1,11 +1,11 @@
-var apiRequest = require(appRoot + "/bin/aerohive/api/req").apiRequest;
+var api = require(appRoot + "/bin/aerohive/api/req");
 
 
-module.exports = function (vpcUrl, accessToken, ownerID, memberOf, adUser, callback) {
+module.exports.GET = function (vpcUrl, accessToken, ownerID, memberOf, adUser, callback) {
     var path = "/xapi/v1/identity/userGroups?ownerId="+ownerID;
     if (memberOf) path += '&memberOf=' + memberOf;
     if (adUser) path += '&adUser=' + adUser;
-    apiRequest(vpcUrl, accessToken, path, function (err, result) {
+    api.GET(vpcUrl, accessToken, path, function (err, result) {
         if (err){
             callback(err, null);
         } else if (result){

@@ -1,0 +1,127 @@
+<div class="pt-r">
+    <div id="container">
+        <div class="line clearfix">
+            <div class="view-section clearfix">
+                <div class="dashboard-main" style="margin: auto; float: none">
+                    <div class="ui-sec-tle">
+                        <h3>User Group</h3>
+
+                        <div class="ui-filter-dtl-area">
+                            <ul class="ui-select-card-list clearfix line">
+                                <li class="ui-select-card-item" ng-repeat="userGroup in userGroups">
+                                    <div class="ui-select-card"
+                                         ng-class="{'ui-select-card-selected': selectedUserGroup(userGroup.id)}"
+                                         ng-click="selectUserGroup(userGroup.id)">
+                                        <div class="ui-select-card-con">
+                                            <p class="ui-select-card-title">{{userGroup.name}}</p>
+
+                                            <p class="ui-select-card-des">{{userGroup.ssids|ssidStringFromArray}}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="ui-sec-tle" ng-show="displayUserDetails('single')">
+                            <h3>User Details</h3>
+                            <!-- ngRepeat: field in userFields -->
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="firstName" class="ng-binding">First Name:</label>
+                                </div>
+                                <div class="last column">
+                                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                                           style="height: 30px;" id="firstName" type="text" ng-model="user.firstName">
+                                </div>
+                            </div>
+                            
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="lastName" class="ng-binding">Last Name:</label>
+                                </div>
+                                <div class="last column">
+                                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                                           style="height: 30px;" id="lastName" type="text" ng-model="user.lastName">
+                                </div>
+                            </div>
+                            
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="email" class="ng-binding">Email:</label>
+                                </div>
+                                <div class="last column">
+                                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                                           style="height: 30px;" id="email" type="text" ng-model="user.email">
+                                </div>
+                            </div>
+                            
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="phone" class="ng-binding">Phone:</label>
+                                </div>
+                                <div class="last column">
+                                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                                           style="height: 30px;" id="phone" type="text" ng-model="user.phone">
+                                </div>
+                            </div>
+                            
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="organization" class="ng-binding">Organization:</label>
+                                </div>
+                                <div class="last column">
+                                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                                           style="height: 30px;" id="organization" type="text"
+                                           ng-model="user.organization">
+                                </div>
+                            </div>
+                            
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="purpose" class="ng-binding">Purpose of Visit:</label>
+                                </div>
+                                <div class="last column">
+                                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                                           style="height: 30px;" id="purpose" type="text" ng-model="user.purpose">
+                                </div>
+                            </div>
+                            
+                            <div class="line clearfix">
+                                <div class="grid_4 first column">
+                                    <label for="deliverMethod">Deliver Method:</label>
+                                </div>
+                                <div class="last column">
+                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                            style="height: 30px;" id="deliverMethod" ng-model="user.deliverMethod">
+                                        <option value="NO_DELIVERY" class="ng-binding ng-scope" ng-selected="user.deliverMethod">No delivery
+                                        </option>
+                                        
+                                        <option value="EMAIL"
+                                                class="ng-binding ng-scope">Email
+                                        </option>
+                                        
+                                        <option value="SMS"
+                                                class="ng-binding ng-scope">Sms
+                                        </option>
+                                        
+                                        <option value="EMAIL_AND_SMS"
+                                                class="ng-binding ng-scope">Email and sms
+                                        </option>
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                        <div class="clearfix">
+                            <button class="btn btn-primary" ng-click="reset()">Reset</button>
+                            <button class="btn btn-primary" ng-click="save()">Save</button>
+                        </div>
+                        </div>
+                        </div>
+
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>

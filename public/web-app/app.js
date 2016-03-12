@@ -6,14 +6,11 @@ identity.config(function ($routeProvider) {
             templateUrl: "/web-app/views/credentials.html",
             controller: "CredentialsCtrl"
         })
-        .when("/create/single", {
+        .when("/create/:type", {
             templateUrl: "/web-app/views/create.html",
             controller: "NewCtrl"
         })
-        .when("/create/bulk", {
-            templateUrl: "/web-app/views/create.html",
-            controller: "BulkCtrl"
-        })
+
         .when("/import", {
             templateUrl: "/web-app/views/import.html",
             controller: "ImportCtrl"
@@ -50,11 +47,11 @@ identity.factory("userGroupsService", function ($http) {
     var isLoaded = false;
 
     return {
-        init: function () {
+        getUserGroups: function () {
+            userGroups = userGroups.slice(0, 0);
             return $http
-                .post("/api/userGroup")
+                .post("/api/identity/userGroup", {cache: true})
                 .then(function (response) {
-                    console.log(response);
                     if (response.data.error) return response.data;
                     else {
                         enableEmailApproval = response.data.enableEmailApproval;
@@ -66,9 +63,6 @@ identity.factory("userGroupsService", function ($http) {
                         return userGroups;
                     }
                 });
-        },
-        getUserGroups: function () {
-            return userGroups;
         },
         getEmailApprouval: function () {
             return enableEmailApproval;
@@ -111,9 +105,87 @@ identity.factory("exportService", function () {
         {name: 'visitPurpose', selected: true, display: "Visit Purpose"}
     ];
     return {
-        getFields: function(){
+        getFields: function () {
             return exportFields;
         }
+    }
+});
+
+identity.factory("newUser", function ($http, $q) {
+    var userFieldsToDisplay = [
+        {name: 'firstName', display: 'First Name'},
+        {name: 'lastName', display: 'Last Name'},
+        {name: 'email', display: 'Email'},
+        {name: 'phone', display: 'Phone'},
+        {name: 'organization', display: 'Organization'},
+        {name: 'purpose', display: 'Purpose of Visit'}
+    ];
+    var user;
+    var deliverMethod = ['NO_DELIVERY', 'EMAIL', 'SMS', 'EMAIL_AND_SMS'];
+    init();
+
+    function init(){
+        user = {
+            'firstName': '',
+            'lastName': '',
+            'email': '',
+            'phone': '',
+            'organization': '',
+            'purpose': '',
+            'groupId': 0,
+            'policy': 'GUEST',
+            'deliverMethod': 'NO_DELIVERY'
+        };
+    }
+
+    function saveUser(user) {
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/identity/credentials",
+            method: "POST",
+            data: {hmCredentialsRequestVo: user},
+            timeout: canceller.promise
+        });
+        var promise = request.then(
+            function (response) {
+                if (response.data.error) return response.data;
+                else {
+                    console.log(response);
+                    return true;
+                }
+            },
+            function (response) {
+                if (response.status >= 0) {
+                    console.log("error");
+                    console.log(response);
+                    return ($q.reject("error"));
+                }
+            });
+
+        promise.abort = function () {
+            canceller.resolve();
+        };
+        promise.finally(function () {
+            console.info("Cleaning up object references.");
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+        });
+
+        return promise;
+    }
+
+    return {
+        getUser: function () {
+            return user;
+        },
+        getUserFieldsToDisplay: function () {
+            return userFieldsToDisplay;
+        },
+        getDeliverMethod: function () {
+            return deliverMethod;
+        },
+        saveUser: saveUser,
+        clear: init
     }
 });
 
@@ -125,12 +197,11 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
             credentialType: userTypesService.getArrayForRequest(),
             userGroup: userGroupsService.getArrayForRequest()
         };
-
         dataLoaded = false;
 
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/credentials",
+            url: "/api/identity/credentials",
             method: "GET",
             params: params,
             timeout: canceller.promise
@@ -185,18 +256,19 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     $scope.exportFields = exportService.getFields();
     $scope.userTypes = userTypesService.getUserTypes();
 
-    userGroupsService.init().then(function (promise) {
+    userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
             $scope.userGroups = promise;
-            initialized = true;
             requestForCredentials = credentialsService.getCredentials();
             requestForCredentials.then(function (promise) {
-                if (promise && promise.error) console.log(promise);
+                initialized = true;
+                if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
                 else $scope.credentials = promise;
             });
         }
     });
+
     $scope.$watch('userTypes', function () {
         $scope.refresh();
     }, true);
@@ -213,35 +285,73 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             return credentialsService.isLoaded()
         };
     });
-    $scope.refresh = function(){
+    $scope.refresh = function () {
         if (initialized) {
             requestForCredentials.abort();
             requestForCredentials = credentialsService.getCredentials();
             requestForCredentials.then(function (promise) {
-                $scope.credentials = promise;
+                if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+                else $scope.credentials = promise;
             });
         }
     };
-    $scope.getExportHeader = function(){
+    $scope.getExportHeader = function () {
         var header = [];
-        $scope.exportFields.forEach(function(field){
+        $scope.exportFields.forEach(function (field) {
             if (field.selected) header.push(field.name);
         });
-        header[0] = '#'+header[0];
+        header[0] = '#' + header[0];
         return header;
     };
-    $scope.export = function(){
-      if ($scope.credentials) {
-          var exportData = [];
-          $scope.credentials.forEach(function(credential){
-              var user = {};
-              $scope.exportFields.forEach(function (field){
+    $scope.export = function () {
+        if ($scope.credentials) {
+            var exportData = [];
+            $scope.credentials.forEach(function (credential) {
+                var user = {};
+                $scope.exportFields.forEach(function (field) {
                     if (field.selected) user[field.name] = credential[field.name];
-              });
-              exportData.push(user);
-          });
-          return exportData;
-      }
+                });
+                exportData.push(user);
+            });
+            return exportData;
+        }
+    };
+
+});
+
+identity.controller("NewCtrl", function ($scope, $location, userGroupsService, newUser) {
+
+    userGroupsService.getUserGroups().then(function (promise) {
+        if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+        else {
+            $scope.userGroups = promise;
+        }
+    });
+
+    $scope.user = newUser.getUser();
+    $scope.userFields = newUser.getUserFieldsToDisplay();
+    $scope.deliverMethod = newUser.getDeliverMethod();
+
+    $scope.selectedUserGroup = function (id) {
+        if ($scope.user.groupId === id) return true;
+        else return false;
+    };
+    $scope.selectUserGroup = function (id) {
+        if ($scope.user.groupId === id) $scope.user.groupId = 0;
+        else $scope.user.groupId = id;
+    };
+
+    $scope.displayUserDetails = function (path) {
+        if ((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0) return true;
+        else return false;
+
+    };
+
+    $scope.reset = function(){
+        $scope.user = newUser.clear();
+    };
+    $scope.save = function(){
+        newUser.saveUser($scope.user);
     };
 
 });
@@ -265,8 +375,12 @@ identity.filter("userType", function () {
         else return "";
     }
 });
-
-
+identity.filter("deliverMethod", function () {
+    return function (input) {
+        var string = input.replace(/_/g, " ");
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    }
+});
 
 identity.directive("sub-create", function () {
 
@@ -291,7 +405,7 @@ identity.controller("HeaderCtrl", function ($scope, $location) {
 identity.controller('ModalCtrl', function ($scope, $uibModal) {
 
     $scope.animationsEnabled = true;
-    $scope.$on('apiError', function(event, apiError) {
+    $scope.$on('apiError', function (event, apiError) {
         $scope.apiErrorStatus = apiError.status;
         $scope.apiErrorMessage = apiError.message;
         $scope.apiErrorCode = apiError.code;
@@ -301,7 +415,7 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
     });
     $scope.open = function (template, size) {
         var modaleTemplateUrl = "";
-        switch (template){
+        switch (template) {
             case 'about':
                 modaleTemplateUrl = 'modalAboutContent.html';
                 break;
@@ -309,10 +423,10 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
                 modaleTemplateUrl = 'views/modalExportContent.html';
                 break;
         }
-    displayModel(modaleTemplateUrl, size);
+        displayModel(modaleTemplateUrl, size);
 
     };
-    function displayModel(modaleTemplateUrl, size){
+    function displayModel(modaleTemplateUrl, size) {
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
             templateUrl: modaleTemplateUrl,

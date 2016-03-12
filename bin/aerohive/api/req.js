@@ -2,16 +2,12 @@ var https = require('https');
 var ApiConf = require(appRoot + "/bin/aerohive/config");
 
 
-module.exports.apiRequest = function (vpcUrl, accessToken, path, callback) {
-
-    var result = {};
-    result.request = {};
-    result.result = {};
+module.exports.GET = function (vpcUrl, accessToken, path, callback) {
     var options = {
         host: vpcUrl,
         port: 443,
         path: path,
-        method: 'GET',
+        method: "GET",
         headers: {
             'X-AH-API-CLIENT-SECRET': ApiConf.secret,
             'X-AH-API-CLIENT-ID': ApiConf.clientId,
@@ -19,6 +15,32 @@ module.exports.apiRequest = function (vpcUrl, accessToken, path, callback) {
             'Authorization': "Bearer " + accessToken
         }
     };
+    httpRequest(options, callback);
+};
+
+module.exports.POST = function (vpcUrl, accessToken, path, data, callback) {
+    var options = {
+        host: vpcUrl,
+        port: 443,
+        path: path,
+        method: "POST",
+        headers: {
+            'X-AH-API-CLIENT-SECRET': ApiConf.secret,
+            'X-AH-API-CLIENT-ID': ApiConf.clientId,
+            'X-AH-API-CLIENT-REDIRECT-URI': ApiConf.redirectUrl,
+            'Authorization': "Bearer " + accessToken,
+            'Content-Type': 'application/json'
+        }
+    };
+    var body = JSON.stringify(data);
+    httpRequest(options, callback, body);
+};
+
+function httpRequest(options, callback, body){
+    var result = {};
+    result.request = {};
+    result.result = {};
+
     console.info(options);
     result.request.options = options;
     var req = https.request(options, function (res) {
@@ -55,8 +77,8 @@ module.exports.apiRequest = function (vpcUrl, accessToken, path, callback) {
 
 
 // write data to request body
-    req.write('data\n');
+    req.write(body + '\n');
     req.end();
 
 
-};
+}
