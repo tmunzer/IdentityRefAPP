@@ -13,13 +13,20 @@ router.get('/identity/credentials', function (req, res, next) {
     var userGroup = [""];
     var credentials = [];
 
-    if (req.query.hasOwnProperty('credentialType') && req.query.credentialType.length>0) credentialType = req.query.credentialType;
-    if (req.query.hasOwnProperty('userGroup') && req.query.userGroup.length>0) userGroup = req.query.userGroup;
+    if (req.query.hasOwnProperty('credentialType')){
+        if (typeof req.query.credentialType === "string") credentialType = [req.query.credentialType];
+        else credentialType = req.query.credentialType;
+    }
+    if (req.query.hasOwnProperty('userGroup')) {
+        if (typeof req.query.userGroup === "string") userGroup = [req.query.userGroup];
+        else userGroup = req.query.userGroup;
+    }
 
     var reqDone = 0;
     var reqMax = credentialType.length * userGroup.length;
     credentialType.forEach(function (credential) {
         userGroup.forEach(function (group) {
+            console.log(group);
             API.identity.credentials.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
                 if (err) res.json({error: err});
                 else {

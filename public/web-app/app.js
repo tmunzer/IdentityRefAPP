@@ -23,8 +23,8 @@ identity.config(function ($routeProvider) {
 
 identity.factory("userTypesService", function () {
     var userTypes = [
-        {name: "CLOUD_PPSK", selected: true},
-        {name: "CLOUD_RADIUS", selected: true}
+        {name: "CLOUD_PPSK", selected: false},
+        {name: "CLOUD_RADIUS", selected: false}
     ];
     return {
         getUserTypes: function () {
@@ -56,7 +56,7 @@ identity.factory("userGroupsService", function ($http) {
                     else {
                         enableEmailApproval = response.data.enableEmailApproval;
                         response.data.userGroups.forEach(function (group) {
-                            group["selected"] = true;
+                            group["selected"] = false;
                             userGroups.push(group);
                         });
                         isLoaded = true;
