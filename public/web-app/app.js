@@ -254,6 +254,7 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     var initialized = false;
     $scope.exportFields = exportService.getFields();
     $scope.userTypes = userTypesService.getUserTypes();
+    $scope.itemsByPage=10;
 
     userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -263,10 +264,21 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             requestForCredentials.then(function (promise) {
                 initialized = true;
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
-                else $scope.credentials = promise;
+                else {
+                    $scope.credentials = promise;
+                    $scope.credentialsMaster = promise;
+
+                }
             });
         }
     });
+
+    $scope.page = function(num){
+        $scope.itemsByPage = num;
+    };
+    $scope.isCurPage = function(num){
+        return num === $scope.itemsByPage;
+    };
 
     $scope.$watch('userTypes', function () {
         $scope.refresh();

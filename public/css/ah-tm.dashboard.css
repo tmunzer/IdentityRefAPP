@@ -379,12 +379,12 @@ table {
     font-size: 12px !important;
 
 }
-.table tr:hover {
+.table tbody tr:hover {
     background-color: #fff8ea;
     transition:all 0.2s ease-in-out;
 
 }
-.table tr {
+.table tbody tr {
     transition:all 0.2s ease-in-out;
 }
 table td {
@@ -397,4 +397,13 @@ table td {
 .ui-select-card:hover {
     border-color: orange;
     transition:all 0.1s ease-in-out;
+}
+
+table tfoot td {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+ul.pagination {
+    margin: 0 !important;
 }
