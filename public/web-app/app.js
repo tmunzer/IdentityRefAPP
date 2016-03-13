@@ -255,6 +255,7 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     $scope.exportFields = exportService.getFields();
     $scope.userTypes = userTypesService.getUserTypes();
     $scope.itemsByPage=10;
+    $scope.selectAllChecked = false;
 
     userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -296,13 +297,24 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             return credentialsService.isLoaded()
         };
     });
+    $scope.selectAll = function(){
+        $scope.credentialsMaster.forEach(function(cred){
+            cred.selected = $scope.selectAllChecked;
+        })
+    };
+    $scope.selectOne = function(){
+        $scope.selectAllChecked = false;
+    };
     $scope.refresh = function () {
         if (initialized) {
             requestForCredentials.abort();
             requestForCredentials = credentialsService.getCredentials();
             requestForCredentials.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
-                else $scope.credentials = promise;
+                else {
+                    $scope.credentials = promise;
+                    $scope.credentialsMaster = promise;
+                }
             });
         }
     };
@@ -522,7 +534,7 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
 identity.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
 
     $scope.close = function () {
-        $uibModalInstance.close('cancel');
+        $uibModalInstance.close('close');
 
     };
 });
