@@ -44,3 +44,19 @@ module.exports.POST = function (vpcUrl, accessToken, ownerID, memberOf, adUser, 
         }
     })
 };
+
+module.exports.DELETE = function (vpcUrl, accessToken, ownerID, memberOf, adUser, ids, callback) {
+    var path = "/xapi/v1/identity/credentials?ownerId=" + ownerID;
+    if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
+    if (adUser && adUser!="") path += '&adUser=' + adUser;
+    if (ids && ids != "") path += '&ids=' + ids;
+    api.DELETE(vpcUrl, accessToken, path, function (err, result) {
+        if (err) {
+            callback(err, null);
+        } else if (result) {
+            callback(null, result);
+        } else {
+            callback(null, null);
+        }
+    })
+};

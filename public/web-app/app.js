@@ -188,6 +188,46 @@ identity.factory("newUser", function ($http, $q) {
     }
 });
 
+identity.factory("deleteUser", function($http, $q){
+
+    function deleteCredenetials(ids){
+
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/identity/credentials",
+            method: "DELETE",
+            params: {ids: ids},
+            timeout: canceller.promise
+        });
+        var promise = request.then(
+            function (response) {
+                if (response && response.data && response.data.error) return response.data;
+                else return response;
+            },
+            function (response) {
+                if (response.status >= 0) {
+                    console.log("error");
+                    return ($q.reject("error"));
+                }
+            });
+
+        promise.abort = function () {
+            canceller.resolve();
+        };
+        promise.finally(function () {
+            console.info("Cleaning up object references.");
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+        });
+
+        return promise;
+    }
+
+    return {
+        deleteCredentials: deleteCredenetials
+    }
+});
+
 identity.factory("credentialsService", function ($http, $q, userTypesService, userGroupsService) {
     var dataLoaded = false;
 
@@ -244,12 +284,15 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
         getCredentials: getCredentials,
         isLoaded: function isLoaded() {
             return dataLoaded;
+        },
+        setIsLoaded: function setIsLoaded(isLoaded){
+            dataLoaded = isLoaded;
         }
     }
 });
 
 
-identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService, exportService) {
+identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
     var requestForCredentials = null;
     var initialized = false;
     $scope.exportFields = exportService.getFields();
@@ -339,7 +382,19 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             return exportData;
         }
     };
-
+    $scope.deleteCredentials = function(){
+        var ids = [];
+        credentialsService.setIsLoaded(false);
+        $scope.credentialsMaster.forEach(function(credential){
+            if (credential.selected) ids.push(credential.id);
+        });
+        var deleteCredentials = deleteUser.deleteCredentials(ids);
+        deleteCredentials.then(function(promise){
+            credentialsService.setIsLoaded(true);
+            if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
+            else $scope.refresh();
+        });
+    }
 });
 
 identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGroupsService, newUser) {

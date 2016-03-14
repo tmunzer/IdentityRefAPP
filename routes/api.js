@@ -52,4 +52,12 @@ router.post('/identity/credentials', function (req, res, next) {
         else res.json(result);
     })
 });
+router.delete('/identity/credentials', function(req, res, next){
+    var ids = "";
+    if (req.query.hasOwnProperty("ids")) ids = req.query.ids;
+    API.identity.credentials.DELETE(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, ids, function(err, result){
+        if (err) res.json({error: err});
+        else res.json(result);
+    })
+});
 module.exports = router;

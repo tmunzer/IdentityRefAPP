@@ -30,6 +30,7 @@ module.exports.identity = {
     },
     credentials: {
         GET: require(appRoot + "/bin/aerohive/api/identity/credentials").GET,
-        POST: require(appRoot + "/bin/aerohive/api/identity/credentials").POST
+        POST: require(appRoot + "/bin/aerohive/api/identity/credentials").POST,
+        DELETE: require(appRoot + "/bin/aerohive/api/identity/credentials").DELETE
     }
 };

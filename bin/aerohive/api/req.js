@@ -36,6 +36,22 @@ module.exports.POST = function (vpcUrl, accessToken, path, data, callback) {
     httpRequest(options, callback, body);
 };
 
+module.exports.DELETE = function (vpcUrl, accessToken, path, callback) {
+    var options = {
+        host: vpcUrl,
+        port: 443,
+        path: path,
+        method: "DELETE",
+        headers: {
+            'X-AH-API-CLIENT-SECRET': ApiConf.secret,
+            'X-AH-API-CLIENT-ID': ApiConf.clientId,
+            'X-AH-API-CLIENT-REDIRECT-URI': ApiConf.redirectUrl,
+            'Authorization': "Bearer " + accessToken
+        }
+    };
+    httpRequest(options, callback);
+};
+
 function httpRequest(options, callback, body){
     var result = {};
     result.request = {};
