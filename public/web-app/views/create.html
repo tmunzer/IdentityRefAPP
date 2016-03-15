@@ -146,18 +146,62 @@
                             </div>
                         </div>
                         <div class="clearfix">
-                            <button class="btn btn-primary" ng-click="reset()">Reset</button>
-                            <input ng-disabled="isNotValid()" type="button" class="btn btn-primary" ng-click="save()"
+                            <button class="btn btn-primary" ng-click="reset('single')">Reset</button>
+                            <input ng-disabled="isNotValid('single')" type="button" class="btn btn-primary" ng-click="save('single')"
                                    value="Save">
                         </div>
                     </div>
                 </div>
 
             </div>
-            <div class="ui-sec-tle" ng-show="displayUserDetails('bulk')">
 
+            <div class="ui-sec-tle" ng-show="displayUserDetails('bulk')">
+                <div class="line clearfix ng-scope">
+                    <div class="grid_4 first column">
+                        <label for="email_bulk" class="ng-binding">Prefix:</label>
+                    </div>
+                    <div class="last column">
+                        <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                               style="height: 30px;" id="prefix" type="text" ng-model="bulk.prefix">
+                    </div>
+                </div>
+
+                <div class="line clearfix ng-scope">
+                    <div class="grid_4 first column">
+                        <label for="email_bulk" class="ng-binding">Domain:</label>
+                    </div>
+                    <div class="last column">
+                        <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                               style="height: 30px;" id="domain" type="text" ng-model="bulk.domain">
+                    </div>
+                </div>
+
+                <div class="line clearfix ng-scope">
+                    <div class="grid_4 first column">
+                        <label for="example" class="ng-binding">Example:</label>
+                    </div>
+                    <div class="last column">
+                        <input disabled="" class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                               style="height: 30px;" id="example" type="text" value="{{bulk.prefix}}_00001@{{bulk.domain}}">
+                    </div>
+                </div>
+
+                <div class="line clearfix ng-scope">
+                    <div class="grid_4 first column">
+                        <label for="numberOfAccounts" class="ng-binding">Number of accounts (1-10):</label>
+                    </div>
+                    <div class="last column">
+                        <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty" ng-model="bulk.numberOfAccounts"
+                               style="height: 30px;" id="numberOfAccounts" type="number" min="0" max="10">
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <button class="btn btn-primary" ng-click="reset('bulk')">Reset</button>
+                    <input ng-disabled="isNotValid('bulk')" type="button" class="btn btn-primary" ng-click="save('bulk')"
+                           value="Save">
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+

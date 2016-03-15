@@ -188,9 +188,9 @@ identity.factory("newUser", function ($http, $q) {
     }
 });
 
-identity.factory("deleteUser", function($http, $q){
+identity.factory("deleteUser", function ($http, $q) {
 
-    function deleteCredenetials(ids){
+    function deleteCredenetials(ids) {
 
         var canceller = $q.defer();
         var request = $http({
@@ -285,7 +285,7 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
         isLoaded: function isLoaded() {
             return dataLoaded;
         },
-        setIsLoaded: function setIsLoaded(isLoaded){
+        setIsLoaded: function setIsLoaded(isLoaded) {
             dataLoaded = isLoaded;
         }
     }
@@ -297,7 +297,7 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     var initialized = false;
     $scope.exportFields = exportService.getFields();
     $scope.userTypes = userTypesService.getUserTypes();
-    $scope.itemsByPage=10;
+    $scope.itemsByPage = 10;
     $scope.selectAllChecked = false;
 
     userGroupsService.getUserGroups().then(function (promise) {
@@ -317,10 +317,10 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
         }
     });
 
-    $scope.page = function(num){
+    $scope.page = function (num) {
         $scope.itemsByPage = num;
     };
-    $scope.isCurPage = function(num){
+    $scope.isCurPage = function (num) {
         return num === $scope.itemsByPage;
     };
 
@@ -340,12 +340,12 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             return credentialsService.isLoaded()
         };
     });
-    $scope.selectAll = function(){
-        $scope.credentialsMaster.forEach(function(cred){
+    $scope.selectAll = function () {
+        $scope.credentialsMaster.forEach(function (cred) {
             cred.selected = $scope.selectAllChecked;
         })
     };
-    $scope.selectOne = function(){
+    $scope.selectOne = function () {
         $scope.selectAllChecked = false;
     };
     $scope.refresh = function () {
@@ -382,14 +382,14 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             return exportData;
         }
     };
-    $scope.deleteCredentials = function(){
+    $scope.deleteCredentials = function () {
         var ids = [];
         credentialsService.setIsLoaded(false);
-        $scope.credentialsMaster.forEach(function(credential){
+        $scope.credentialsMaster.forEach(function (credential) {
             if (credential.selected) ids.push(credential.id);
         });
         var deleteCredentials = deleteUser.deleteCredentials(ids);
-        deleteCredentials.then(function(promise){
+        deleteCredentials.then(function (promise) {
             credentialsService.setIsLoaded(true);
             if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
             else $scope.refresh();
@@ -397,8 +397,7 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     }
 });
 
-identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGroupsService, newUser) {
-
+identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGroupsService, newUser, credentialsService) {
     userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
@@ -406,7 +405,13 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         }
     });
 
-    var master = newUser.getUser();
+    var masterBulk = {
+        prefix: "",
+        domain: "",
+        numberOfAccounts: 0
+    };
+    var masterUser = newUser.getUser();
+
     $scope.userFields = newUser.getUserFieldsToDisplay();
     $scope.deliverMethod = newUser.getDeliverMethod();
     $scope.username = {
@@ -416,6 +421,7 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
     };
     $scope.disableEmail = false;
     $scope.disablePhone = false;
+
     $scope.selectedUserGroup = function (id) {
         if ($scope.user.groupId === id) return true;
         else return false;
@@ -430,18 +436,18 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         else return false;
     };
 
-    $scope.$watch("user.deliverMethod", function(newVal){
+    $scope.$watch("user.deliverMethod", function (newVal) {
         $scope.disableEmail = false;
         $scope.disablePhone = false;
-        if (newVal.toString() === "EMAIL"){
+        if (newVal.toString() === "EMAIL") {
             $scope.usernameField('email');
             $scope.username.email = true;
             $scope.disableEmail = true;
-        } else if (newVal.toString() === "SMS"){
+        } else if (newVal.toString() === "SMS") {
             $scope.usernameField('phone');
             $scope.username.phone = true;
             $scope.disablePhone = true;
-        } else if (newVal.toString() === "EMAIL_AND_SMS"){
+        } else if (newVal.toString() === "EMAIL_AND_SMS") {
             $scope.usernameField('phone');
             $scope.username.email = true;
             $scope.username.phone = true;
@@ -452,35 +458,94 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         }
     });
 
-    $scope.isNotValid = function(){
-      if ($scope.username.email || $scope.username.phone) return false;
-        else return true;
-    };
+    $scope.isNotValid = function (creationType) {
+        if (creationType === "single") return !($scope.username.email || $scope.username.phone);
+        else if (creationType === "bulk") {
 
-    $scope.usernameField = function (field){
-        $scope.username[field] = true;
-    };
-    $scope.reset = function () {
-        if ($scope.user && $scope.user.groupId > 0) {
-            var groupId = $scope.user.groupId;
-            $scope.user = angular.copy(master);
-            $scope.user.groupId = groupId;
-        } else {
-            $scope.user = angular.copy(master);
         }
     };
-    $scope.save = function () {
-        newUser.saveUser($scope.user).then(function (promise) {
-            if (promise && promise.error) {
-                $rootScope.$broadcast("apiWarning", promise.error);
+
+    $scope.usernameField = function (field) {
+        $scope.username[field] = true;
+    };
+    $scope.reset = function (creationType) {
+        if (creationType === "single" || !creationType) {
+            if ($scope.user && $scope.user.groupId > 0) {
+                var groupId = $scope.user.groupId;
+                $scope.user = angular.copy(masterUser);
+                $scope.user.groupId = groupId;
             } else {
-                console.log(promise);
-                $rootScope.$broadcast('newSingle', promise);
+                $scope.user = angular.copy(masterUser);
             }
-        });
+        } else if (creationType === 'bulk' || !creationType) {
+            $scope.bulk = angular.copy(masterBulk);
+        }
+    };
+    $scope.save = function (creationType) {
+        if (creationType === "single") {
+            newUser.saveUser($scope.user).then(function (promise) {
+                if (promise && promise.error) {
+                    $rootScope.$broadcast("apiWarning", promise.error);
+                } else {
+                    console.log(promise);
+                    $rootScope.$broadcast('newSingle', promise);
+                }
+            });
+        } else if (creationType === "bulk") {
+            var requestForCredentials = credentialsService.getCredentials();
+            requestForCredentials.then(function (promise) {
+                if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+                else {
+                    var credentials = promise;
+                    var bulkAccounts = [];
+                    var createdAccounts = 0;
+                    var currentAccount = 1;
+                    var stringAccount = "";
+                    var alreadyExists;
+                    while (createdAccounts < $scope.bulk.numberOfAccounts) {
+                        alreadyExists = false;
+                        var fillingNumber = "";
+                        for (var j = 5; j > currentAccount.toString().length; j--) {
+                            fillingNumber += "0";
+                        }
+                        stringAccount = $scope.bulk.prefix + '_' + fillingNumber + currentAccount + '@' + $scope.bulk.domain;
+                        credentials.forEach(function (credential) {
+                            if (credential.userName === stringAccount) alreadyExists = true;
+                        });
+                        if (!alreadyExists) {
+                            createdAccounts++;
+                            newUser.saveUser({
+                                groupId: $scope.user.groupId,
+                                email: stringAccount,
+                                policy: "GUEST",
+                                'deliverMethod': 'NO_DELIVERY'
+                            }).then(function (promise2) {
+                                if (promise2 && promise2.error) {
+                                    $rootScope.$broadcast("apiWarning", promise2.error);
+                                } else {
+                                    bulkAccounts.push(promise2);
+                                    if (createdAccounts === $scope.bulk.numberOfAccounts){
+                                        var header = [];
+                                        for (var key in promise2){
+                                            header.push(key);
+                                        }
+                                        header[0] = '#' + header[0];
+                                        $rootScope.$broadcast('bulkDone', bulkAccounts, header, createdAccounts);
+                                    }
+                                }
+                            });
+                        }
+                        currentAccount++;
+
+                    }
+                }
+            });
+        }
     };
     $scope.reset();
 });
+
+
 identity.filter("ssidStringFromArray", function () {
     return function (input) {
         if (!input || input.length === 0) return "";
@@ -535,16 +600,16 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
         $scope.apiErrorStatus = apiError.status;
         $scope.apiErrorMessage = apiError.message;
         $scope.apiErrorCode = apiError.code;
-        var modaleTemplateUrl = 'views/modalErrorContent.html';
-        displayModel(modaleTemplateUrl);
+        var modalTemplateUrl = 'views/modalErrorContent.html';
+        displayModel(modalTemplateUrl);
 
     });
     $scope.$on('apiWarning', function (event, apiWarning) {
         $scope.apiErrorStatus = apiWarning.status;
         $scope.apiErrorMessage = apiWarning.message;
         $scope.apiErrorCode = apiWarning.code;
-        var modaleTemplateUrl = 'views/modalWarningContent.html';
-        displayModel(modaleTemplateUrl);
+        var modalTemplateUrl = 'views/modalWarningContent.html';
+        displayModel(modalTemplateUrl);
 
     });
     $scope.$on('newSingle', function (event, account) {
@@ -554,27 +619,41 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
         $scope.startTime = account.startTime;
         $scope.endTime = account.endTime;
         $scope.authType = account.authType;
-        var modaleTemplateUrl = 'views/modalSingleContent.html';
-        displayModel(modaleTemplateUrl);
+        var modalTemplateUrl = 'views/modalSingleContent.html';
+        displayModel(modalTemplateUrl);
+
+    });
+    $scope.$on('bulkDone', function (event, bulkAccounts, header, numberOfAccounts) {
+        $scope.getBulkExportHeader = function () {
+            return header;
+        };
+        $scope.bulkExport = function () {
+            if (bulkAccounts) {
+                return bulkAccounts;
+            }
+        };
+        $scope.numberOfAccounts = numberOfAccounts;
+        var modalTemplateUrl = 'views/modalBulkContent.html';
+        displayModel(modalTemplateUrl);
 
     });
     $scope.open = function (template, size) {
-        var modaleTemplateUrl = "";
+        var modalTemplateUrl = "";
         switch (template) {
             case 'about':
-                modaleTemplateUrl = 'modalAboutContent.html';
+                modalTemplateUrl = 'modalAboutContent.html';
                 break;
             case 'export':
-                modaleTemplateUrl = 'views/modalExportContent.html';
+                modalTemplateUrl = 'views/modalExportContent.html';
                 break;
         }
-        displayModel(modaleTemplateUrl, size);
+        displayModel(modalTemplateUrl, size);
 
     };
-    function displayModel(modaleTemplateUrl, size) {
+    function displayModel(modalTemplateUrl, size) {
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
-            templateUrl: modaleTemplateUrl,
+            templateUrl: modalTemplateUrl,
             controller: 'ModalInstanceCtrl',
             scope: $scope,
             size: size
