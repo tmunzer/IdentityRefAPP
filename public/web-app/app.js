@@ -484,9 +484,9 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         if (creationType === "single") return !($scope.username.email || $scope.username.phone);
         else if (creationType === "bulk") {
             return (
-            $scope.bulk.prefixIsNotValid &&
-            $scope.bulk.domainIsNotValid &&
-            $scope.bulk.numberOfAccounts > 0 &&
+            $scope.bulk.prefixIsNotValid ||
+            $scope.bulk.domainIsNotValid ||
+            $scope.bulk.numberOfAccounts > 0 ||
             $scope.bulk.numberOfAccounts < $scope.bulk.maxNumberOfAccounts);
         }
     };
