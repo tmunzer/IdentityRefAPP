@@ -485,9 +485,7 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         else if (creationType === "bulk") {
             return (
             $scope.bulk.prefixIsNotValid ||
-            $scope.bulk.domainIsNotValid ||
-            $scope.bulk.numberOfAccounts > 0 ||
-            $scope.bulk.numberOfAccounts < $scope.bulk.maxNumberOfAccounts);
+            $scope.bulk.domainIsNotValid);
         }
     };
 
