@@ -407,10 +407,15 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
 
     var masterBulk = {
         prefix: "",
+        prefixIsNotValid: true,
         domain: "",
+        domainIsNotValid: true,
         result: false,
-        numberOfAccounts: 0
+        numberOfAccounts: 0,
+        maxNumberOfAccounts: 10
     };
+    $scope.bulk = angular.copy(masterBulk);
+
     $scope.bulkResultHeaders = [];
     $scope.bulkResult = [];
     $scope.bulkError = [];
@@ -466,10 +471,18 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         }
     });
 
+    $scope.$watch("bulk.prefix", function(){
+        var re = /^([0-9a-zA-Z_\-.]{2,})$/i;
+        $scope.bulk.prefixIsNotValid = !(re.test($scope.bulk.prefix));
+    });
+    $scope.$watch("bulk.domain", function(){
+        var re = /^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i;
+        $scope.bulk.domainIsNotValid = !(re.test($scope.bulk.domain));
+    });
     $scope.isNotValid = function (creationType) {
         if (creationType === "single") return !($scope.username.email || $scope.username.phone);
         else if (creationType === "bulk") {
-
+            return ($scope.bulk.prefixIsNotValid && $scope.bulk.domainIsNotValid);
         }
     };
 

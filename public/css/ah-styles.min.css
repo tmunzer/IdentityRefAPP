@@ -10234,7 +10234,7 @@ input[type="radio"][disabled],input[type="checkbox"][disabled],input[type="radio
     background-color:#d9edf7;
     border-color:#3a87ad
 }
-input:focus:invalid,textarea:focus:invalid,select:focus:invalid {
+input.invalid,textarea:focus:invalid,select:focus:invalid {
     color:#b94a48;
     border-color:#ee5f5b
 }

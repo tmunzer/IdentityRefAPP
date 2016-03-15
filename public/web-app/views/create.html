@@ -159,20 +159,22 @@
             <div class="ui-sec-tle" ng-show="displayUserDetails('bulk')">
                 <div class="line clearfix ng-scope">
                     <div class="grid_4 first column">
-                        <label for="email_bulk" class="ng-binding">Prefix:</label>
+                        <label for="prefix" class="ng-binding">Prefix:</label>
                     </div>
                     <div class="last column">
                         <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                               ng-class="{invalid: bulk.prefixIsNotValid}"
                                style="height: 30px;" id="prefix" type="text" ng-model="bulk.prefix">
                     </div>
                 </div>
 
                 <div class="line clearfix ng-scope">
                     <div class="grid_4 first column">
-                        <label for="email_bulk" class="ng-binding">Domain:</label>
+                        <label for="domain" class="ng-binding">Domain:</label>
                     </div>
                     <div class="last column">
                         <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                               ng-class="{invalid: bulk.domainIsNotValid}"
                                style="height: 30px;" id="domain" type="text" ng-model="bulk.domain">
                     </div>
                 </div>
@@ -190,12 +192,12 @@
 
                 <div class="line clearfix ng-scope">
                     <div class="grid_4 first column">
-                        <label for="numberOfAccounts" class="ng-binding">Number of accounts (1-10):</label>
+                        <label for="numberOfAccounts" class="ng-binding">Number of accounts (1-{{bulk.maxNumberOfAccounts}}):</label>
                     </div>
                     <div class="last column">
                         <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
                                ng-model="bulk.numberOfAccounts"
-                               style="height: 30px;" id="numberOfAccounts" type="number" min="0" max="10">
+                               style="height: 30px;" id="numberOfAccounts" type="number" min="0" max="{{bulk.maxNumberOfAccounts}}">
                     </div>
                 </div>
                 <div class="clearfix">
@@ -208,9 +210,10 @@
             <div class="ui-sec-tle" ng-show="displayBulkResult('bulk')">
                 <div class="clearfix">
                     <h3>Bulk Result</h3>
+                    <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl" ng-click="open('exportBulk')" style="margin: 5px 0">Export</button>
                     <uib-progressbar max="max" value="(createdAccountsFinished/bulk.numberOfAccounts)*100"><span style="color:white; white-space:nowrap;">{{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</span></uib-progressbar>
 
-                    <div style="position: relative; min-height: 150px;">
+                    <div style="position: relative; min-height: 50px;">
                         <div class="dgrid dgrid-grid ui-widget dgrid-autoheight">
                             <div class="dgrid-header dgrid-header-row ui-widget dgrid-autoheight" role="grid">
                                 <table st-safe-src="credentialsMaster" st-table="credentials"
@@ -236,7 +239,6 @@
                             </div>
                         </div>
                     </div>
-                    <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl" ng-click="open('exportBulk')" style="margin: 5px 0">Export</button>
                 </div>
                 <div class="clearfix">
                     <h3>Bulk Errors</h3>

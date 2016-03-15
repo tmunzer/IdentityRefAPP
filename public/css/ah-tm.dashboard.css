@@ -408,7 +408,18 @@ ul.pagination {
     margin: 0 !important;
 }
 
+.progress {
+    border-radius: 0;
+    margin-top: 20px;
+}
+
 .progress-bar {
     height: 100%;
     text-align: center;
+    background-color:#62c462;
+
+}
+input.invalid,textarea.invalid,select.invalid {
+    color:#b94a48;
+    border-color:#ee5f5b
 }
