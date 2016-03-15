@@ -147,7 +147,8 @@
                         </div>
                         <div class="clearfix">
                             <button class="btn btn-primary" ng-click="reset('single')">Reset</button>
-                            <input ng-disabled="isNotValid('single')" type="button" class="btn btn-primary" ng-click="save('single')"
+                            <input ng-disabled="isNotValid('single')" type="button" class="btn btn-primary"
+                                   ng-click="save('single')"
                                    value="Save">
                         </div>
                     </div>
@@ -182,7 +183,8 @@
                     </div>
                     <div class="last column">
                         <input disabled="" class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
-                               style="height: 30px;" id="example" type="text" value="{{bulk.prefix}}_00001@{{bulk.domain}}">
+                               style="height: 30px;" id="example" type="text"
+                               value="{{bulk.prefix}}_00001@{{bulk.domain}}">
                     </div>
                 </div>
 
@@ -191,17 +193,56 @@
                         <label for="numberOfAccounts" class="ng-binding">Number of accounts (1-10):</label>
                     </div>
                     <div class="last column">
-                        <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty" ng-model="bulk.numberOfAccounts"
+                        <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                               ng-model="bulk.numberOfAccounts"
                                style="height: 30px;" id="numberOfAccounts" type="number" min="0" max="10">
                     </div>
                 </div>
                 <div class="clearfix">
                     <button class="btn btn-primary" ng-click="reset('bulk')">Reset</button>
-                    <input ng-disabled="isNotValid('bulk')" type="button" class="btn btn-primary" ng-click="save('bulk')"
+                    <input ng-disabled="isNotValid('bulk')" type="button" class="btn btn-primary"
+                           ng-click="save('bulk')"
                            value="Save">
+                </div>
+            </div>
+            <div class="ui-sec-tle" ng-show="displayBulkResult('bulk')">
+                <div class="clearfix">
+                    <h3>Bulk Result</h3>
+                    <uib-progressbar max="max" value="(createdAccountsFinished/bulk.numberOfAccounts)*100"><span style="color:white; white-space:nowrap;">{{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</span></uib-progressbar>
+
+                    <div style="position: relative; min-height: 150px;">
+                        <div class="dgrid dgrid-grid ui-widget dgrid-autoheight">
+                            <div class="dgrid-header dgrid-header-row ui-widget dgrid-autoheight" role="grid">
+                                <table st-safe-src="credentialsMaster" st-table="credentials"
+                                       class="dgrid-row-table table table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th ng-repeat="header in bulkResultHeaders"
+                                            class="dgrid-cell dgrid-column-1 dgrid-selector"
+                                            role="columnheader">
+                                            <div class="dgrid-resize-header-container">{{header}}</div>
+                                            <div class="dgrid-resize-handle resizeNode-1"></div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="credential in bulkResult">
+                                        <td ng-repeat="field in credential">
+                                            <div>{{field}}</div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl" ng-click="open('exportBulk')" style="margin: 5px 0">Export</button>
+                </div>
+                <div class="clearfix">
+                    <h3>Bulk Errors</h3>
+                    <div ng-repeat="error in bulkError">{{error}}</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

@@ -3,10 +3,12 @@
 </div>
 <div class="modal-body">
     <table style="text-align: left">
+        <tbody>
         <tr>
             <th style="padding: 10px;">Number of created accounts: </th>
-            <td>{{$scope.numberOfAccounts}}</td>
+            <td>{{createdAccountsFinished}}</td>
         </tr>
+        </tbody>
     </table>
     <a class="btn btn-primary" ng-csv="bulkExport()" csv-header="getBulkExportHeader()" filename="bulkAccounts.csv">Export to CSV</a>
 </div>

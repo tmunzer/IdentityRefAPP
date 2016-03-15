@@ -408,8 +408,12 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
     var masterBulk = {
         prefix: "",
         domain: "",
+        result: false,
         numberOfAccounts: 0
     };
+    $scope.bulkResultHeaders = [];
+    $scope.bulkResult = [];
+    $scope.bulkError = [];
     var masterUser = newUser.getUser();
 
     $scope.userFields = newUser.getUserFieldsToDisplay();
@@ -423,8 +427,7 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
     $scope.disablePhone = false;
 
     $scope.selectedUserGroup = function (id) {
-        if ($scope.user.groupId === id) return true;
-        else return false;
+        return $scope.user.groupId === id;
     };
     $scope.selectUserGroup = function (id) {
         if ($scope.user.groupId === id) $scope.user.groupId = 0;
@@ -432,10 +435,15 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
     };
 
     $scope.displayUserDetails = function (path) {
-        if ((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0) return true;
-        else return false;
+        return !!((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0);
     };
 
+    $scope.displayBulkResult = function (){
+        return ($scope.bulk && $scope.bulk.result);
+    };
+    $scope.displayBulkError = function (){
+        return $scope.bulkError.length > 0;
+    };
     $scope.$watch("user.deliverMethod", function (newVal) {
         $scope.disableEmail = false;
         $scope.disablePhone = false;
@@ -492,17 +500,18 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
                 }
             });
         } else if (creationType === "bulk") {
+            $scope.bulk.result = true;
             var requestForCredentials = credentialsService.getCredentials();
             requestForCredentials.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
                 else {
                     var credentials = promise;
-                    var bulkAccounts = [];
-                    var createdAccounts = 0;
+                    var createdAccountsInitiated = 0;
+                    $scope.createdAccountsFinished = 0;
                     var currentAccount = 1;
                     var stringAccount = "";
                     var alreadyExists;
-                    while (createdAccounts < $scope.bulk.numberOfAccounts) {
+                    while (createdAccountsInitiated < $scope.bulk.numberOfAccounts) {
                         alreadyExists = false;
                         var fillingNumber = "";
                         for (var j = 5; j > currentAccount.toString().length; j--) {
@@ -513,7 +522,7 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
                             if (credential.userName === stringAccount) alreadyExists = true;
                         });
                         if (!alreadyExists) {
-                            createdAccounts++;
+                            createdAccountsInitiated++;
                             newUser.saveUser({
                                 groupId: $scope.user.groupId,
                                 email: stringAccount,
@@ -521,17 +530,16 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
                                 'deliverMethod': 'NO_DELIVERY'
                             }).then(function (promise2) {
                                 if (promise2 && promise2.error) {
-                                    $rootScope.$broadcast("apiWarning", promise2.error);
+                                    $scope.bulkError.push(promise2.error);
                                 } else {
-                                    bulkAccounts.push(promise2);
-                                    if (createdAccounts === $scope.bulk.numberOfAccounts){
-                                        var header = [];
+                                    if ($scope.bulkResultHeaders.length == 0){
                                         for (var key in promise2){
-                                            header.push(key);
+                                            $scope.bulkResultHeaders.push(key);
                                         }
-                                        header[0] = '#' + header[0];
-                                        $rootScope.$broadcast('bulkDone', bulkAccounts, header, createdAccounts);
                                     }
+                                    $scope.bulkResult.push(promise2);
+                                    $scope.createdAccountsFinished ++;
+
                                 }
                             });
                         }
@@ -540,6 +548,14 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
                     }
                 }
             });
+        }
+    };
+    $scope.getBulkExportHeader = function () {
+        return $scope.bulkResultHeaders;
+    };
+    $scope.bulkExport = function () {
+        if ($scope.bulkResult) {
+            return $scope.bulkResult;
         }
     };
     $scope.reset();
@@ -623,20 +639,6 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
         displayModel(modalTemplateUrl);
 
     });
-    $scope.$on('bulkDone', function (event, bulkAccounts, header, numberOfAccounts) {
-        $scope.getBulkExportHeader = function () {
-            return header;
-        };
-        $scope.bulkExport = function () {
-            if (bulkAccounts) {
-                return bulkAccounts;
-            }
-        };
-        $scope.numberOfAccounts = numberOfAccounts;
-        var modalTemplateUrl = 'views/modalBulkContent.html';
-        displayModel(modalTemplateUrl);
-
-    });
     $scope.open = function (template, size) {
         var modalTemplateUrl = "";
         switch (template) {
@@ -645,6 +647,9 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
                 break;
             case 'export':
                 modalTemplateUrl = 'views/modalExportContent.html';
+                break;
+            case 'exportBulk':
+                modalTemplateUrl = 'views/modalBulkContent.html';
                 break;
         }
         displayModel(modalTemplateUrl, size);

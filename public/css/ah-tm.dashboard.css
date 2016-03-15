@@ -407,3 +407,8 @@ table tfoot td {
 ul.pagination {
     margin: 0 !important;
 }
+
+.progress-bar {
+    height: 100%;
+    text-align: center;
+}
