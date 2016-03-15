@@ -412,7 +412,7 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         domainIsNotValid: true,
         result: false,
         numberOfAccounts: 0,
-        maxNumberOfAccounts: 10
+        maxNumberOfAccounts: 1000
     };
     $scope.bulk = angular.copy(masterBulk);
 
@@ -479,10 +479,15 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         var re = /^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i;
         $scope.bulk.domainIsNotValid = !(re.test($scope.bulk.domain));
     });
+
     $scope.isNotValid = function (creationType) {
         if (creationType === "single") return !($scope.username.email || $scope.username.phone);
         else if (creationType === "bulk") {
-            return ($scope.bulk.prefixIsNotValid && $scope.bulk.domainIsNotValid);
+            return (
+            $scope.bulk.prefixIsNotValid &&
+            $scope.bulk.domainIsNotValid &&
+            $scope.bulk.numberOfAccounts > 0 &&
+            $scope.bulk.numberOfAccounts < $scope.bulk.maxNumberOfAccounts);
         }
     };
 
