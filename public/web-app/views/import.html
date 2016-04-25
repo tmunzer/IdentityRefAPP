@@ -1,0 +1,207 @@
+<div class="pt-r">
+    <div id="container">
+        <div class="line clearfix">
+            <div class="view-section clearfix">
+                <div class="dashboard-main" style="margin: auto; float: none">
+                    <div class="ui-sec-tle">
+                        <h3>File Upload</h3>
+
+                        <div class="line clearfix">
+
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column" style="line-height: 30px;">
+                                    <label for="file" class="ng-binding">CSV File:</label>
+                                </div>
+                                <div class="last column">
+                                    <input type="file" id="file" file-change="handler($event,files)"
+                                           ng-model="csvFile"/>
+                                </div>
+                            </div>
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column" style="line-height: 30px;">
+                                    <label for="delimiter" class="ng-binding">CSV Delimiter:</label>
+                                </div>
+                                <div class="last column">
+                                    <input id="delimiter" class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
+                                           style="height: 30px;" ng-model="delimiter" type="text" placeholder=",">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="ui-sec-tle">
+                        <h3>File Preview</h3>
+
+                        <div class="line clearfix">
+                            <span>The preview table is only showing the 10 first rows.</span>
+
+                            <div class="line clearfix">
+                                <div>
+                                    <table class="dgrid-row-table table table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th ng-repeat="header in csvHeader">{{header}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="row in csvRows | limitTo:10">
+                                            <td ng-repeat="column in row track by $index">{{column}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="ui-sec-tle">
+                        <h3>Match Fields</h3>
+
+
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="email" class="ng-binding">Email:</label>
+                                </div>
+                                <div class="last column">
+                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                            style="height: 30px;" ng-model="match.email">
+                                        <option ng-repeat="field in fields" value={{field}}
+                                                class="ng-binding ng-scope">{{field}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="phone" class="ng-binding">Phone:</label>
+                                </div>
+                                <div class="last column">
+                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                            style="height: 30px;" ng-model="match.phone">
+                                        <option ng-repeat="field in fields" value={{field}}
+                                                class="ng-binding ng-scope">{{field}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="organization" class="ng-binding">Organization:</label>
+                                </div>
+                                <div class="last column">
+                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                            style="height: 30px;" ng-model="match.organization">
+                                        <option ng-repeat="field in fields" value={{field}}
+                                                class="ng-binding ng-scope">{{field}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="line clearfix ng-scope">
+                                <div class="grid_4 first column">
+                                    <label for="purpose" class="ng-binding">Purpose of Visit:</label>
+                                </div>
+                                <div class="last column">
+                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                            style="height: 30px;" ng-model="match.purpose">
+                                        <option ng-repeat="field in fields" value={{field}}
+                                                class="ng-binding ng-scope">{{field}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="line clearfix">
+                                <div class="grid_4 first column">
+                                    <label for="deliverMethod">Deliver Method:</label>
+                                </div>
+                                <div class="last column">
+                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                            style="height: 30px;" id="deliverMethod" ng-model="user.deliverMethod"
+                                            ng-selected="user.deliverMethod">
+                                        <option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
+                                        </option>
+
+                                        <option value="EMAIL"
+                                                class="ng-binding ng-scope">Email
+                                        </option>
+
+                                        <option value="SMS"
+                                                class="ng-binding ng-scope">Sms
+                                        </option>
+
+                                        <option value="EMAIL_AND_SMS"
+                                                class="ng-binding ng-scope">Email and sms
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="clearfix">
+                                <button class="btn btn-primary" ng-click="reset('single')">Reset</button>
+                                <input ng-disabled="isNotValid('single')" type="button" class="btn btn-primary"
+                                       ng-click="save('single')"
+                                       value="Create">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+                    <div class="ui-sec-tle" ng-show="displayBulkResult('bulk')">
+                        <div class="clearfix">
+                            <h3>Bulk Result</h3>
+                            <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl"
+                                    ng-click="open('exportBulk')" style="margin: 5px 0">Export
+                            </button>
+                            <uib-progressbar max="max" value="(createdAccountsFinished/bulk.numberOfAccounts)*100"><span
+                                    style="color:white; white-space:nowrap;">{{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</span>
+                            </uib-progressbar>
+
+                            <div style="position: relative; min-height: 50px;">
+                                <div class="dgrid dgrid-grid ui-widget dgrid-autoheight">
+                                    <div class="dgrid-header dgrid-header-row ui-widget dgrid-autoheight" role="grid">
+                                        <table st-safe-src="credentialsMaster" st-table="credentials"
+                                               class="dgrid-row-table table table-condensed">
+                                            <thead>
+                                            <tr>
+                                                <th ng-repeat="header in bulkResultHeaders"
+                                                    class="dgrid-cell dgrid-column-1 dgrid-selector"
+                                                    role="columnheader">
+                                                    <div class="dgrid-resize-header-container">{{header}}</div>
+                                                    <div class="dgrid-resize-handle resizeNode-1"></div>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="credential in bulkResult">
+                                                <td ng-repeat="field in credential">
+                                                    <div>{{field}}</div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <h3>Bulk Errors</h3>
+
+                            <div ng-repeat="error in bulkError">{{error}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

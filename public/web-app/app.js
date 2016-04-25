@@ -443,10 +443,10 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         return !!((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0);
     };
 
-    $scope.displayBulkResult = function (){
+    $scope.displayBulkResult = function () {
         return ($scope.bulk && $scope.bulk.result);
     };
-    $scope.displayBulkError = function (){
+    $scope.displayBulkError = function () {
         return $scope.bulkError.length > 0;
     };
     $scope.$watch("user.deliverMethod", function (newVal) {
@@ -471,11 +471,11 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
         }
     });
 
-    $scope.$watch("bulk.prefix", function(){
+    $scope.$watch("bulk.prefix", function () {
         var re = /^([0-9a-zA-Z_\-.]{2,})$/i;
         $scope.bulk.prefixIsNotValid = !(re.test($scope.bulk.prefix));
     });
-    $scope.$watch("bulk.domain", function(){
+    $scope.$watch("bulk.domain", function () {
         var re = /^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i;
         $scope.bulk.domainIsNotValid = !(re.test($scope.bulk.domain));
     });
@@ -548,13 +548,13 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
                                 if (promise2 && promise2.error) {
                                     $scope.bulkError.push(promise2.error);
                                 } else {
-                                    if ($scope.bulkResultHeaders.length == 0){
-                                        for (var key in promise2){
+                                    if ($scope.bulkResultHeaders.length == 0) {
+                                        for (var key in promise2) {
                                             $scope.bulkResultHeaders.push(key);
                                         }
                                     }
                                     $scope.bulkResult.push(promise2);
-                                    $scope.createdAccountsFinished ++;
+                                    $scope.createdAccountsFinished++;
 
                                 }
                             });
@@ -622,6 +622,74 @@ identity.controller("HeaderCtrl", function ($scope, $location) {
         if (path === $location.path().toString().split("/")[2]) return true;
         else return false;
     }
+});
+identity.directive('fileChange', ['$parse', function ($parse) {
+    return {
+        require: 'ngModel',
+        restrict: 'A',
+        link: function ($scope, element, attrs, ngModel) {
+            var attrHandler = $parse(attrs['fileChange']);
+            var handler = function (e) {
+                $scope.$apply(function () {
+                    attrHandler($scope, {$event: e, files: e.target.files});
+                });
+            };
+            element[0].addEventListener('change', handler, false);
+        }
+    }
+}]);
+identity.controller("ImportCtrl", function ($scope, $filter) {
+    $scope.csvFile = [];
+    $scope.csvHeader = [];
+    $scope.csvRows = [];
+    var csvFile = undefined;
+    $scope.fields = undefined;
+
+    $scope.handler = function (e, files) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            csvFile = reader.result;
+            parseCsv();
+        };
+        reader.readAsText(files[0]);
+    };
+
+    $scope.$watch('delimiter', function () {
+        parseCsv();
+    }, true);
+
+    function parseCsv() {
+        $scope.csvRows = [];
+        if (csvFile) {
+            var rows = csvFile.split('\n');
+            var delimiter;
+            if ($scope.delimiter) delimiter = $scope.delimiter;
+            else delimiter = ",";
+
+            rows.forEach(function (val) {
+                if (val.indexOf("#") == 0) {
+                    $scope.csvHeader = val.split(delimiter);
+                    $scope.csvHeader[0] = $scope.csvHeader[0].replace("#", "");
+                    if (!$scope.fields) {
+                        $scope.fields = $scope.csvHeader;
+                        $scope.fields.splice(0,0,"None");
+                    }
+                } else {
+                    var o = val.split(delimiter);
+                    $scope.csvRows.push(o);
+                    if (!$scope.fields) {
+                        for (var i = 0; i < o.length; i++){
+                            $scope.fields.push("Field "+i);
+                        }
+                        $scope.splice(0,0,"--None--");
+                    }
+                }
+            });
+            $scope.$apply();
+        }
+
+    }
+
 });
 
 

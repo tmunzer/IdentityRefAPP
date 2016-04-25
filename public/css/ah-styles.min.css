@@ -2042,6 +2042,7 @@ label {
     padding-top:30px
 }
 label,.lbl {
+    line-height: 30px;
     vertical-align:middle
 }
 input[type=checkbox],input[type=radio] {
