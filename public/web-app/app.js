@@ -47,10 +47,15 @@ identity.factory("userGroupsService", function ($http) {
     var isLoaded = false;
 
     return {
-        getUserGroups: function () {
+        getUserGroups: function (reqId) {
             userGroups = userGroups.slice(0, 0);
-            return $http
-                .post("/api/identity/userGroup", {cache: true})
+
+            return $http({
+                url: "/api/identity/userGroup",
+                method: "POST",
+                data: {reqId: reqId},
+                option: {cache: true}
+            })
                 .then(function (response) {
                     if (response.data.error) return response.data;
                     else {
@@ -60,7 +65,7 @@ identity.factory("userGroupsService", function ($http) {
                             userGroups.push(group);
                         });
                         isLoaded = true;
-                        return userGroups;
+                        return {userGroups: userGroups, reqId: response.data.reqId};
                     }
                 });
         },
@@ -300,10 +305,13 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
     $scope.itemsByPage = 10;
     $scope.selectAllChecked = false;
 
-    userGroupsService.getUserGroups().then(function (promise) {
+    var reqId = new Date().getTime();
+    userGroupsService.getUserGroups(reqId).then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
-            $scope.userGroups = promise;
+            if (promise.reqId == reqId) {
+                $scope.userGroups = promise.userGroups;
+            }
             requestForCredentials = credentialsService.getCredentials();
             requestForCredentials.then(function (promise) {
                 initialized = true;
@@ -398,10 +406,11 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
 });
 
 identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGroupsService, newUser, credentialsService) {
-    userGroupsService.getUserGroups().then(function (promise) {
+    var reqId = new Date().getTime();
+    userGroupsService.getUserGroups(reqId).then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
-        else {
-            $scope.userGroups = promise;
+        else if (reqId == promise.reqId){
+            $scope.userGroups = promise.userGroups;
         }
     });
 
@@ -638,12 +647,44 @@ identity.directive('fileChange', ['$parse', function ($parse) {
         }
     }
 }]);
-identity.controller("ImportCtrl", function ($scope, $filter) {
+identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, credentialsService) {
     $scope.csvFile = [];
     $scope.csvHeader = [];
     $scope.csvRows = [];
+    var masterImportUsers = {
+        email: "",
+        phone: "",
+        organization: "",
+        purpose: "",
+        deliverMethod: "NO_DELIVERY",
+        groupId: 0
+    };
+    $scope.importUsers = angular.copy(masterImportUsers);
+    $scope.result = false;
+    $scope.numberOfAccounts = 0;
     var csvFile = undefined;
     $scope.fields = undefined;
+
+
+    $scope.bulkResultHeaders = [];
+    $scope.bulkResult = [];
+    $scope.bulkError = [];
+
+    var reqId = new Date().getTime();
+    userGroupsService.getUserGroups(reqId).then(function (promise) {
+        if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+        else if (reqId == promise.reqId){
+            $scope.userGroups = promise.userGroups;
+        }
+    });
+
+    $scope.selectedUserGroup = function (id) {
+        return $scope.importUsers.groupId === id;
+    };
+    $scope.selectUserGroup = function (id) {
+        if ($scope.importUsers.groupId === id) $scope.user.groupId = 0;
+        else $scope.importUsers.groupId = id;
+    };
 
     $scope.handler = function (e, files) {
         var reader = new FileReader();
@@ -660,28 +701,33 @@ identity.controller("ImportCtrl", function ($scope, $filter) {
 
     function parseCsv() {
         $scope.csvRows = [];
+        $scope.fields = [];
+        $scope.csvHeader = [];
         if (csvFile) {
             var rows = csvFile.split('\n');
             var delimiter;
             if ($scope.delimiter) delimiter = $scope.delimiter;
             else delimiter = ",";
 
+            $scope.numberOfAccounts = 0;
             rows.forEach(function (val) {
                 if (val.indexOf("#") == 0) {
                     $scope.csvHeader = val.split(delimiter);
                     $scope.csvHeader[0] = $scope.csvHeader[0].replace("#", "");
-                    if (!$scope.fields) {
+                    if ($scope.fields.length == 0) {
                         $scope.fields = $scope.csvHeader;
-                        $scope.fields.splice(0,0,"None");
                     }
                 } else {
+                    console.log($scope.csvHeader);
                     var o = val.split(delimiter);
                     $scope.csvRows.push(o);
-                    if (!$scope.fields) {
+                    $scope.numberOfAccounts ++;
+                    if ($scope.fields.length == 0) {
                         for (var i = 0; i < o.length; i++){
+                            $scope.csvHeader.push("Field "+i);
                             $scope.fields.push("Field "+i);
                         }
-                        $scope.splice(0,0,"--None--");
+                        console.log($scope.csvHeader);
                     }
                 }
             });
@@ -689,8 +735,92 @@ identity.controller("ImportCtrl", function ($scope, $filter) {
         }
 
     }
+    $scope.reset = function(){
+        $scope.importUsers = angular.copy(masterImportUsers);
+    };
+    $scope.isNotValid = function(){
+        if ($scope.importUsers.email =="" && $scope.importUsers.phone == "") return true;
+        if ($scope.importUsers.deliverMethod == "EMAIL" && $scope.importUsers.email == "") return true;
+        else if ($scope.importUsers.deliverMethod == "SMS" && $scope.importUsers.phone == "") return true;
+        else if ($scope.importUsers.deliverMethod== "EMAIL_AND_SMS" && ($scope.importUsers.email == "" || $scope.importUsers.phone == "")) return true;
+        else return false;
+    };
+    $scope.create = function(){
+        $scope.result = true;
+        var requestForCredentials = credentialsService.getCredentials();
+        requestForCredentials.then(function (promise) {
+            if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+            else {
+                var user = {};
+                var credentials = promise;
+                var createdAccountsInitiated = 0;
+                $scope.createdAccountsFinished = 0;
+                var currentAccount = 1;
+                var stringAccount = "";
+                var alreadyExists;
+                $scope.csvRows.forEach(function(row) {
+                    alreadyExists = false;
+                    user = {
+                        email: "",
+                        phone: "",
+                        purpose: "",
+                        organization: ""
+                    };
+                    user.email = row[$scope.importUsers.email];
+                    user.phone = row[$scope.importUsers.phone];
+                    user.purpose = row[$scope.importUsers.purpose];
+                    user.organization = row[$scope.importUsers.organization];
+                    console.log(user);
+                    credentials.forEach(function (credential) {
+                        if (credential.userName === user.email || credential.userName === user.phone) alreadyExists = true;
+                    });
+                    if (!alreadyExists) {
+                        createdAccountsInitiated++;
+                        newUser.saveUser({
+                            groupId: $scope.importUsers.groupId,
+                            email: user.email,
+                            phone: user.phone,
+                            organization: user.organization,
+                            visitPurpose: user.purpose,
+                            policy: "GUEST",
+                            'deliverMethod': $scope.importUsers.deliverMethod
+                        }).then(function (promise2) {
+                            if (promise2 && promise2.error) {
+                                $scope.bulkError.push(promise2.error);
+                            } else {
+                                if ($scope.bulkResultHeaders.length == 0) {
+                                    for (var key in promise2) {
+                                        $scope.bulkResultHeaders.push(key);
+                                    }
+                                }
+                                $scope.bulkResult.push(promise2);
+                                $scope.createdAccountsFinished++;
 
+                            }
+                        });
+                    }
+                    currentAccount++;
+
+                });
+            }
+        });
+    };
+    $scope.displayResult = function () {
+        return $scope.result;
+    };
+    $scope.displayBulkError = function () {
+        return $scope.bulkError.length > 0;
+    };
+    $scope.getBulkExportHeader = function () {
+        return $scope.bulkResultHeaders;
+    };
+    $scope.bulkExport = function () {
+        if ($scope.bulkResult) {
+            return $scope.bulkResult;
+        }
+    };
 });
+
 
 
 identity.controller('ModalCtrl', function ($scope, $uibModal) {

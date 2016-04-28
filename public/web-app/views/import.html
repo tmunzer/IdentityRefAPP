@@ -3,6 +3,28 @@
         <div class="line clearfix">
             <div class="view-section clearfix">
                 <div class="dashboard-main" style="margin: auto; float: none">
+
+                    <div class="ui-sec-tle">
+                        <h3>User Group</h3>
+
+                        <div class="ui-filter-dtl-area">
+                            <ul class="ui-select-card-list clearfix line">
+                                <li class="ui-select-card-item" ng-repeat="userGroup in userGroups  | orderBy:'name'">
+                                    <div class="ui-select-card"
+                                         ng-class="{'ui-select-card-selected': selectedUserGroup(userGroup.id)}"
+                                         ng-click="selectUserGroup(userGroup.id)">
+                                        <div class="ui-select-card-con">
+                                            <p class="ui-select-card-title">{{userGroup.name}}</p>
+
+                                            <p class="ui-select-card-des">SSID:
+                                                {{userGroup.ssids|ssidStringFromArray}}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <div class="ui-sec-tle">
                         <h3>File Upload</h3>
 
@@ -28,6 +50,8 @@
                             </div>
                         </div>
                     </div>
+
+
                     <div class="clearfix"></div>
                     <div class="ui-sec-tle">
                         <h3>File Preview</h3>
@@ -53,118 +77,111 @@
                             </div>
                         </div>
                     </div>
+
+
                     <div class="clearfix"></div>
                     <div class="ui-sec-tle">
-                        <h3>Match Fields</h3>
+                        <h3>Fields Matching</h3>
 
-
-                            <div class="line clearfix ng-scope">
-                                <div class="grid_4 first column">
-                                    <label for="email" class="ng-binding">Email:</label>
-                                </div>
-                                <div class="last column">
-                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                                            style="height: 30px;" ng-model="match.email">
-                                        <option ng-repeat="field in fields" value={{field}}
-                                                class="ng-binding ng-scope">{{field}}
-                                        </option>
-                                    </select>
-                                </div>
+                        <div class="line clearfix ng-scope">
+                            <div class="grid_4 first column">
+                                <label for="email" class="ng-binding">Email:</label>
                             </div>
-
-                            <div class="line clearfix ng-scope">
-                                <div class="grid_4 first column">
-                                    <label for="phone" class="ng-binding">Phone:</label>
-                                </div>
-                                <div class="last column">
-                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                                            style="height: 30px;" ng-model="match.phone">
-                                        <option ng-repeat="field in fields" value={{field}}
-                                                class="ng-binding ng-scope">{{field}}
-                                        </option>
-                                    </select>
-                                </div>
+                            <div class="last column">
+                                <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                        style="height: 30px;" ng-model="importUsers.email">
+                                    <option ng-repeat="field in fields track by $index" value={{$index}}
+                                            class="ng-binding ng-scope">{{field}}
+                                    </option>
+                                </select>
                             </div>
+                        </div>
 
-                            <div class="line clearfix ng-scope">
-                                <div class="grid_4 first column">
-                                    <label for="organization" class="ng-binding">Organization:</label>
-                                </div>
-                                <div class="last column">
-                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                                            style="height: 30px;" ng-model="match.organization">
-                                        <option ng-repeat="field in fields" value={{field}}
-                                                class="ng-binding ng-scope">{{field}}
-                                        </option>
-                                    </select>
-                                </div>
+                        <div class="line clearfix ng-scope">
+                            <div class="grid_4 first column">
+                                <label for="phone" class="ng-binding">Phone:</label>
                             </div>
-
-                            <div class="line clearfix ng-scope">
-                                <div class="grid_4 first column">
-                                    <label for="purpose" class="ng-binding">Purpose of Visit:</label>
-                                </div>
-                                <div class="last column">
-                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                                            style="height: 30px;" ng-model="match.purpose">
-                                        <option ng-repeat="field in fields" value={{field}}
-                                                class="ng-binding ng-scope">{{field}}
-                                        </option>
-                                    </select>
-                                </div>
+                            <div class="last column">
+                                <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                        style="height: 30px;" ng-model="importUsers.phone">
+                                    <option ng-repeat="field in fields track by $index" value={{$index}}
+                                            class="ng-binding ng-scope">{{field}}
+                                    </option>
+                                </select>
                             </div>
+                        </div>
 
-                            <div class="line clearfix">
-                                <div class="grid_4 first column">
-                                    <label for="deliverMethod">Deliver Method:</label>
-                                </div>
-                                <div class="last column">
-                                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                                            style="height: 30px;" id="deliverMethod" ng-model="user.deliverMethod"
-                                            ng-selected="user.deliverMethod">
-                                        <option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
-                                        </option>
-
-                                        <option value="EMAIL"
-                                                class="ng-binding ng-scope">Email
-                                        </option>
-
-                                        <option value="SMS"
-                                                class="ng-binding ng-scope">Sms
-                                        </option>
-
-                                        <option value="EMAIL_AND_SMS"
-                                                class="ng-binding ng-scope">Email and sms
-                                        </option>
-
-                                    </select>
-                                </div>
+                        <div class="line clearfix ng-scope">
+                            <div class="grid_4 first column">
+                                <label for="organization" class="ng-binding">Organization:</label>
                             </div>
-                            <div class="clearfix">
-                                <button class="btn btn-primary" ng-click="reset('single')">Reset</button>
-                                <input ng-disabled="isNotValid('single')" type="button" class="btn btn-primary"
-                                       ng-click="save('single')"
-                                       value="Create">
+                            <div class="last column">
+                                <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                        style="height: 30px;" ng-model="importUsers.organization">
+                                    <option ng-repeat="field in fields track by $index" value={{$index}}
+                                            class="ng-binding ng-scope">{{field}}
+                                    </option>
+                                </select>
                             </div>
+                        </div>
+
+                        <div class="line clearfix ng-scope">
+                            <div class="grid_4 first column">
+                                <label for="purpose" class="ng-binding">Purpose of Visit:</label>
+                            </div>
+                            <div class="last column">
+                                <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                        style="height: 30px;" ng-model="importUsers.purpose">
+                                    <option ng-repeat="field in fields track by $index" value={{$index}}
+                                            class="ng-binding ng-scope">{{field}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="line clearfix">
+                            <div class="grid_4 first column">
+                                <label for="deliverMethod">Deliver Method:</label>
+                            </div>
+                            <div class="last column">
+                                <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                                        style="height: 30px;" id="deliverMethod" ng-model="importUsers.deliverMethod"
+                                        ng-selected="user.deliverMethod">
+                                    <option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
+                                    </option>
+
+                                    <option value="EMAIL"
+                                            class="ng-binding ng-scope">Email
+                                    </option>
+
+                                    <option value="SMS"
+                                            class="ng-binding ng-scope">Sms
+                                    </option>
+
+                                    <option value="EMAIL_AND_SMS"
+                                            class="ng-binding ng-scope">Email and sms
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <button class="btn btn-primary" ng-click="reset()">Reset</button>
+                            <input ng-disabled="isNotValid()" type="button" class="btn btn-primary"
+                                   ng-click="create()"
+                                   value="Create">
                         </div>
                     </div>
 
 
-
-
-
-
-
-
-
-                    <div class="ui-sec-tle" ng-show="displayBulkResult('bulk')">
+                    <div class="ui-sec-tle" ng-show="displayResult()">
                         <div class="clearfix">
-                            <h3>Bulk Result</h3>
+                            <h3>Import Result</h3>
                             <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl"
                                     ng-click="open('exportBulk')" style="margin: 5px 0">Export
                             </button>
-                            <uib-progressbar max="max" value="(createdAccountsFinished/bulk.numberOfAccounts)*100"><span
-                                    style="color:white; white-space:nowrap;">{{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</span>
+                            <uib-progressbar max="max" value="(createdAccountsFinished/numberOfAccounts)*100"><span
+                                    style="color:white; white-space:nowrap;">{{createdAccountsFinished}} / {{numberOfAccounts}}</span>
                             </uib-progressbar>
 
                             <div style="position: relative; min-height: 50px;">
@@ -204,4 +221,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

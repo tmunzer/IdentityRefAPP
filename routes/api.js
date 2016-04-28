@@ -5,7 +5,10 @@ var API = require(appRoot + "/bin/aerohive/api/main");
 router.post('/identity/userGroup', function (req, res, next) {
     API.identity.userGroups.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, function (err, result) {
         if (err) res.json({error: err});
-        else res.json(result);
+        else {
+            result.reqId = req.body.reqId;
+            res.json(result);
+        }
     });
 });
 router.get('/identity/credentials', function (req, res, next) {
