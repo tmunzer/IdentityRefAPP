@@ -14,9 +14,9 @@ router.get('/reg', function (req, res) {
             else if (data.hasOwnProperty("data")) {
                 for (var owner in data.data) {
                     console.log(owner);
-                    req.session.ownerId = data[owner].ownerId;
-                    req.session.vpcUrl = data[owner].vpcUrl;
-                    req.session.accessToken = data[owner].accessToken;
+                    req.session.ownerId = data.data[owner].ownerId;
+                    req.session.vpcUrl = data.data[owner].vpcUrl;
+                    req.session.accessToken = data.data[owner].accessToken;
                 }
                 res.redirect('/web-app/');
             }
