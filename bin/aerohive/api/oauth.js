@@ -19,7 +19,7 @@ module.exports.getPermanentToken = function(authCode, redirectUrl, secret, clien
         console.info('HEADERS: ' + JSON.stringify(res.headers));
         res.setEncoding('utf8');
         res.on('data', function (data) {
-            callback(data);
+            callback(JSON.parse(data));
         });
     });
 
