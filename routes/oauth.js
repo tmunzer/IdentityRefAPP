@@ -10,9 +10,12 @@ router.get('/reg', function (req, res) {
     } else if (req.query.hasOwnProperty("authCode")) {
         var authCode = req.query.authCode;
         OAuth.getPermanentToken(authCode, ApiConf.redirectUrl, ApiConf.secret, ApiConf.clientId, function(data){
-            console.log(data);
             if (data.hasOwnProperty("error")) Error.render(data.error, "conf", req, res);
             else if (data.hasOwnProperty("data")) {
+                console.log(data);
+                console.log(typeof data);
+                console.log(data.data);
+                console.log(typeof data.data);
                 data.data.forEach(function (owner) {
                     req.session.ownerId = owner.ownerId;
                     req.session.vpcUrl = owner.vpcUrl;
