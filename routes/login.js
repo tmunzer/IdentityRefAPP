@@ -11,7 +11,7 @@ var ApiConf = require(appRoot + "/bin/aerohive/config");
 router.get('/', function(req, res, next) {
   var errorcode;
   if (req.query.hasOwnProperty('errorcode')) errorcode = req.query["errorcode"];
-  res.render('login', { title: 'Identity' , errorcode: errorcode, client_id: ApiConf.client_id, redirect_uri: ApiConf.redirect_uri });
+  res.render('login', { title: 'Identity' , errorcode: errorcode, client_id: ApiConf.clientId, redirect_uri: ApiConf.redirectUrl });
 });
 router.post('/', function (req, res, next) {
   var ownerIdRegexp = new RegExp("^[0-9]*$");
