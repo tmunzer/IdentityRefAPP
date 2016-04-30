@@ -12,15 +12,12 @@ router.get('/reg', function (req, res) {
         OAuth.getPermanentToken(authCode, ApiConf.redirectUrl, ApiConf.secret, ApiConf.clientId, function(data){
             if (data.hasOwnProperty("error")) Error.render(data.error, "conf", req, res);
             else if (data.hasOwnProperty("data")) {
-                console.log(data);
-                console.log(typeof data);
-                console.log(data.data);
-                console.log(typeof data.data);
-                data.data.forEach(function (owner) {
+                for (var owner in data.data) {
+                    console.log(owner);
                     req.session.ownerId = owner.ownerId;
                     req.session.vpcUrl = owner.vpcUrl;
                     req.session.accessToken = owner.accessToken;
-                });
+                }
                 res.redirect('/web-app/');
             }
         });
