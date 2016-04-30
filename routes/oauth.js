@@ -6,17 +6,22 @@ var Error = require(appRoot + '/routes/error');
 
 router.get('/reg', function (req, res) {
     if (req.query.hasOwnProperty('error')) {
-        console.log("1");
         Error.render(req.query.error, "conf", req, res);
     } else if (req.query.hasOwnProperty("authCode")) {
-        console.log("2");
         var authCode = req.query.authCode;
         OAuth.getPermanentToken(authCode, ApiConf.redirectUrl, ApiConf.secret, ApiConf.clientId, function(data){
             console.log(data);
             if (data.hasOwnProperty("error")) Error.render(data.error, "conf", req, res);
-
+            else if (data.hasOwnProperty("data")) {
+                data.data.forEach(function (owner) {
+                    req.session.ownerId = owner.ownerId;
+                    req.session.vpcUrl = owner.vpcUrl;
+                    req.session.accessToken = owner.accessToken;
+                });
+                res.redirect('/web-app/');
+            }
         });
-    } else console.log("3");
+    } else Error.render("Unknown error", "conf", req, res);
 });
 
 module.exports = router;
