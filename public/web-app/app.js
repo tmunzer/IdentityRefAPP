@@ -41,34 +41,54 @@ identity.factory("userTypesService", function () {
     }
 });
 
-identity.factory("userGroupsService", function ($http) {
+identity.factory("userGroupsService", function ($http, $q) {
     var enableEmailApproval;
-    var userGroups = [];
+    var userGroups;
     var isLoaded = false;
 
-    return {
-        getUserGroups: function (reqId) {
-            userGroups = userGroups.slice(0, 0);
+    function init(){
+        userGroups = [];
+    }
+    init();
 
-            return $http({
+     function getUserGroups() {
+            init();
+
+         var canceller = $q.defer();
+            var request = $http({
                 url: "/api/identity/userGroup",
                 method: "POST",
-                data: {reqId: reqId},
-                option: {cache: true}
-            })
-                .then(function (response) {
-                    if (response.data.error) return response.data;
-                    else {
-                        enableEmailApproval = response.data.enableEmailApproval;
-                        response.data.userGroups.forEach(function (group) {
-                            group["selected"] = false;
-                            userGroups.push(group);
-                        });
-                        isLoaded = true;
-                        return {userGroups: userGroups, reqId: response.data.reqId};
-                    }
-                });
-        },
+                timeout: canceller.promise
+            });
+
+            var promise = request.then(
+                function (response) {
+                if (response.data.error) return response.data;
+                else {
+                    enableEmailApproval = response.data.enableEmailApproval;
+                    response.data.userGroups.forEach(function (group) {
+                        group["selected"] = false;
+                        userGroups.push(group);
+                    });
+                    isLoaded = true;
+                    return {userGroups: userGroups, reqId: response.data.reqId};
+                }
+            });
+
+            promise.abort = function () {
+                canceller.resolve();
+            };
+            promise.finally(function () {
+                console.info("Cleaning up object references.");
+                promise.abort = angular.noop;
+                canceller = request = promise = null;
+            });
+
+            return promise;
+     }
+
+    return {
+        getUserGroups: getUserGroups,
         getEmailApprouval: function () {
             return enableEmailApproval;
         },
@@ -195,7 +215,7 @@ identity.factory("newUser", function ($http, $q) {
 
 identity.factory("deleteUser", function ($http, $q) {
 
-    function deleteCredenetials(ids) {
+    function deleteCredentials(ids) {
 
         var canceller = $q.defer();
         var request = $http({
@@ -229,7 +249,7 @@ identity.factory("deleteUser", function ($http, $q) {
     }
 
     return {
-        deleteCredentials: deleteCredenetials
+        deleteCredentials: deleteCredentials
     }
 });
 
@@ -299,19 +319,20 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
 
 identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
     var requestForCredentials = null;
+    var requestForUserGroups = null;
     var initialized = false;
     $scope.exportFields = exportService.getFields();
     $scope.userTypes = userTypesService.getUserTypes();
     $scope.itemsByPage = 10;
     $scope.selectAllChecked = false;
 
-    var reqId = new Date().getTime();
-    userGroupsService.getUserGroups(reqId).then(function (promise) {
+
+    if (requestForUserGroups) requestForUserGroups.abort();
+    requestForUserGroups = userGroupsService.getUserGroups();
+    requestForUserGroups.then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
-            if (promise.reqId == reqId) {
-                $scope.userGroups = promise.userGroups;
-            }
+            $scope.userGroups = promise.userGroups;
             requestForCredentials = credentialsService.getCredentials();
             requestForCredentials.then(function (promise) {
                 initialized = true;
@@ -406,11 +427,16 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
 });
 
 identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGroupsService, newUser, credentialsService) {
-    var reqId = new Date().getTime();
-    userGroupsService.getUserGroups(reqId).then(function (promise) {
+    var requestForUserGroups = null;
+    var initialized = false;
+
+    if (initialized) requestForUserGroups.abort();
+    requestForUserGroups = userGroupsService.getUserGroups();
+    requestForUserGroups.then(function (promise) {
+        initialized = true;
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
-        else if (reqId == promise.reqId){
-            $scope.userGroups = promise.userGroups;
+        else {
+            $scope.userGroups = angular.copy(promise.userGroups);
         }
     });
 
@@ -670,10 +696,10 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
     $scope.bulkResult = [];
     $scope.bulkError = [];
 
-    var reqId = new Date().getTime();
-    userGroupsService.getUserGroups(reqId).then(function (promise) {
+
+    userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
-        else if (reqId == promise.reqId){
+        else {
             $scope.userGroups = promise.userGroups;
         }
     });

@@ -37,7 +37,7 @@ html
                                                         when "3"
                                                             div Access Token is invalid.
                                             div.login-form
-                                                form(id="test" action="/" method="post")
+                                                form(id="AT" action="/" method="post")
                                                     div.dropdown
                                                         button(id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
                                                             span.init-text(id="server") Select Server
@@ -49,21 +49,24 @@ html
                                                     input(placeholder="Owner ID" required="required" autocorrect="off" autocapitalize="none" name="ownerID" type="text")
                                                     input(placeholder="Access Token" required="required" name="accessToken" type="text")
                                                     input.blue-button(value="See Data" type="submit")
+                                                span='For more information, a Quick Start Guide is available '
+                                                a(href="/howto/" target='_blank') here
 
-                                div.rightColumn.grid_7_2
-                                    div
-                                        h1.font-aaux-thin(style="margin-top: 25px;") You want to see your analytics charts?
+                                div.rightColumn.grid_7_2.leftColumn
+                                    div.front
+                                        h1.font-aaux-thin Access with your <br>HMNG Account?
+                                        div.login-form(style="text-align: center;")
+                                            form(id="OAuth" action="https://cloud.aerohive.com/thirdpartylogin" method="get")
+                                                input(type="hidden" name="client_id" value="2169bae1")
+                                                input(type="hidden" name="redirect_uri" value="https://identity.ah-lab.fr/oauth/reg")
+                                                div(style="margin: 30px;text-align: left;")
+                                                    span You can use the OAuth authentication system to use this application with your HiveMnager NG account.
+                                                div(style="margin: 30px;text-align: left;")
+                                                    span="You can find some information about OAuth on the "
+                                                        a(href="https://en.wikipedia.org/wiki/OAuth" target="_blank") OAuth Wiki page
+                                                    span .
+                                                input.blue-button(value="Go to HMNG Authentication page" type="submit" style="margin: auto;text-align: center;")
 
-                                        span For now, you will have to manually generate an access token on your HiveManager NG account. <br><br>
-                                        span In your HiveManager NG account,
-                                        ul
-                                            li - go to API Token Management
-                                            li - click <b>+</b><br>
-                                            li - Use the Client ID
-                                                span(style="color: #3694D1") <b> 2169bae1</b>
-                                        span='For more information, a Quick Start Guide is available '
-                                        a(href="/howto/" target='_blank') here
-                                        span .
 
 
         script.

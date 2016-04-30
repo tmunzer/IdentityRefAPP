@@ -48,9 +48,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 var routes = require('./routes/login');
 var webapp = require('./routes/web-app');
 var api = require('./routes/api');
+var oauth = require('./routes/oauth');
 app.use('/', routes);
 app.use('/web-app/', webapp);
 app.use('/api/', api);
+app.use('/oauth', oauth);
 
 app.get('/fail', function (req, res, next) {
   setTimeout(function () {
