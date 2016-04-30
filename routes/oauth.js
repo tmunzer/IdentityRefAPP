@@ -12,8 +12,7 @@ router.get('/reg', function (req, res) {
         console.log("2");
         var authCode = req.query.authCode;
         OAuth.getPermanentToken(authCode, ApiConf.redirectUrl, ApiConf.secret, ApiConf.clientId, function(data){
-            console.log(data.error);
-            console.log(typeof data);
+            console.log(data);
             if (data.hasOwnProperty("error")) Error.render(data.error, "conf", req, res);
 
         });
