@@ -14,7 +14,7 @@ router.get('/reg', function (req, res) {
             else if (data.hasOwnProperty("data")) {
                 for (var owner in data.data) {
                     req.session.ownerID = data.data[owner].ownerId;
-                    req.session.vpcUrl = data.data[owner].vpcUrl;
+                    req.session.vpcUrl = data.data[owner].vpcUrl.split("//")[1];
                     req.session.accessToken = data.data[owner].accessToken;
                 }
                 console.log(req.session);
