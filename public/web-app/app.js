@@ -20,7 +20,7 @@ identity.config(function ($routeProvider) {
             controller: "ImportCtrl"
         })
         .otherwise({
-            redirectTo: "/credentials/"
+            redirectTo: "/monitor/"
         })
 });
 
