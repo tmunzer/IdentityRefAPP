@@ -423,3 +423,12 @@ input.invalid,textarea.invalid,select.invalid {
     color:#b94a48;
     border-color:#ee5f5b
 }
+
+/*============================================== /
+/ =================== CUSTOM FA ================ /
+/ ============================================== */
+
+.fa-stack.fa-lg.tm{
+    cursor: default;
+    font-size: small;
+}

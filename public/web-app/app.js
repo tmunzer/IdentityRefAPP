@@ -2,6 +2,10 @@ var identity = angular.module("identity", ["ngRoute", 'ui.bootstrap', 'smart-tab
 
 identity.config(function ($routeProvider) {
     $routeProvider
+        .when("/monitor", {
+            templateUrl: "/web-app/views/monitor.html",
+            controller: "MonitorCtrl"
+        })
         .when("/credentials", {
             templateUrl: "/web-app/views/credentials.html",
             controller: "CredentialsCtrl"
@@ -316,6 +320,68 @@ identity.factory("credentialsService", function ($http, $q, userTypesService, us
     }
 });
 
+identity.factory("monitorService", function ($http, $q, userTypesService, userGroupsService) {
+    var dataLoaded = false;
+
+    function getDevices() {
+        var params = {
+            credentialType: userTypesService.getArrayForRequest(),
+            userGroup: userGroupsService.getArrayForRequest()
+        };
+        dataLoaded = false;
+
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/monitor/devices",
+            method: "GET",
+            params: params,
+            timeout: canceller.promise
+        });
+        var promise = request.then(
+            function (response) {
+                if (response.data.error) return response.data;
+                else {
+                    var credentials = [];
+
+                    response.data.forEach(function (credential) {
+                        credential.groupName = userGroupsService.getUserGroupName(credential.groupId);
+                        credentials.push(credential);
+                    });
+                    dataLoaded = true;
+                    return credentials;
+                }
+            },
+            function (response) {
+                if (response.status >= 0) {
+                    console.log("error");
+                    console.log(response);
+                    return ($q.reject("error"));
+                }
+            });
+
+        promise.abort = function () {
+            canceller.resolve();
+        };
+        promise.finally(function () {
+            console.info("Cleaning up object references.");
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+        });
+
+        return promise;
+    }
+
+
+    return {
+        getDevices: getDevices,
+        isLoaded: function isLoaded() {
+            return dataLoaded;
+        },
+        setIsLoaded: function setIsLoaded(isLoaded) {
+            dataLoaded = isLoaded;
+        }
+    }
+});
 
 identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
     var requestForCredentials = null;
@@ -916,4 +982,123 @@ identity.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
         $uibModalInstance.close('close');
 
     };
+});
+
+
+identity.controller("MonitorCtrl", function($scope, monitorService, userGroupsService, userTypesService){
+    var requestForMonitor = null;
+    var requestForUserGroups = null;
+    var initialized = false;
+    var devices = [];
+    $scope.userTypes = userTypesService.getUserTypes();
+    $scope.itemsByPage = 10;
+    $scope.selectAllChecked = false;
+    $scope.connected = true;
+    $scope.notConnected= false;
+
+
+    if (requestForUserGroups) requestForUserGroups.abort();
+    requestForUserGroups = userGroupsService.getUserGroups();
+    requestForUserGroups.then(function (promise) {
+        if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+        else {
+            $scope.userGroups = promise.userGroups;
+            requestForMonitor = monitorService.getDevices();
+            requestForMonitor.then(function (promise) {
+                initialized = true;
+                if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+                else {
+                    devices = promise;
+                    filterConnectionState();
+                }
+            });
+        }
+    });
+
+    function filterConnectionState(){
+        if ($scope.connected == false && $scope.notConnected == false) {
+            $scope.devices = angular.copy(devices);
+            $scope.devicesMaster = angular.copy(devices);
+        } else {
+            $scope.devices = [];
+            $scope.devicesMaster = [];
+            if ($scope.connected == true){
+                devices.forEach(function(device){
+                    if (device.clients.length > 0) {
+                        $scope.devices.push(device);
+                        $scope.devicesMaster.push(device);
+                    }
+                })
+            }
+            if ($scope.notConnected == true){
+                devices.forEach(function(device){
+                    if (device.clients.length == 0) {
+                        $scope.devices.push(device);
+                        $scope.devicesMaster.push(device);
+                    }
+                })
+            }
+        }
+    }
+
+    $scope.page = function (num) {
+        $scope.itemsByPage = num;
+    };
+    $scope.isCurPage = function (num) {
+        return num === $scope.itemsByPage;
+    };
+
+    $scope.$watch('userTypes', function () {
+        $scope.refresh();
+    }, true);
+    $scope.$watch('userGroups', function () {
+        $scope.refresh();
+    }, true);
+    $scope.$watch("userGroups", function () {
+        $scope.userGroupsLoaded = function () {
+            return userGroupsService.isLoaded();
+        };
+    });
+    $scope.$watch("connected", function() {
+        filterConnectionState();
+    });
+    $scope.$watch("notConnected", function() {
+        filterConnectionState();
+    });
+    $scope.$watch("devices", function () {
+        $scope.monitorLoaded = function () {
+            return monitorService.isLoaded()
+        };
+    });
+    $scope.refresh = function () {
+        if (initialized) {
+            requestForMonitor.abort();
+            requestForMonitor = monitorService.getDevices();
+            requestForMonitor.then(function (promise) {
+                if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+                else {
+                    devices = promise;
+                    filterConnectionState();
+                }
+            });
+        }
+    };
+
+    $scope.userColor = function (user){
+        if (user.clients.length == 0) return "color: #aca5a3";
+        else return "color: #75D064";
+    };
+    $scope.clientColor = function (client){
+        if (client.clientHealth == 100) return "color: #75D064";
+        else if (client.clientHealth >= 50) return "color: rgb(255, 207, 92)";
+        else return "color: #d04d49";
+    };
+    $scope.showClients = function (user){
+        if (user.showClients == true) user.showClients = false;
+        else if (user.clients.length > 0)user.showClients = true;
+    };
+    $scope.clientsLink = function(user){
+        if (user.clients.length > 0) return "color: #0093D1;text-decoration: underline;";
+        else return "";
+    }
 });
