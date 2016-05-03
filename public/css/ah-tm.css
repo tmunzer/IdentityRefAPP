@@ -19,31 +19,7 @@ hr {
 table, th, td {
     border-color: #FFA500;
 }
-/*============================================== /
-/ ==================== HEADER=================== /
-/ ============================================== */
-header {
-    position: fixed;
-    border-bottom: 1px solid #FFA500;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 50px;
-    background-color: #3694D1;
-    z-index: 15;
-}
-header #logo {
-    height: 50px;
-    padding: 10px;
-    position: absolute;
-    left: 5px;
-}
-header #ah-tm {
-    position: absolute;
-    color: #EDAF24;
-    top: 25px;
-    right: 10px;
-}
+
 /*============================================== /
 / ===================== NAV ==================== /
 / ============================================== */
@@ -156,83 +132,6 @@ article.action.console {
     font-weight: normal !important;
 }
 
-/*============================================== /
-/ ================= BREADCRUMB ================= /
-/ ============================================== */
-.breadcrumb-table {
-    width: 95%;
-    padding: 1em 0;
-    margin: 2em auto;
-    font-weight: normal;
-    text-align: center;
-    position: relative;
-}
-.breadcrumb-row {
-    width: 100%;
-    position: relative;
-}
-.breadcrumb-row:after {
-    content: "";
-    z-index: -1;
-    height: 0;
-    top: 68%;
-    position: absolute;
-    border-top: 2px solid #3694D1;
-}
-.breadcrumb-row.firewall:after {
-    width: 66%;
-    left: 17%;
-}
-.breadcrumb-row.depl:after {
-    width: 75%;
-    left: 12%;
-}
-.breadcrumb-row i {
-    position: relative;
-    background-color: #F0F0F4;
-    color: #3694D1;
-}
-.breadcrumb-table.firewall td {
-    width: 33%;
-}
-.breadcrumb-table.depl td {
-    width: 25%;
-}
-/*============================================== /
-/ ================== FIREWALL ================== /
-/ ============================================== */
-.firewall-test-result {
-    text-align: center;
-}
-button.btn {
-    background-color: #3694D1 !important;
-    color: white !important;
-    font-weight: bold !important;
-    border: 0 !important;
-    box-shadow: 0 !important;
-    border-radius: 0 !important;
-    margin: 0 1em;
-    padding: 5px 1em;
-}
-button.btn:hover {
-    background-color: #166EB7 !important;
-}
-
-button.btn.disabled, button.btn.disabled:hover {
-    background-color: #939598 !important;
-}
-label.disabled {
-    color: #939598 !important;
-}
-input.chkbox {
-    margin: 0 1em 0 -2em;
-
-}
-input {
-    border: 1px solid #999!important;
-    line-height: 25px !important;
-    padding: 0 10px !important;
-}
 
 /*============================================== /
 / ================== DROPDOWN ================== /
@@ -446,53 +345,6 @@ input.form-control, span.input-group-addon {
 / ============================================== */
 
 /*============================================== /
-/ ================== UPDATE ================== /
-/ ============================================== */
-
-hr.history {
-    border-color: gray;
-    margin-left: 15em;
-    margin-right: 15em;
-}
-.release-note {
-    width: 80%;
-    margin: auto;
-    padding: 1em;
-    background-color: white;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5) inset !important;
-}
-.cancelDL {
-    color: white;
-}
-.cancelDL-disabled {
-    color: #adadad;
-    pointer-events: none;
-}
-
-.progress {
-    width:75%;
-    border: 1px solid #939598;
-}
-.progress.update {
-    margin: 0 2em;
-    float: left;
-}
-.progress.depl {
-    margin: auto;
-}
-/*============================================== /
-/ ================== LICENSE =================== /
-/ ============================================== */
-.license {
-    width: 90%;
-    padding: 1em;
-    background-color: white;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5) inset !important;
-    font-family: monospace;
-    color: black;
-    margin: 1em auto;
-}
-/*============================================== /
 / ================= lIST-GROUP ================= /
 / ============================================== */
 .list-group {
@@ -539,90 +391,5 @@ hr.history {
     font-size: 0.9em !important;
 }
 
-/*============================================== /
-/ =================== DHCP ===================== /
-/ ============================================== */
-.dhcp-container {
-    margin: auto;
-    display: inline-block;
-}
-.input-group.dhcp {
-    float: left;
-    margin: 0.5em 2em 0.5em 2em;
-    width: 320px;
-    display: inline-table;
-    vertical-align: middle;
-}
-.input-group.dhcp-server{
-    margin-left: 2em;
-}
-.input-group.dhcp-checkbox{
-    width: 100%;
-    margin: 0 0 2em 2em;
-}
-.radio.dhcp{
-    display: inline;
-    margin: 0 0 0 2em;
-}
-.dropdown.dhcp {
-    margin-left: 158px;
-}
-.dropdown.dhcp > button {
-    width: 320px;
-}
-div.dhcp-server>div.dhcp {
-    float: none;
-    margin: 0.5em 0 0.5em 2em;
-}
-span.dropdown.dhcp>ul.dropdown-menu {
-    width: 320px;
-}
-/*============================================== /
-/ =================== FOOTER =================== /
-/ ============================================== */
-footer {
-    bottom: 0;
-    left: 0;
-    position:fixed;
-}
-
-footer a, footer a:-webkit-any-link {
-    position: fixed;
-    left: 0;
-    color: black;
-    padding: 2px;
-    font-size: 0.8em;
-    background-color: #ccc;
-    text-decoration: none;
-}
-
-footer a:hover {
-    background-color: #222222;
-    color: white;
-    text-decoration: none;
-}
-
-footer.console a {
-    bottom: 165px;
-}
-footer.no-console a {
-    bottom: 0;
-}
-#console {
-    position: fixed;
-    left: 0;
-    width: 100%;
-    height: 165px;
-    background-color: rgba(255,255,255,0.95);
-    overflow-y: auto;
-    z-index: 15;
-
-}
-#console.console {
-    bottom: 0;
-}
-#console.no-console {
-    bottom: -165px;
-}
 
 

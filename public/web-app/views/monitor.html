@@ -1,0 +1,218 @@
+<div class="pt-r">
+    <div id="container">
+        <div class="line clearfix">
+            <div class="view-section clearfix">
+                <div class="leftNavIconMain" style="width: 220px; margin-right: 10px; height: 100%; float: left;">
+                    <div class="filterArea leftNavItem show" style="margin-top: 35px">
+                        <div class="filter-panel clearfix">
+                            <div class="filter-con-header">
+                                <div class="filter-con-title" style='width:100%'> Filter By
+                                    <div class="ui-filter-categ">
+
+                                        <h3 class="ui-filter-categ-tle">User Type</h3>
+
+                                        <div class="ui-filter-dtl-area">
+                                            <div class="ui-filter-dtl">
+                                                <ul>
+                                                    <li ng-repeat="userType in userTypes">
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" data-name={{userType.name}}
+                                                                   class="J-check-any" ng-model="userType.selected"
+                                                                   ng-change="change()">
+                                                            <span class="lbl fn-ellipsis" title={{userType.name}}>{{userType.name | userType}}</span>
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <h3 class="ui-filter-categ-tle">Status</h3>
+
+                                        <div class="ui-filter-dtl-area">
+                                            <div class="ui-filter-dtl">
+                                                <ul>
+                                                    <li>
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" data-name="Connected"
+                                                                   class="J-check-any" ng-model="connected"
+                                                                   ng-change="change()">
+                                                            <span class="lbl fn-ellipsis"
+                                                                  title="Connected">Connected</span>
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" data-name="Not Connected"
+                                                                   class="J-check-any" ng-model="notConnected"
+                                                                   ng-change="change()">
+                                                            <span class="lbl fn-ellipsis" title="Not Connected">Not Connected</span>
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <h3 class="ui-filter-categ-tle">User Group</h3>
+
+                                        <div class="ui-filter-dtl-area">
+                                            <div class="ui-filter-dtl">
+                                                <ul ng-class="{'entity-loading': !userGroupsLoaded()}">
+                                                    <li ng-repeat="userGroup in userGroups">
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" data-name={{userGroup.name}}
+                                                                   class="J-check-any" ng-model="userGroup.selected"
+                                                                   ng-change="change()">
+                                                            <span class="lbl fn-ellipsis" title={{userGroup.name}}>{{userGroup.name}}</span>
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-main">
+                    <div class="dashboard-main">
+                        <div class="ui-tle">
+                            <span class="title">Accounts</span>
+
+                            <div class="fn-right ui-icon ui-fresh-icon" ng-click="refresh()"></div>
+                        </div>
+                        <div>
+
+                            <span>Number of accounts: {{devicesMaster.length}}</span>
+                        </div>
+                        <div class="clearfix">
+                            <div style="position: relative; min-height: 150px;">
+                                <div class="dgrid dgrid-grid ui-widget dgrid-autoheight">
+                                    <div class="dgrid-header dgrid-header-row ui-widget dgrid-autoheight" role="grid">
+                                        <table st-safe-src="devicesMaster" st-table="devices"
+                                               class="dgrid-row-table table table-condensed">
+                                            <thead>
+                                            <tr>
+                                                <th class="dgrid-cell dgrid-column-0 dgrid-selector"
+                                                    role="columnheader" style="width: 5%">
+                                                    <div class="dgrid-resize-header-container">
+                                                        <div class="dgrid-resize-header-container">Status</div>
+                                                    </div>
+                                                    <div class="dgrid-resize-handle resizeNode-1"></div>
+                                                </th>
+                                                <th class="dgrid-cell dgrid-column-1 dgrid-selector" st-sort="userName"
+                                                    role="columnheader" style="width: 15%">
+                                                    <div class="dgrid-resize-header-container">UserName</div>
+                                                    <div class="dgrid-resize-handle resizeNode-1"></div>
+                                                </th>
+                                                <th class="dgrid-cell dgrid-column-13 dgrid-selector"
+                                                    role="columnheader" style="width: 15%">
+                                                    <div class="dgrid-resize-header-container">SSIDs</div>
+                                                    <div class="dgrid-resize-handle resizeNode-1"></div>
+                                                </th>
+                                                <th class="dgrid-cell dgrid-column-13 dgrid-selector"
+                                                    role="columnheader" style="width: 65%">
+                                                    <div class="dgrid-resize-header-container">Connected Devices</div>
+                                                    <div class="dgrid-resize-handle resizeNode-1"></div>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="user in devices">
+                                                <td>
+                                                    <div style="text-align: center;">
+                                                    <span class="fa-stack fa-lg tm" uib-tooltip="{{userString(user)}}" tooltip-placement="bottom">
+                                                        <i class="fa fa-circle fa-stack-2x" style="{{userColor(user)}}"></i>
+                                                        <i class="fa fa-wifi fa-stack-1x" style="color: white"></i>
+                                                    </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>{{user.userName}}</div>
+                                                </td>
+                                                <td>
+                                                    <div>{{user.ssids|ssidStringFromArray}}</div>
+                                                </td>
+                                                <td>
+                                                    <div><a ng-click="showClients(user)" style="{{clientsLink(user)}}">{{user.clients.length}} client(s)</a>
+                                                    <table ng-show="user.showClients">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Status</th>
+                                                            <th>HostName</th>
+                                                            <th>MAC Address</th>
+                                                            <th>OS</th>
+                                                            <th>IP Address</th>
+                                                            <th>User Profile</th>
+                                                            <th>VLAN</th>
+                                                            <th>RSSI</th>
+                                                            <th>SNR</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr ng-repeat="cli in user.clients ">
+                                                            <td>
+                                                                <span class="fa-stack fa-lg tm" uib-tooltip-html='clientString(cli)' tooltip-placement="left" tooltip-class="customClass">
+                                                                    <i class="fa fa-circle fa-stack-2x" style="{{clientColor(cli.clientHealth)}}"></i>
+                                                                    <i class="fa fa-wifi fa-stack-1x" style="color: white"></i>
+                                                                </span>
+                                                            </td>
+                                                        <td>{{cli.hostName}}</td>
+                                                        <td>{{cli.clientMac}}</td>
+                                                        <td>{{cli.os}}</td>
+                                                        <td>{{cli.ip}}</td>
+                                                        <td>{{cli.userProfile}}</td>
+                                                        <td>{{cli.vlan}}</td>
+                                                        <td>{{cli.rssi}}</td>
+                                                        <td>{{cli.snr}}</td>
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="12" class="text-center">
+                                                    <div class="ui-grid-bottom clearfix">
+                                                        <div class="ui-grid-bottom-left fn-left">
+                                                            <a clas="J-page-size ui-page-size"
+                                                               ng-class="{'ui-page-size-cur': isCurPage(10)}"
+                                                               ng-click="page(10)">10</a>
+                                                            <a clas="J-page-size ui-page-size"
+                                                               ng-class="{'ui-page-size-cur': isCurPage(20)}"
+                                                               ng-click="page(20)">20</a>
+                                                            <a clas="J-page-size ui-page-size"
+                                                               ng-class="{'ui-page-size-cur': isCurPage(50)}"
+                                                               ng-click="page(50)">50</a>
+                                                            <a clas="J-page-size ui-page-size"
+                                                               ng-class="{'ui-page-size-cur': isCurPage(100)}"
+                                                               ng-click="page(100)">100</a>
+                                                        </div>
+                                                        <div class="ui-grid-bottom-right fn-right">
+                                                            <div st-pagination="" st-items-by-page="itemsByPage"
+                                                                 st-displayed-pages="7"
+                                                                 st-template="views/customPagination.html"></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <div class="grid-mark"
+                                         ng-style="monitorLoaded() === true && {'display': 'none'}"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

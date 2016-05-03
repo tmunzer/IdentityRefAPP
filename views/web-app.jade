@@ -6,14 +6,14 @@ html
         link(rel='stylesheet' href='/css/ah-styles.min.css')
         link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
         link(rel='stylesheet' href='/css/borderContainer.css')
-        link(rel='stylesheet' href='/js/bootstrap.min.js')
-        script(src="/web-app/angular.js")
-        script(src="/web-app/smart-table.js")
-        script(src="/web-app/angular-route.js")
-        script(src="/web-app/ui-bootstrap.js")
+        link(rel='stylesheet' href='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+        script(src="/bower_components/angular/angular.min.js")
+        script(src="/bower_components/angular-smart-table/dist/smart-table.min.js")
+        script(src="/bower_components/angular-route/angular-route.min.js")
+        script(src="/bower_components/angular-bootstrap/ui-bootstrap.min.js")
         script(src="/web-app/app.js")
         script(src="/web-app/ng-sanitize.js")
-        script(src="/web-app/ng-csv.js")
+        script(src="/bower_components/ng-csv/build/ng-csv.min.js")
         block include
 
     body.claro.fullaccess(ng-app="identity")
@@ -44,6 +44,8 @@ html
                     ul.head-nav
                 div.login-area
                     ul.head-nav
+                        li(class = "nav-item" ng-class="{cur: nav.isActive('monitor')}")
+                            a.nav-dashboard(href="#/monitor/") Monitor
                         li(class = "nav-item" ng-class="{cur: nav.isActive('credentials')}")
                             a.nav-dashboard(href="#/credentials/") Credentials
                         li(class = "nav-item" ng-class="{cur: nav.isActive('create')}")

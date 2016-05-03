@@ -3,7 +3,7 @@ var api = require(appRoot + "/bin/aerohive/api/req");
 
 module.exports.GET = function (vpcUrl, accessToken, ownerId, callback) {
 
-    var path = '/xapi/v1/monitor/devices?ownerId=' + ownerId;
+    var path = '/xapi/v1/monitor/clients?ownerId=' + ownerId;
 
     // send the API request
     api.GET(vpcUrl, accessToken, path, function (err, result) {

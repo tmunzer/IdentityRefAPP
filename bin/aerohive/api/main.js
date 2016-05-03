@@ -2,13 +2,16 @@
 
 module.exports.configuration = {
     location: {
-        GET: require(appRoot + "/bin/aerohive/api/configuration/location").GET
+        GET: require(appRoot + "/bin/aerohive/api/configuration/location/location").GET
     }
 };
 
 module.exports.monitor = {
     device: {
         GET: require(appRoot + "/bin/aerohive/api/monitor/device").GET
+    },
+    client: {
+        GET: require(appRoot + "/bin/aerohive/api/monitor/client").GET
     }
 };
 
