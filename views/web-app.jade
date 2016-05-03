@@ -2,21 +2,26 @@ doctype html5
 html
     head
         title= title
+        link(rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.css')
         link(rel='stylesheet' href='/css/font-awesome.min.css')
-        link(rel='stylesheet' href='/css/ah-styles.min.css')
         link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
-        link(rel='stylesheet' href='/css/borderContainer.css')
-        link(rel='stylesheet' href='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+        link(rel='stylesheet' href='/css/ah-tm.input.css')
+        link(rel='stylesheet' href='/css/ah-tm.dropdown.css')
+        link(rel='stylesheet' href='/css/ah-tm.sizes.css')
+        link(rel='stylesheet' href='/css/ah-tm.tags.css')
+        link(rel='stylesheet' href='/css/ah-tm.table.css')
+        link(rel='stylesheet' href='/css/ah-tm.header.css')
         script(src="/bower_components/angular/angular.min.js")
+        script(src="/bower_components/angular-animate/angular-animate.min.js")
         script(src="/bower_components/angular-smart-table/dist/smart-table.min.js")
         script(src="/bower_components/angular-route/angular-route.min.js")
-        script(src="/bower_components/angular-bootstrap/ui-bootstrap.min.js")
+        script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
         script(src="/web-app/app.js")
         script(src="/web-app/ng-sanitize.js")
         script(src="/bower_components/ng-csv/build/ng-csv.min.js")
         block include
 
-    body.claro.fullaccess(ng-app="identity")
+    body(ng-app="identity")
         div.modal.fade.bs-example-modal-lg(ng-controller="ModalCtrl")
             script(type="text/ng-template" id="modalAboutContent.html")
                 div.modal-header
@@ -36,41 +41,34 @@ html
                 div.modal-footer
                     a(class="btn btn-primary" ng-click="close()") Close
 
-        div.header(id="header" ng-controller="HeaderCtrl")
+        header(ng-controller="HeaderCtrl")
             div.head-inner
                 h1.logo
-                    img.app-logo(src="/images/logo_nav.png" alt="Aerohive")
-                div.login-area(id="appHeader")
+                    img(src="/images/logo_nav.png" alt="Aerohive")
+                div.head-button
                     ul.head-nav
-                div.login-area
-                    ul.head-nav
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('monitor')}")
-                            a.nav-dashboard(href="#/monitor/") Monitor
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('credentials')}")
-                            a.nav-dashboard(href="#/credentials/") Credentials
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('create')}")
-                            a.nav-dashboard(href="#/create/single") Create
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('import')}")
-                            a.nav-dashboard(href="#/import/") Import
-                    div.head-options.hdrOptions
-                         div.ah-navsprite-icons.ah-navsprite-user
-                            div.head-sta-item.sta-user.hdrUser
-                                div.sta-item-con
-                                    div.sta-item-con-arrow
-                                    ul.user-list
-                                        li.user-list-item-first(ng-controller="ModalCtrl" ng-click="open('about')") Account Details
-                                        li
-                                            a(href="/logout/") Logout
-                                span.sta-item-bridge
-            div.head-bottom
-                div.sub-tabs
-                    ul.sub-create(ng-show="nav.isActive('create')")
-                        li(ng-class="{cur: subnav.isActive('single')}")
-                            a(href="#/create/single") Single Account
-                            span.arrow
-                        li(ng-class="{cur: subnav.isActive('bulk')}")
-                            a(href="#/create/bulk") Bulk Accounts
-                            span.arrow
+                        li(ng-class="{cur: nav.isActive('monitor')}")
+                            a(href="#/monitor/")
+                                i.fa.fa-signal.fa-lg
+                                span Monitor
+                        li(ng-class="{cur: nav.isActive('credentials')}")
+                            a(href="#/credentials/")
+                                i.fa.fa-database.fa-lg
+                                span Credentials
+                        li(ng-class="{cur: nav.isActive('create')}")
+                            a(href="#/create/single")
+                                i.fa.fa-plus.fa-lg
+                                span Create
+                        li(ng-class="{cur: nav.isActive('import')}")
+                            a(href="#/import/")
+                                i.fa.fa-download.fa-lg
+                                span Import
+                div.head-button.hdrOptions
+                    ul.user-list
+                        li.user-list-item-first(ng-controller="ModalCtrl" ng-click="open('about')") Account Details
+                        li
+                            a(href="/logout/") Logout
+
 
         div.clearfix(id="main")
             ng-view

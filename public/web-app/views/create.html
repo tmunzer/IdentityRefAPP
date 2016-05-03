@@ -1,9 +1,22 @@
-<div class="pt-r">
-    <div id="container">
-        <div class="line clearfix">
-            <div class="view-section clearfix">
-                <div class="dashboard-main" style="margin: auto; float: none">
-                    <div class="ui-sec-tle">
+<nav>
+    <div class="top-button" style="top:2px">
+        <button>
+            <a href="#/create/single">
+            <i class="fa fa-user"></i>
+            <span>Single</span>
+            </a>
+        </button>
+        <button>
+            <a href="#/create/bulk">
+                <i class="fa fa-users"></i>
+                <span>Bulk</span>
+            </a>
+        </button>
+    </div>
+</nav>
+<section>
+    <article>
+
                         <h3>User Group</h3>
 
                         <div class="ui-filter-dtl-area">
@@ -22,9 +35,8 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="ui-sec-tle" ng-show="displayUserDetails('single')">
+</article>
+                    <article class="ui-sec-tle" ng-show="displayUserDetails('single')">
                         <h3>User Details</h3>
 
                         <div class="line clearfix">
@@ -151,12 +163,10 @@
                                    ng-click="save('single')"
                                    value="Save">
                         </div>
-                    </div>
-                </div>
+                    </article>
 
-            </div>
 
-            <div class="ui-sec-tle" ng-show="displayUserDetails('bulk')">
+            <article class="ui-sec-tle" ng-show="displayUserDetails('bulk')">
                 <div class="line clearfix ng-scope">
                     <div class="grid_4 first column">
                         <label for="prefix" class="ng-binding">Prefix:</label>
@@ -206,8 +216,8 @@
                            ng-click="save('bulk')"
                            value="Save">
                 </div>
-            </div>
-            <div class="ui-sec-tle" ng-show="displayBulkResult('bulk')">
+            </article>
+            <article class="ui-sec-tle" ng-show="displayBulkResult('bulk')">
                 <div class="clearfix">
                     <h3>Bulk Result</h3>
                     <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl" ng-click="open('exportBulk')" style="margin: 5px 0">Export</button>
@@ -244,7 +254,9 @@
                     <h3>Bulk Errors</h3>
                     <div ng-repeat="error in bulkError">{{error}}</div>
                 </div>
-            </div>
+            </article>
         </div>
     </div>
 </div>
+    </article>
+</section>
