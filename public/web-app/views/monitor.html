@@ -123,7 +123,7 @@
                                             <tr ng-repeat="user in devices">
                                                 <td>
                                                     <div style="text-align: center;">
-                                                    <span class="fa-stack fa-lg tm" title="{{user.userName}} is currently not connected">
+                                                    <span class="fa-stack fa-lg tm" uib-tooltip="{{userString(user)}}" tooltip-placement="bottom">
                                                         <i class="fa fa-circle fa-stack-2x" style="{{userColor(user)}}"></i>
                                                         <i class="fa fa-wifi fa-stack-1x" style="color: white"></i>
                                                     </span>
@@ -154,8 +154,8 @@
                                                         <tbody>
                                                         <tr ng-repeat="cli in user.clients ">
                                                             <td>
-                                                                <span class="fa-stack fa-lg tm" title="{{cli.hostName}} is currently connected">
-                                                                    <i class="fa fa-circle fa-stack-2x" style="{{clientColor(cli)}}"></i>
+                                                                <span class="fa-stack fa-lg tm" uib-tooltip-html='clientString(cli)' tooltip-placement="left" tooltip-class="customClass">
+                                                                    <i class="fa fa-circle fa-stack-2x" style="{{clientColor(cli.clientHealth)}}"></i>
                                                                     <i class="fa fa-wifi fa-stack-1x" style="color: white"></i>
                                                                 </span>
                                                             </td>

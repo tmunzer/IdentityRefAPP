@@ -50,23 +50,24 @@ identity.factory("userGroupsService", function ($http, $q) {
     var userGroups;
     var isLoaded = false;
 
-    function init(){
+    function init() {
         userGroups = [];
     }
+
     init();
 
-     function getUserGroups() {
-            init();
+    function getUserGroups() {
+        init();
 
-         var canceller = $q.defer();
-            var request = $http({
-                url: "/api/identity/userGroup",
-                method: "POST",
-                timeout: canceller.promise
-            });
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/identity/userGroup",
+            method: "POST",
+            timeout: canceller.promise
+        });
 
-            var promise = request.then(
-                function (response) {
+        var promise = request.then(
+            function (response) {
                 if (response.data.error) return response.data;
                 else {
                     enableEmailApproval = response.data.enableEmailApproval;
@@ -79,17 +80,17 @@ identity.factory("userGroupsService", function ($http, $q) {
                 }
             });
 
-            promise.abort = function () {
-                canceller.resolve();
-            };
-            promise.finally(function () {
-                console.info("Cleaning up object references.");
-                promise.abort = angular.noop;
-                canceller = request = promise = null;
-            });
+        promise.abort = function () {
+            canceller.resolve();
+        };
+        promise.finally(function () {
+            console.info("Cleaning up object references.");
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+        });
 
-            return promise;
-     }
+        return promise;
+    }
 
     return {
         getUserGroups: getUserGroups,
@@ -813,11 +814,11 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
                     console.log($scope.csvHeader);
                     var o = val.split(delimiter);
                     $scope.csvRows.push(o);
-                    $scope.numberOfAccounts ++;
+                    $scope.numberOfAccounts++;
                     if ($scope.fields.length == 0) {
-                        for (var i = 0; i < o.length; i++){
-                            $scope.csvHeader.push("Field "+i);
-                            $scope.fields.push("Field "+i);
+                        for (var i = 0; i < o.length; i++) {
+                            $scope.csvHeader.push("Field " + i);
+                            $scope.fields.push("Field " + i);
                         }
                         console.log($scope.csvHeader);
                     }
@@ -827,17 +828,18 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
         }
 
     }
-    $scope.reset = function(){
+
+    $scope.reset = function () {
         $scope.importUsers = angular.copy(masterImportUsers);
     };
-    $scope.isNotValid = function(){
-        if ($scope.importUsers.email =="" && $scope.importUsers.phone == "") return true;
+    $scope.isNotValid = function () {
+        if ($scope.importUsers.email == "" && $scope.importUsers.phone == "") return true;
         if ($scope.importUsers.deliverMethod == "EMAIL" && $scope.importUsers.email == "") return true;
         else if ($scope.importUsers.deliverMethod == "SMS" && $scope.importUsers.phone == "") return true;
-        else if ($scope.importUsers.deliverMethod== "EMAIL_AND_SMS" && ($scope.importUsers.email == "" || $scope.importUsers.phone == "")) return true;
+        else if ($scope.importUsers.deliverMethod == "EMAIL_AND_SMS" && ($scope.importUsers.email == "" || $scope.importUsers.phone == "")) return true;
         else return false;
     };
-    $scope.create = function(){
+    $scope.create = function () {
         $scope.result = true;
         var requestForCredentials = credentialsService.getCredentials();
         requestForCredentials.then(function (promise) {
@@ -850,7 +852,7 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
                 var currentAccount = 1;
                 var stringAccount = "";
                 var alreadyExists;
-                $scope.csvRows.forEach(function(row) {
+                $scope.csvRows.forEach(function (row) {
                     alreadyExists = false;
                     user = {
                         email: "",
@@ -912,7 +914,6 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
         }
     };
 });
-
 
 
 identity.controller('ModalCtrl', function ($scope, $uibModal) {
@@ -985,7 +986,7 @@ identity.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
 });
 
 
-identity.controller("MonitorCtrl", function($scope, monitorService, userGroupsService, userTypesService){
+identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsService, userTypesService) {
     var requestForMonitor = null;
     var requestForUserGroups = null;
     var initialized = false;
@@ -994,7 +995,7 @@ identity.controller("MonitorCtrl", function($scope, monitorService, userGroupsSe
     $scope.itemsByPage = 10;
     $scope.selectAllChecked = false;
     $scope.connected = true;
-    $scope.notConnected= false;
+    $scope.notConnected = false;
 
 
     if (requestForUserGroups) requestForUserGroups.abort();
@@ -1015,23 +1016,23 @@ identity.controller("MonitorCtrl", function($scope, monitorService, userGroupsSe
         }
     });
 
-    function filterConnectionState(){
+    function filterConnectionState() {
         if ($scope.connected == false && $scope.notConnected == false) {
             $scope.devices = angular.copy(devices);
             $scope.devicesMaster = angular.copy(devices);
         } else {
             $scope.devices = [];
             $scope.devicesMaster = [];
-            if ($scope.connected == true){
-                devices.forEach(function(device){
+            if ($scope.connected == true) {
+                devices.forEach(function (device) {
                     if (device.clients.length > 0) {
                         $scope.devices.push(device);
                         $scope.devicesMaster.push(device);
                     }
                 })
             }
-            if ($scope.notConnected == true){
-                devices.forEach(function(device){
+            if ($scope.notConnected == true) {
+                devices.forEach(function (device) {
                     if (device.clients.length == 0) {
                         $scope.devices.push(device);
                         $scope.devicesMaster.push(device);
@@ -1059,10 +1060,10 @@ identity.controller("MonitorCtrl", function($scope, monitorService, userGroupsSe
             return userGroupsService.isLoaded();
         };
     });
-    $scope.$watch("connected", function() {
+    $scope.$watch("connected", function () {
         filterConnectionState();
     });
-    $scope.$watch("notConnected", function() {
+    $scope.$watch("notConnected", function () {
         filterConnectionState();
     });
     $scope.$watch("devices", function () {
@@ -1083,21 +1084,37 @@ identity.controller("MonitorCtrl", function($scope, monitorService, userGroupsSe
             });
         }
     };
-
-    $scope.userColor = function (user){
+    $scope.userString = function (user) {
+        if (user.clients.length == 0) return user.userName + " is currently not connected.";
+        else return user.userName + " is currently connected.";
+    };
+    $scope.userColor = function (user) {
         if (user.clients.length == 0) return "color: #aca5a3";
         else return "color: #75D064";
     };
-    $scope.clientColor = function (client){
-        if (client.clientHealth == 100) return "color: #75D064";
-        else if (client.clientHealth >= 50) return "color: rgb(255, 207, 92)";
+    $scope.clientString = function (client) {
+        return '<div style="text-align: left">' + client.hostName + " is currently connected <br>" +
+            "Health: " + client.clientHealth + '<br>' +
+            'Application Health: <span class="' + $scope.clientStringColorClass(client.applicationHealth) + '">' + client.applicationHealth + '</span><br>' +
+            'Network Health: <span class="' + $scope.clientStringColorClass(client.networkHealth) + '">' + client.networkHealth + '</span><br>' +
+            'Radio Health: <span class="' + $scope.clientStringColorClass(client.radioHealth) + '">' + client.radioHealth + '</span>' +
+            '</div>';
+    };
+    $scope.clientStringColorClass = function(score){
+        if (score == 100) return "green";
+        else if (score >= 50) return "yellow";
+        else return "red";
+    };
+    $scope.clientColor = function (healthScore) {
+        if (healthScore == 100) return "color: #75D064";
+        else if (healthScore >= 50) return "color: #FFCF5C";
         else return "color: #d04d49";
     };
-    $scope.showClients = function (user){
+    $scope.showClients = function (user) {
         if (user.showClients == true) user.showClients = false;
         else if (user.clients.length > 0)user.showClients = true;
     };
-    $scope.clientsLink = function(user){
+    $scope.clientsLink = function (user) {
         if (user.clients.length > 0) return "color: #0093D1;text-decoration: underline;";
         else return "";
     }

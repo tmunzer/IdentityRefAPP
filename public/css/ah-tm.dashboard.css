@@ -432,3 +432,17 @@ input.invalid,textarea.invalid,select.invalid {
     cursor: default;
     font-size: small;
 }
+
+.tooltip.customClass .tooltip-inner {
+    text-align: left;
+}
+
+.tooltip.customClass .green {
+    color: #75D064;
+}
+.tooltip.customClass .yellow {
+    color: #FFCF5C;
+}
+.tooltip.customClass .red {
+    color: #d04d49;
+}
