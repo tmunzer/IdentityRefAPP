@@ -104,3 +104,21 @@
 .input_10 {
     width:568px
 }
+
+
+.grid_50p {
+    width: 50%;
+    min-width: 400px;
+    padding: 10px;
+    margin: 0 auto;
+}
+.grid_100p {
+    width: 100%;
+    min-width: 700px;
+    padding: 10px;
+    margin: 0 auto;
+}
+.grid {
+    padding: 10px;
+    margin: 0 auto;
+}

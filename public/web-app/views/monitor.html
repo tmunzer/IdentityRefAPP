@@ -7,15 +7,16 @@
 
 <div class="main-container">
     <aside>
-        <article>
-            <div class="filter-con-title" style='width:100%'>
+        <article class="grid">
+            <div class="inside">
+            <div style='width:100%'>
                 <div class="title">Filter By
                 </div>
-                <div class="ui-filter-categ">
+                <div>
 
-                    <h3 class="ui-filter-categ-tle">User Type</h3>
+                    <h3>User Type</h3>
 
-                    <div class="ui-filter-dtl-area">
+                    <div>
                         <ul>
                             <li ng-repeat="userType in userTypes">
                                 <label class="checkbox">
@@ -28,9 +29,9 @@
                         </ul>
                     </div>
 
-                    <h3 class="ui-filter-categ-tle">Status</h3>
+                    <h3>Status</h3>
 
-                    <div class="ui-filter-dtl-area">
+                    <div>
                         <ul>
                             <li>
                                 <label class="checkbox">
@@ -52,11 +53,11 @@
                         </ul>
                     </div>
 
-                    <h3 class="ui-filter-categ-tle">User Group</h3>
+                    <h3>User Group</h3>
 
-                    <div class="ui-filter-dtl-area">
+                    <div>
                         <ul ng-class="{'entity-loading': !userGroupsLoaded()}">
-                            <li ng-repeat="userGroup in userGroups">
+                            <li ng-repeat="userGroup in userGroups | orderBy:'name'">
                                 <label class="checkbox">
                                     <input type="checkbox" data-name={{userGroup.name}}
                                            class="J-check-any" ng-model="userGroup.selected"
@@ -69,10 +70,12 @@
 
                 </div>
             </div>
+            </div>
         </article>
     </aside>
     <section class="right">
-        <article>
+        <article class="grid_100p">
+            <div class="inside">
             <div class="ui-tle">
                 <div class="title">
                 <span>Number of accounts: {{devicesMaster.length}}</span>
@@ -81,7 +84,7 @@
             <div class="clearfix">
                 <div style="position: relative; min-height: 150px;">
                         <div>
-                            <table st-safe-src="devicesMaster" st-table="devices" class="dgrid-row-table table table-condensed">
+                            <table st-safe-src="devicesMaster" st-search="userName" st-table="devices" class="dgrid-row-table table table-condensed">
                                 <thead>
                                 <tr>
                                     <th class="dgrid-cell dgrid-column-0 dgrid-selector" role="columnheader" style="width: 5%">
@@ -105,6 +108,9 @@
                                         <div class="dgrid-resize-header-container">Connected Devices</div>
                                         <div class="dgrid-resize-handle resizeNode-1"></div>
                                     </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4"><input st-search="" class="form-control" placeholder="Search for a User..." type="text"/></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -168,15 +174,26 @@
                                 <tr>
                                     <td colspan="12" class="text-center">
                                         <div class="ui-grid-bottom clearfix">
-                                            <div class="ui-grid-bottom-left fn-left">
-                                                <a clas="J-page-size ui-page-size" ng-class="{'ui-page-size-cur': isCurPage(10)}" ng-click="page(10)">10</a>
-                                                <a clas="J-page-size ui-page-size" ng-class="{'ui-page-size-cur': isCurPage(20)}" ng-click="page(20)">20</a>
-                                                <a clas="J-page-size ui-page-size" ng-class="{'ui-page-size-cur': isCurPage(50)}" ng-click="page(50)">50</a>
-                                                <a clas="J-page-size ui-page-size" ng-class="{'ui-page-size-cur': isCurPage(100)}" ng-click="page(100)">100</a>
+                                            <div class="fn-left">
+                                                <ul class="pagination ui-grid-pages">
+                                                    <li ng-class="{'cur': isCurPage(10)}">
+                                                        <a ng-click="page(10)">10</a>
+                                                    </li>
+                                                    <li ng-class="{'cur': isCurPage(20)}">
+                                                        <a ng-click="page(20)">20</a>
+                                                    </li>
+                                                    <li ng-class="{'cur': isCurPage(50)}">
+                                                        <a ng-click="page(50)">50</a>
+                                                    </li>
+                                                    <li ng-class="{'cur': isCurPage(100)}">
+                                                        <a ng-click="page(100)">100</a>
+                                                    </li>
+                                                </ul>
                                             </div>
-                                            <div class="ui-grid-bottom-right fn-right">
-                                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7" st-template="views/customPagination.html"></div>
-                                            </div>
+                                            <div st-pagination="" st-items-by-page="itemsByPage"
+                                                 st-displayed-pages="7"
+                                                 st-template="views/customPagination.html"></div>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -186,7 +203,7 @@
                         <div class="grid-mark" ng-style="monitorLoaded() === true && {'display': 'none'}"></div>
                 </div>
             </div>
-
+            </div>
         </article>
     </section>
 </div>

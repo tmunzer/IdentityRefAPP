@@ -182,7 +182,7 @@ html,body {
 }
 
 .LoginPage input, .LoginPage button {
-    height: 50px;
+    height: 50px !important;
 }
 .LoginPage input {
     border-color: #e9e9e9;

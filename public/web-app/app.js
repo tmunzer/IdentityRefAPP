@@ -542,7 +542,8 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
     };
 
     $scope.displayUserDetails = function (path) {
-        return !!((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0);
+        //return !!((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0);
+        return !!((path === $location.path().toString().split("/")[2]));
     };
 
     $scope.displayBulkResult = function () {
@@ -583,7 +584,12 @@ identity.controller("NewCtrl", function ($scope, $rootScope, $location, userGrou
     });
 
     $scope.isNotValid = function (creationType) {
-        if (creationType === "single") return !($scope.username.email || $scope.username.phone);
+        if (creationType === "single") {
+            if ($scope.user.deliverMethod == "EMAIL") return $scope.user.email == "";
+            if ($scope.user.deliverMethod == "SMS") return $scope.user.phone == "";
+            if ($scope.user.deliverMethod == "EMAIL_AND_SMS") return ($scope.user.email == "" && $scope.user.phone == "");
+            else return ($scope.user.email == "" && $scope.user.phone == "");
+        }
         else if (creationType === "bulk") {
             return (
             $scope.bulk.prefixIsNotValid ||
@@ -866,7 +872,10 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
                     user.organization = row[$scope.importUsers.organization];
                     console.log(user);
                     credentials.forEach(function (credential) {
-                        if (credential.userName === user.email || credential.userName === user.phone) alreadyExists = true;
+                        if (credential.userName === user.email || credential.userName === user.phone) {
+                            alreadyExists = true;
+                            $scope.bulkError.push(credential.userName + " already exists");
+                        }
                     });
                     if (!alreadyExists) {
                         createdAccountsInitiated++;
