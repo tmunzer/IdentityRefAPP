@@ -925,74 +925,6 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
 });
 
 
-identity.controller('ModalCtrl', function ($scope, $uibModal) {
-
-    $scope.animationsEnabled = true;
-    $scope.$on('apiError', function (event, apiError) {
-        $scope.apiErrorStatus = apiError.status;
-        $scope.apiErrorMessage = apiError.message;
-        $scope.apiErrorCode = apiError.code;
-        var modalTemplateUrl = 'views/modalErrorContent.html';
-        displayModel(modalTemplateUrl);
-
-    });
-    $scope.$on('apiWarning', function (event, apiWarning) {
-        $scope.apiErrorStatus = apiWarning.status;
-        $scope.apiErrorMessage = apiWarning.message;
-        $scope.apiErrorCode = apiWarning.code;
-        var modalTemplateUrl = 'views/modalWarningContent.html';
-        displayModel(modalTemplateUrl);
-
-    });
-    $scope.$on('newSingle', function (event, account) {
-        $scope.loginName = account.loginName;
-        $scope.password = account.password;
-        $scope.ssid = account.ssid;
-        $scope.startTime = account.startTime;
-        $scope.endTime = account.endTime;
-        $scope.authType = account.authType;
-        var modalTemplateUrl = 'views/modalSingleContent.html';
-        displayModel(modalTemplateUrl);
-
-    });
-    $scope.open = function (template, size) {
-        var modalTemplateUrl = "";
-        switch (template) {
-            case 'about':
-                modalTemplateUrl = 'modalAboutContent.html';
-                break;
-            case 'export':
-                modalTemplateUrl = 'views/modalExportContent.html';
-                break;
-            case 'exportBulk':
-                modalTemplateUrl = 'views/modalBulkContent.html';
-                break;
-        }
-        displayModel(modalTemplateUrl, size);
-
-    };
-    function displayModel(modalTemplateUrl, size) {
-        var modalInstance = $uibModal.open({
-            animation: $scope.animationsEnabled,
-            templateUrl: modalTemplateUrl,
-            controller: 'ModalInstanceCtrl',
-            scope: $scope,
-            size: size
-        });
-    }
-
-});
-
-// Please note that $uibModalInstance represents a modal window (instance) dependency.
-// It is not the same as the $uibModal service used above.
-
-identity.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
-
-    $scope.close = function () {
-        $uibModalInstance.close('close');
-
-    };
-});
 
 
 identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsService, userTypesService) {
@@ -1010,7 +942,10 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
     if (requestForUserGroups) requestForUserGroups.abort();
     requestForUserGroups = userGroupsService.getUserGroups();
     requestForUserGroups.then(function (promise) {
-        if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
+        if (promise && promise.error) {
+            console.log(promise);
+            $scope.$broadcast("apiError", promise.error);
+        }
         else {
             $scope.userGroups = promise.userGroups;
             requestForMonitor = monitorService.getDevices();
@@ -1127,4 +1062,75 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
         if (user.clients.length > 0) return "color: #0093D1;text-decoration: underline;";
         else return "";
     }
+});
+
+
+
+identity.controller('ModalCtrl', function ($scope, $uibModal) {
+    $scope.animationsEnabled = true;
+    $scope.$on('apiError', function (event, apiError) {
+        console.log("test");
+        $scope.apiErrorStatus = apiError.status;
+        $scope.apiErrorMessage = apiError.message;
+        $scope.apiErrorCode = apiError.code;
+        var modalTemplateUrl = 'views/modalErrorContent.html';
+        displayModel(modalTemplateUrl);
+
+    });
+    $scope.$on('apiWarning', function (event, apiWarning) {
+        $scope.apiErrorStatus = apiWarning.status;
+        $scope.apiErrorMessage = apiWarning.message;
+        $scope.apiErrorCode = apiWarning.code;
+        var modalTemplateUrl = 'views/modalWarningContent.html';
+        displayModel(modalTemplateUrl);
+
+    });
+    $scope.$on('newSingle', function (event, account) {
+        $scope.loginName = account.loginName;
+        $scope.password = account.password;
+        $scope.ssid = account.ssid;
+        $scope.startTime = account.startTime;
+        $scope.endTime = account.endTime;
+        $scope.authType = account.authType;
+        var modalTemplateUrl = 'views/modalSingleContent.html';
+        displayModel(modalTemplateUrl);
+
+    });
+    $scope.open = function (template, size) {
+        var modalTemplateUrl = "";
+        switch (template) {
+            case 'about':
+                modalTemplateUrl = 'modalAboutContent.html';
+                break;
+            case 'export':
+                modalTemplateUrl = 'views/modalExportContent.html';
+                break;
+            case 'exportBulk':
+                modalTemplateUrl = 'views/modalBulkContent.html';
+                break;
+        }
+        displayModel(modalTemplateUrl, size);
+
+    };
+    function displayModel(modalTemplateUrl, size) {
+        var modalInstance = $uibModal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: modalTemplateUrl,
+            controller: 'ModalInstanceCtrl',
+            scope: $scope,
+            size: size
+        });
+    }
+
+});
+
+// Please note that $uibModalInstance represents a modal window (instance) dependency.
+// It is not the same as the $uibModal service used above.
+
+identity.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
+
+    $scope.close = function () {
+        $uibModalInstance.close('close');
+
+    };
 });

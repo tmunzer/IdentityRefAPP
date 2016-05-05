@@ -53,6 +53,7 @@ html,body {
     color: #666766;
     margin-bottom: 54px;
     line-height: 44px;
+    text-align: center;
 }
 .LoginPage input[type='text'] {
     color: #2C3E50 !important;
@@ -89,12 +90,6 @@ html,body {
     color:    #2C3E50 !important;
 }
 
-.LoginPage .leftColumn h1 {
-    margin-left: 38px;
-    margin-bottom: 58px;
-    margin-top: 30px;
-}
-
 .init-text {
     float: left;
 }
@@ -111,50 +106,6 @@ html,body {
     height:470px
 }
 
-
-
-.box-flip .front {
-    -webkit-transform: translateZ(10px);
-    -moz-transform: translateZ(10px);
-    transform: translateZ(10px);
-}
-.box-flip .front, .box-flip .back {
-    -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-.flip-position {
-    position: absolute;
-    top: 0;
-    width: 534px;
-    left: -216px;
-}
-.flip-position {
-    position: absolute;
-    top: 0;
-    width: 534px;
-    left: -216px;
-}
-.LoginPage .leftColumn {
-    float: left;
-    height: 100%;
-}
-.box-flip {
-    position: absolute;
-    left: 216px;
-    -webkit-transform-origin: 55px;
-    -moz-transform-origin: 55px;
-    transform-origin: 55px;
-    -webkit-transition: -webkit-transform .6s,opacity .6s;
-    -moz-transition: -moz-transform .6s,opacity .6s;
-    transition: transform .6s,opacity .6s;
-    -webkit-transform-style: preserve-3d;
-    -moz-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    -webkit-transform: rotateY(0deg);
-    -moz-transform: rotateY(0deg);
-    transform: rotateY(0deg);
-}
 .LoginPage form {
     margin: 0;
 }
