@@ -22,9 +22,12 @@ identity.config(function ($routeProvider) {
         .otherwise({
             redirectTo: "/monitor/"
         })
-}).config(function($mdThemingProvider){
+}).config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
-        .primaryPalette('green');
+        .primaryPalette("green")
+        .accentPalette('green', {
+            'default': '400' // by default use shade 400 from the pink palette for primary intentions
+        });
 });
 
 
@@ -388,7 +391,7 @@ identity.factory("monitorService", function ($http, $q, userTypesService, userGr
 });
 
 identity.controller("CredentialsCtrl", function ($scope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
-$scope.test = null;
+    $scope.test = null;
     var requestForUserGroups = null;
     var initialized = false;
     $scope.exportFields = exportService.getFields();
@@ -445,9 +448,9 @@ $scope.test = null;
     };
     $scope.selectOne = function (cred) {
         cred.selected = !cred.selected;
-        if (cred.selected){
-            $scope.selectedItems ++;
-        } else $scope.selectedItems --;
+        if (cred.selected) {
+            $scope.selectedItems++;
+        } else $scope.selectedItems--;
         $scope.selectAllChecked = $scope.selectedItems == $scope.credentials.length;
     };
     $scope.refresh = function () {
@@ -995,13 +998,14 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
     $scope.notConnected = false;
 
 
-    $scope.removeFilter = function () {
-        $scope.filter.show = false;
-        $scope.query.filter = '';
+    $scope.query = {
+        show: false,
+        filter: ""
+    }
 
-        if($scope.filter.form.$dirty) {
-            $scope.filter.form.$setPristine();
-        }
+    $scope.removeFilter = function () {
+        $scope.query.show = false;
+        $scope.query.filter = '';
     };
 
     if (requestForUserGroups) requestForUserGroups.abort();
@@ -1026,22 +1030,24 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
     });
 
     function filterConnectionState() {
-        if (devices){
+        if (devices) {
             if ($scope.connected == false && $scope.notConnected == false) {
-                $scope.devices = angular.copy(devices);
+                devices.forEach(function (device) {
+                    if ($scope.query.filter === "" || device.userName.indexOf($scope.query.filter) >= 0) $scope.devices = angular.copy(devices);
+                });
             } else {
                 $scope.devices = [];
                 if ($scope.connected == true) {
                     devices.forEach(function (device) {
                         if (device.clients.length > 0) {
-                            $scope.devices.push(device);
+                            if ($scope.query.filter === "" || device.userName.indexOf($scope.query.filter) >= 0) $scope.devices.push(device);
                         }
                     })
                 }
                 if ($scope.notConnected == true) {
                     devices.forEach(function (device) {
                         if (device.clients.length == 0) {
-                            $scope.devices.push(device);
+                            if ($scope.query.filter === "" || device.userName.indexOf($scope.query.filter) >= 0)$scope.devices.push(device);
                         }
                     })
                 }
@@ -1078,6 +1084,10 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
         $scope.monitorLoaded = function () {
             return monitorService.isLoaded()
         };
+    });
+    $scope.$watch("query.filter", function () {
+        filterConnectionState();
+
     });
     $scope.refresh = function () {
         if (initialized) {

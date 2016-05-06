@@ -1,9 +1,7 @@
 body {
     background-color: #F5F5F5;
 }
-* {
-    outline: none;
-}
+
 #main {
     padding-top: 80px;
     margin: 0 2%;
@@ -95,4 +93,9 @@ h3, .h3 {
     text-transform: uppercase;
     color: white;
     margin: 1px 0;
+}
+
+
+md-toolbar * {
+    color: rgba(255,255,255,0.87) !important;
 }
