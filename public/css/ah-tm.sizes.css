@@ -105,9 +105,11 @@
     width:568px
 }
 
-
+.grid_33p {
+    width: 33%;
+}
 .grid_50p {
-    width: 50%;
+    width: 48%;
     min-width: 400px;
     padding: 10px;
     margin: 0 auto;

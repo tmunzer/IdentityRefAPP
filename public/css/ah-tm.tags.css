@@ -1,7 +1,9 @@
 body {
     background-color: #F5F5F5;
 }
-
+* {
+    outline: none;
+}
 #main {
     padding-top: 80px;
     margin: 0 2%;
@@ -15,14 +17,15 @@ body {
 / ============================================== */
 nav {
     margin: 10px 0;
-    background-color: #2C3E50;
+    background-color: #175797;
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
     text-align: center;
     height: 50px;
+    border-radius: 4px;
 }
 
-nav button {
-    height: 50px;
-    margin: 0;
+nav .md-button {
+   color: white !important;
 }
 
 
@@ -54,20 +57,20 @@ section {
 / ============================================== */
 article > .inside{
     margin: 10px 0;
-    padding: 5px;
     background: white;
-    box-shadow: 0 0 50px 1px rgba(150, 150, 150, 0.5);
     display: inline-block;
     width: 100%;
 }
-
+article > .inside .title {
+    border-radius: 3px 3px 0 0;
+}
 
 article .title {
-    background-color: #3694D1;
+    background-color: #0085DC;
     padding: 10px;
     text-align: left;
     font-size: 20px;
-    font-weight: lighter;
+    font-weight: 200;
     text-transform: uppercase;
     color: white;
 }
@@ -84,11 +87,11 @@ li {
 }
 
 h3, .h3 {
-    background-color: #3694D1;
+    background-color: #0085DC;
     padding: 10px;
     text-align: left;
-    font-size: 12;
-    font-weight: lighter;
+    font-size: 12px;
+    font-weight: 300;
     text-transform: uppercase;
     color: white;
     margin: 1px 0;

@@ -3,7 +3,7 @@ var router = express.Router();
 var API = require(appRoot + "/bin/aerohive/api/main");
 /* GET users listing. */
 router.post('/identity/userGroup', function (req, res, next) {
-    API.identity.userGroups.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, function (err, result) {
+    API.identity.userGroups.getUserGroups(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, function (err, result) {
         if (err) res.json({error: err});
         else {
             result.reqId = req.body.reqId;
@@ -30,7 +30,7 @@ router.get('/identity/credentials', function (req, res, next) {
     credentialType.forEach(function (credential) {
         userGroup.forEach(function (group) {
             console.log(group);
-            API.identity.credentials.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
+            API.identity.credentials.getCredentials(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
                 if (err) res.json({error: err});
                 else {
                     result.forEach(function (account) {
@@ -50,7 +50,7 @@ router.get('/identity/credentials', function (req, res, next) {
 router.post('/identity/credentials', function (req, res, next) {
     var hmCredentialsRequestVo = {};
     if (req.body.hasOwnProperty('hmCredentialsRequestVo')) hmCredentialsRequestVo = req.body.hmCredentialsRequestVo;
-    API.identity.credentials.POST(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, hmCredentialsRequestVo, function (err, result) {
+    API.identity.credentials.createCredential(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, hmCredentialsRequestVo, function (err, result) {
         if (err) res.json({error: err});
         else res.json(result);
     })
@@ -58,7 +58,7 @@ router.post('/identity/credentials', function (req, res, next) {
 router.delete('/identity/credentials', function (req, res, next) {
     var ids = "";
     if (req.query.hasOwnProperty("ids")) ids = req.query.ids;
-    API.identity.credentials.DELETE(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, ids, function (err, result) {
+    API.identity.credentials.deleteCredential(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, ids, function (err, result) {
         if (err) res.json({error: err});
         else res.json(result);
     })
@@ -83,7 +83,7 @@ router.get('/monitor/devices', function (req, res, next) {
     credentialType.forEach(function (credential) {
         userGroup.forEach(function (group) {
             console.log(group);
-            API.identity.credentials.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
+            API.identity.credentials.getCredentials(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
                 if (err) res.json({error: err});
                 else {
                     result.forEach(function (account) {

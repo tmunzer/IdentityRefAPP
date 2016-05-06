@@ -1,4 +1,4 @@
-var identity = angular.module("identity", ["ngRoute", 'ui.bootstrap', 'smart-table', 'ngSanitize', 'ngCsv']);
+var identity = angular.module("identity", ["ngRoute", 'ui.bootstrap', 'ngSanitize', 'ngCsv', 'ngMaterial', 'ngMessages', 'md.data.table']);
 
 identity.config(function ($routeProvider) {
     $routeProvider
@@ -22,6 +22,9 @@ identity.config(function ($routeProvider) {
         .otherwise({
             redirectTo: "/monitor/"
         })
+}).config(function($mdThemingProvider){
+    $mdThemingProvider.theme('default')
+        .primaryPalette('green');
 });
 
 
@@ -384,15 +387,21 @@ identity.factory("monitorService", function ($http, $q, userTypesService, userGr
     }
 });
 
-identity.controller("CredentialsCtrl", function ($scope, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
-    var requestForCredentials = null;
+identity.controller("CredentialsCtrl", function ($scope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
+$scope.test = null;
     var requestForUserGroups = null;
     var initialized = false;
     $scope.exportFields = exportService.getFields();
     $scope.userTypes = userTypesService.getUserTypes();
-    $scope.itemsByPage = 10;
-    $scope.selectAllChecked = false;
 
+    $scope.requestForCredentials = null;
+    $scope.credentials = null;
+    // table items
+    $scope.selectAllChecked = false;
+    $scope.selectedItems = 0;
+    // pagination
+    $scope.itemsByPage = 10;
+    $scope.currentPage = 1;
 
     if (requestForUserGroups) requestForUserGroups.abort();
     requestForUserGroups = userGroupsService.getUserGroups();
@@ -400,25 +409,16 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
             $scope.userGroups = promise.userGroups;
-            requestForCredentials = credentialsService.getCredentials();
-            requestForCredentials.then(function (promise) {
+            $scope.requestForCredentials = credentialsService.getCredentials();
+            $scope.requestForCredentials.then(function (promise) {
                 initialized = true;
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
                 else {
                     $scope.credentials = promise;
-                    $scope.credentialsMaster = promise;
-
                 }
             });
         }
     });
-
-    $scope.page = function (num) {
-        $scope.itemsByPage = num;
-    };
-    $scope.isCurPage = function (num) {
-        return num === $scope.itemsByPage;
-    };
 
     $scope.$watch('userTypes', function () {
         $scope.refresh();
@@ -437,22 +437,27 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
         };
     });
     $scope.selectAll = function () {
-        $scope.credentialsMaster.forEach(function (cred) {
+        $scope.credentials.forEach(function (cred) {
             cred.selected = $scope.selectAllChecked;
-        })
+        });
+        if ($scope.selectAllChecked) $scope.selectedItems = $scope.credentials.length;
+        else $scope.selectedItems = 0;
     };
-    $scope.selectOne = function () {
-        $scope.selectAllChecked = false;
+    $scope.selectOne = function (cred) {
+        cred.selected = !cred.selected;
+        if (cred.selected){
+            $scope.selectedItems ++;
+        } else $scope.selectedItems --;
+        $scope.selectAllChecked = $scope.selectedItems == $scope.credentials.length;
     };
     $scope.refresh = function () {
         if (initialized) {
-            requestForCredentials.abort();
-            requestForCredentials = credentialsService.getCredentials();
-            requestForCredentials.then(function (promise) {
+            $scope.requestForCredentials.abort();
+            $scope.requestForCredentials = credentialsService.getCredentials();
+            $scope.requestForCredentials.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
                 else {
                     $scope.credentials = promise;
-                    $scope.credentialsMaster = promise;
                 }
             });
         }
@@ -478,17 +483,65 @@ identity.controller("CredentialsCtrl", function ($scope, userTypesService, userG
             return exportData;
         }
     };
-    $scope.deleteCredentials = function () {
+    $scope.deleteCredentials = function (ev) {
         var ids = [];
-        credentialsService.setIsLoaded(false);
-        $scope.credentialsMaster.forEach(function (credential) {
-            if (credential.selected) ids.push(credential.id);
+        var userNames = [];
+        $scope.credentials.forEach(function (credential) {
+            if (credential.selected) {
+                ids.push(credential.id);
+                userNames.push(credential.userName);
+            }
         });
-        var deleteCredentials = deleteUser.deleteCredentials(ids);
-        deleteCredentials.then(function (promise) {
-            credentialsService.setIsLoaded(true);
-            if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
-            else $scope.refresh();
+        if (ids.length == 1) {
+            var confirm = $mdDialog.confirm()
+                .title('Are you sure?')
+                .textContent('Do you want to delete the account ' + userNames[0] + '?')
+                .ariaLabel('Confirmation')
+                .targetEvent(ev)
+                .ok('Please do it!')
+                .cancel('Cancel');
+            $mdDialog.show(confirm).then(function () {
+                credentialsService.setIsLoaded(false);
+                var deleteCredentials = deleteUser.deleteCredentials(ids);
+                deleteCredentials.then(function (promise) {
+                    credentialsService.setIsLoaded(true);
+                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
+                    else $scope.refresh();
+                });
+            })
+
+        } else if (ids.length > 1) {
+            var confirm = $mdDialog.confirm()
+                .title('Are you sure?')
+                .textContent('Do you want to delete these ' + ids.length + ' accounts?')
+                .ariaLabel('Confirmation')
+                .targetEvent(ev)
+                .ok('Please do it!')
+                .cancel('Cancel');
+            $mdDialog.show(confirm).then(function () {
+                credentialsService.setIsLoaded(false);
+                var deleteCredentials = deleteUser.deleteCredentials(ids);
+                deleteCredentials.then(function (promise) {
+                    credentialsService.setIsLoaded(true);
+                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
+                    else $scope.refresh();
+                });
+            })
+        }
+    };
+
+    $scope.export = function () {
+        var parentEl = angular.element(document.body);
+        console.log($scope.exportFields);
+        $mdDialog.show({
+            parent: parentEl,
+            templateUrl: 'views/modalExportContent.html',
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                }
+            }
         });
     }
 });
@@ -925,19 +978,31 @@ identity.controller("ImportCtrl", function ($scope, userGroupsService, newUser, 
 });
 
 
-
-
 identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsService, userTypesService) {
-    var requestForMonitor = null;
+    $scope.requestForMonitor = null;
     var requestForUserGroups = null;
     var initialized = false;
     var devices = [];
+    $scope.devices = [];
     $scope.userTypes = userTypesService.getUserTypes();
+
+    // pagination var
     $scope.itemsByPage = 10;
-    $scope.selectAllChecked = false;
+    $scope.currentPage = 1;
+
+    // filter only on connected user by default
     $scope.connected = true;
     $scope.notConnected = false;
 
+
+    $scope.removeFilter = function () {
+        $scope.filter.show = false;
+        $scope.query.filter = '';
+
+        if($scope.filter.form.$dirty) {
+            $scope.filter.form.$setPristine();
+        }
+    };
 
     if (requestForUserGroups) requestForUserGroups.abort();
     requestForUserGroups = userGroupsService.getUserGroups();
@@ -948,8 +1013,8 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
         }
         else {
             $scope.userGroups = promise.userGroups;
-            requestForMonitor = monitorService.getDevices();
-            requestForMonitor.then(function (promise) {
+            $scope.requestForMonitor = monitorService.getDevices();
+            $scope.requestForMonitor.then(function (promise) {
                 initialized = true;
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
                 else {
@@ -961,29 +1026,28 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
     });
 
     function filterConnectionState() {
-        if ($scope.connected == false && $scope.notConnected == false) {
-            $scope.devices = angular.copy(devices);
-            $scope.devicesMaster = angular.copy(devices);
-        } else {
-            $scope.devices = [];
-            $scope.devicesMaster = [];
-            if ($scope.connected == true) {
-                devices.forEach(function (device) {
-                    if (device.clients.length > 0) {
-                        $scope.devices.push(device);
-                        $scope.devicesMaster.push(device);
-                    }
-                })
-            }
-            if ($scope.notConnected == true) {
-                devices.forEach(function (device) {
-                    if (device.clients.length == 0) {
-                        $scope.devices.push(device);
-                        $scope.devicesMaster.push(device);
-                    }
-                })
+        if (devices){
+            if ($scope.connected == false && $scope.notConnected == false) {
+                $scope.devices = angular.copy(devices);
+            } else {
+                $scope.devices = [];
+                if ($scope.connected == true) {
+                    devices.forEach(function (device) {
+                        if (device.clients.length > 0) {
+                            $scope.devices.push(device);
+                        }
+                    })
+                }
+                if ($scope.notConnected == true) {
+                    devices.forEach(function (device) {
+                        if (device.clients.length == 0) {
+                            $scope.devices.push(device);
+                        }
+                    })
+                }
             }
         }
+
     }
 
     $scope.page = function (num) {
@@ -1017,9 +1081,9 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
     });
     $scope.refresh = function () {
         if (initialized) {
-            requestForMonitor.abort();
-            requestForMonitor = monitorService.getDevices();
-            requestForMonitor.then(function (promise) {
+            $scope.requestForMonitor.abort();
+            $scope.requestForMonitor = monitorService.getDevices();
+            $scope.requestForMonitor.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
                 else {
                     devices = promise;
@@ -1044,7 +1108,7 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
             'Radio Health: <span class="' + $scope.clientStringColorClass(client.radioHealth) + '">' + client.radioHealth + '</span>' +
             '</div>';
     };
-    $scope.clientStringColorClass = function(score){
+    $scope.clientStringColorClass = function (score) {
         if (score == 100) return "green";
         else if (score >= 50) return "yellow";
         else return "red";
@@ -1063,7 +1127,6 @@ identity.controller("MonitorCtrl", function ($scope, monitorService, userGroupsS
         else return "";
     }
 });
-
 
 
 identity.controller('ModalCtrl', function ($scope, $uibModal) {
@@ -1096,6 +1159,7 @@ identity.controller('ModalCtrl', function ($scope, $uibModal) {
         displayModel(modalTemplateUrl);
 
     });
+
     $scope.open = function (template, size) {
         var modalTemplateUrl = "";
         switch (template) {
@@ -1134,3 +1198,4 @@ identity.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
 
     };
 });
+

@@ -1,7 +1,7 @@
 var api = require(appRoot + "/bin/aerohive/api/req");
 
 
-module.exports.GET = function (vpcUrl, accessToken, ownerID, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
+module.exports.getCredentials = function (vpcUrl, accessToken, ownerID, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
     var path = "/xapi/v1/identity/credentials?ownerId=" + ownerID;
     if (credentialType && credentialType!="") path += '&credentialType=' + credentialType;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
@@ -26,7 +26,7 @@ module.exports.GET = function (vpcUrl, accessToken, ownerID, credentialType, use
     })
 };
 
-module.exports.POST = function (vpcUrl, accessToken, ownerID, memberOf, adUser, hmCredentialsRequestVo, callback) {
+module.exports.createCredential = function (vpcUrl, accessToken, ownerID, memberOf, adUser, hmCredentialsRequestVo, callback) {
     var path = "/xapi/v1/identity/credentials?ownerId=" + ownerID;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
@@ -45,12 +45,65 @@ module.exports.POST = function (vpcUrl, accessToken, ownerID, memberOf, adUser, 
     })
 };
 
-module.exports.DELETE = function (vpcUrl, accessToken, ownerID, memberOf, adUser, ids, callback) {
+module.exports.deleteCredential = function (vpcUrl, accessToken, ownerID, memberOf, adUser, ids, callback) {
     var path = "/xapi/v1/identity/credentials?ownerId=" + ownerID;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
     if (ids && ids != "") path += '&ids=' + ids;
     api.DELETE(vpcUrl, accessToken, path, function (err, result) {
+        if (err) {
+            callback(err, null);
+        } else if (result) {
+            callback(null, result);
+        } else {
+            callback(null, null);
+        }
+    })
+};
+
+module.exports.deliverCredential = function (vpcUrl, accessToken, ownerID, memberOf, adUser, hmCredentialDeliveryInfoVo, callback) {
+    var path = "/v1/identity/credentials/deliver?ownerId=" + ownerID;
+    if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
+    if (adUser && adUser!="") path += '&adUser=' + adUser;
+
+    for (var key in hmCredentialDeliveryInfoVo) {
+        if (hmCredentialDeliveryInfoVo[key] === '') delete hmCredentialDeliveryInfoVo[key];
+    }
+    api.POST(vpcUrl, accessToken, path, hmCredentialDeliveryInfoVo, function (err, result) {
+        if (err) {
+            callback(err, null);
+        } else if (result) {
+            callback(null, result);
+        } else {
+            callback(null, null);
+        }
+    })
+};
+
+module.exports.renewCredential = function (vpcUrl, accessToken, ownerID, credentialId, memberOf, adUser, callback) {
+    var path ="/v1/identity/credentials/" + credentialId + "/renew?ownerId=" + ownerID;
+    if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
+    if (adUser && adUser!="") path += '&adUser=' + adUser;
+    api.PUT(vpcUrl, accessToken, path, function(err, result){
+        if (err) {
+            callback(err, null);
+        } else if (result) {
+            callback(null, result);
+        } else {
+            callback(null, null);
+        }
+    })
+};
+
+module.exports.updateCredential = function (vpcUrl, accessToken, ownerID, credentialId, memberOf, adUser, hmCredentialUpdateVo, callback) {
+    var path ="/v1/identity/credentials/" + credentialId + "?ownerId=" + ownerID;
+    if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
+    if (adUser && adUser!="") path += '&adUser=' + adUser;
+
+    for (var key in hmCredentialUpdateVo) {
+        if (hmCredentialUpdateVo[key] === '') delete hmCredentialUpdateVo[key];
+    }
+    api.PUT(vpcUrl, accessToken, path, hmCredentialUpdateVo, function (err, result) {
         if (err) {
             callback(err, null);
         } else if (result) {

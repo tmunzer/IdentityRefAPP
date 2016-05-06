@@ -1,20 +1,22 @@
-<div class="modal-header">
-    <h4 class="modal-title">Export Accounts</h4>
-</div>
-<div class="modal-body">
-    <span>Values to exports</span>
-    <ul >
-        <li ng-repeat="field in exportFields">
-            <label class="checkbox">
-                <input type="checkbox" data-name={{field.name}}
-                       class="J-check-any" ng-model="field.selected"
-                       ng-change="change()">
-                <span class="lbl fn-ellipsis" title={{field.name}}>{{field.display}}</span>
-            </label>
-        </li>
-    </ul>
-</div>
-<div class="modal-footer">
-    <a class="btn btn-primary" ng-click="close()">Cancel</a>
-    <a class="btn btn-primary" ng-csv="export()" csv-header="getExportHeader()" filename="accounts.csv">Export to CSV</a>
-</div>
+<md-dialog aria-label="List dialog" class="md-default-theme md-transition-in">
+    <md-dialog-content class="md-dialog-content">
+        <h2 class="md-title">Export Accounts</h2>
+        <span>Values to exports</span>
+        <ul>
+            <li ng-repeat="field in exportFields">
+                <label class="checkbox">
+                    <input type="checkbox" data-name={{field.name}}
+                           class="J-check-any" ng-model="field.selected"
+                           ng-change="change()">
+                    <span class="lbl fn-ellipsis" title={{field.name}}>{{field.display}}</span>
+                </label>
+
+            </li>
+        </ul>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary md-button ng-scope md-default-theme md-ink-ripple" ng-click="closeDialog()">Cancel</md-button>
+        <md-button class="md-primary md-button md-default-theme md-ink-ripple" ng-csv="export()" csv-header="getExportHeader()" filename="accounts.csv">Export to CSV</md-button>
+    </md-dialog-actions>
+</md-dialog>
+

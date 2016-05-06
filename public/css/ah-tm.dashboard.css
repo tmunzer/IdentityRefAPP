@@ -1,6 +1,5 @@
 
 body {
-    font: 12px helvetica,arial,san-serif !important;
     margin: 0;
 }
 
@@ -280,9 +279,6 @@ table tfoot td {
     padding: 0 !important;
 }
 
-ul.pagination {
-    margin: 0 !important;
-}
 
 .progress {
     border-radius: 0;
