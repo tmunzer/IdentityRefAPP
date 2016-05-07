@@ -1,5 +1,6 @@
 angular.module('Credentials').factory("credentialsService", function ($http, $q, userTypesService, userGroupsService) {
     var dataLoaded = false;
+    var promise = null;
 
     function getCredentials() {
         var params = {
@@ -15,7 +16,9 @@ angular.module('Credentials').factory("credentialsService", function ($http, $q,
             params: params,
             timeout: canceller.promise
         });
-        var promise = request.then(
+
+        if (promise) promise.abort();
+        promise = request.then(
             function (response) {
                 if (response.data.error) return response.data;
                 else {

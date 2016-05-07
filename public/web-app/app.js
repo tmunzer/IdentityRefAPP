@@ -51,6 +51,7 @@ identity.factory("userGroupsService", function ($http, $q) {
     var enableEmailApproval;
     var userGroups;
     var isLoaded = false;
+    var promise = null;
 
     function init() {
         userGroups = [];
@@ -67,8 +68,8 @@ identity.factory("userGroupsService", function ($http, $q) {
             method: "POST",
             timeout: canceller.promise
         });
-
-        var promise = request.then(
+        if (promise) promise.abort();
+        promise = request.then(
             function (response) {
                 if (response.data.error) return response.data;
                 else {

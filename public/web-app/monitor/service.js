@@ -1,5 +1,6 @@
 angular.module('Monitor').factory("monitorService", function ($http, $q, userTypesService, userGroupsService) {
     var dataLoaded = false;
+    var promise = null;
 
     function getDevices() {
         var params = {
@@ -15,7 +16,9 @@ angular.module('Monitor').factory("monitorService", function ($http, $q, userTyp
             params: params,
             timeout: canceller.promise
         });
-        var promise = request.then(
+
+        if (promise) promise.abort();
+        promise = request.then(
             function (response) {
                 if (response.data.error) return response.data;
                 else {

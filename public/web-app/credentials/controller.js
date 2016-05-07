@@ -28,7 +28,7 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
     };
 
 
-    if (requestForUserGroups) requestForUserGroups.abort();
+
     requestForUserGroups = userGroupsService.getUserGroups();
     requestForUserGroups.then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -84,7 +84,6 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
     };
     $scope.refresh = function () {
         if (initialized) {
-            $scope.requestForCredentials.abort();
             $scope.requestForCredentials = credentialsService.getCredentials();
             $scope.requestForCredentials.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);

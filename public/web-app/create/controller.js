@@ -6,7 +6,6 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     $scope.currentPage = 1;
 
 
-    if (initialized) requestForUserGroups.abort();
     requestForUserGroups = userGroupsService.getUserGroups();
     requestForUserGroups.then(function (promise) {
         initialized = true;
