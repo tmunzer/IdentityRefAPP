@@ -49,19 +49,14 @@ identity.factory("userTypesService", function () {
 
 identity.factory("userGroupsService", function ($http, $q) {
     var enableEmailApproval;
-    var userGroups;
+    var userGroups = [];
     var isLoaded = false;
     var promise = null;
 
-    function init() {
-        userGroups = [];
-    }
-
-    init();
 
     function getUserGroups() {
-        init();
-
+        userGroups = [];
+        isLoaded = false;
         var canceller = $q.defer();
         var request = $http({
             url: "/api/identity/userGroup",
