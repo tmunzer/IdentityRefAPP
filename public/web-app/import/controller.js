@@ -1,7 +1,9 @@
-angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsService, createUser, credentialsService) {
+angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsService, createService, credentialsService) {
     $scope.csvFile = [];
+    $scope.csvFileName = "No selected file...";
     $scope.csvHeader = [];
     $scope.csvRows = [];
+    $scope.delimiter = ",";
     var masterImportUsers = {
         email: "",
         phone: "",
@@ -13,14 +15,25 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
     $scope.importUsers = angular.copy(masterImportUsers);
     $scope.result = false;
     $scope.numberOfAccounts = 0;
+    $scope.accountsDone = 0;
     var csvFile = undefined;
     $scope.fields = undefined;
 
+    $scope.previewPage = 1;
+    $scope.previewByPage = 5;
+
+    $scope.importPage = 1;
+    $scope.importByPage = 10;
+
+    $scope.errorPage = 1;
+    $scope.errorByPage = 10;
 
     $scope.bulkResultHeaders = [];
     $scope.bulkResult = [];
     $scope.bulkError = [];
 
+    $scope.importProcessed = false;
+    $scope.initImport = false;
 
     userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -38,6 +51,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
     };
 
     $scope.handler = function (e, files) {
+        $scope.csvFileName = files[0].name;
         var reader = new FileReader();
         reader.onload = function (e) {
             csvFile = reader.result;
@@ -46,14 +60,23 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
         reader.readAsText(files[0]);
     };
 
+
     $scope.$watch('delimiter', function () {
         parseCsv();
     }, true);
+    $scope.$watch("userGroups", function () {
+        $scope.userGroupsLoaded = function () {
+            return userGroupsService.isLoaded();
+        };
+    });
+
+
 
     function parseCsv() {
         $scope.csvRows = [];
         $scope.fields = [];
         $scope.csvHeader = [];
+        $scope.numberOfAccounts = 0;
         if (csvFile) {
             var rows = csvFile.split('\n');
             var delimiter;
@@ -68,8 +91,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
                     if ($scope.fields.length == 0) {
                         $scope.fields = $scope.csvHeader;
                     }
-                } else {
-                    console.log($scope.csvHeader);
+                } else if (val != "") {
                     var o = val.split(delimiter);
                     $scope.csvRows.push(o);
                     $scope.numberOfAccounts++;
@@ -78,7 +100,6 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
                             $scope.csvHeader.push("Field " + i);
                             $scope.fields.push("Field " + i);
                         }
-                        console.log($scope.csvHeader);
                     }
                 }
             });
@@ -90,25 +111,32 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
     $scope.reset = function () {
         $scope.importUsers = angular.copy(masterImportUsers);
     };
+
+
     $scope.isNotValid = function () {
-        if ($scope.importUsers.email == "" && $scope.importUsers.phone == "") return true;
-        if ($scope.importUsers.deliverMethod == "EMAIL" && $scope.importUsers.email == "") return true;
+        if ($scope.importUsers.groupId == 0) return true;
+        else if ($scope.importUsers.email == "" && $scope.importUsers.phone == "") return true;
+        else if ($scope.importUsers.deliverMethod == "EMAIL" && $scope.importUsers.email == "") return true;
         else if ($scope.importUsers.deliverMethod == "SMS" && $scope.importUsers.phone == "") return true;
         else if ($scope.importUsers.deliverMethod == "EMAIL_AND_SMS" && ($scope.importUsers.email == "" || $scope.importUsers.phone == "")) return true;
         else return false;
     };
+
+
     $scope.create = function () {
         $scope.result = true;
+        $scope.initImport = true;
+        $scope.importProcessed = true;
+        $scope.accountsDone = 0;
         var requestForCredentials = credentialsService.getCredentials();
         requestForCredentials.then(function (promise) {
             if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
             else {
+                $scope.initImport = false;
                 var user = {};
                 var credentials = promise;
                 var createdAccountsInitiated = 0;
                 $scope.createdAccountsFinished = 0;
-                var currentAccount = 1;
-                var stringAccount = "";
                 var alreadyExists;
                 $scope.csvRows.forEach(function (row) {
                     alreadyExists = false;
@@ -122,16 +150,15 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
                     user.phone = row[$scope.importUsers.phone];
                     user.purpose = row[$scope.importUsers.purpose];
                     user.organization = row[$scope.importUsers.organization];
-                    console.log(user);
                     credentials.forEach(function (credential) {
                         if (credential.userName === user.email || credential.userName === user.phone) {
                             alreadyExists = true;
-                            $scope.bulkError.push(credential.userName + " already exists");
+                            $scope.bulkError.push({account: credential.userName, message: "userName already exists"});
                         }
                     });
                     if (!alreadyExists) {
                         createdAccountsInitiated++;
-                        newUser.saveUser({
+                        createService.saveUser({
                             groupId: $scope.importUsers.groupId,
                             email: user.email,
                             phone: user.phone,
@@ -141,7 +168,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
                             'deliverMethod': $scope.importUsers.deliverMethod
                         }).then(function (promise2) {
                             if (promise2 && promise2.error) {
-                                $scope.bulkError.push(promise2.error);
+                                $scope.bulkError.push({account: promise2.error.errorParams.item.replace("credential (", "").replace(")", ""), message: promise2.error.message});
                             } else {
                                 if ($scope.bulkResultHeaders.length == 0) {
                                     for (var key in promise2) {
@@ -152,27 +179,16 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
                                 $scope.createdAccountsFinished++;
 
                             }
+                            $scope.accountsDone ++;
+                            if ($scope.accountsDone == $scope.csvRows.length){
+                                $scope.importProcessed = false;
+                            }
                         });
                     }
-                    currentAccount++;
 
                 });
             }
         });
-    };
-    $scope.displayResult = function () {
-        return $scope.result;
-    };
-    $scope.displayBulkError = function () {
-        return $scope.bulkError.length > 0;
-    };
-    $scope.getBulkExportHeader = function () {
-        return $scope.bulkResultHeaders;
-    };
-    $scope.bulkExport = function () {
-        if ($scope.bulkResult) {
-            return $scope.bulkResult;
-        }
     };
 });
 

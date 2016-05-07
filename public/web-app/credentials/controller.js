@@ -45,14 +45,9 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
             });
         }
     });
-
-    $scope.$watch('userTypes', function () {
-        $scope.refresh();
-    }, true);
-    $scope.$watch('userGroups', function () {
-        $scope.refresh();
-    }, true);
+    
     $scope.$watch("userGroups", function () {
+        $scope.refresh();
         $scope.userGroupsLoaded = function () {
             return userGroupsService.isLoaded();
         };
@@ -65,7 +60,6 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
     $scope.$watch("table.filter", function(){
             $scope.credentials = [];
             credentials.forEach(function(credential){
-                console.log(credential);
                 if($scope.table.filter == ""
                     || (credential.userName && credential.userName.indexOf($scope.table.filter) >= 0)
                     || (credential.email && credential.email.indexOf($scope.table.filter) >= 0)

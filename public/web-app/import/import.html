@@ -1,13 +1,14 @@
-<nav>
-
-</nav>
 <section>
     <article class="grid_50p">
-        <div class="inside" md-whiteframe="1">
-            <h3>User Group</h3>
+        <md-content class="inside" md-whiteframe="5">
+            <div class="title">User Group</div>
+            <div ng-show="userGroupsLoaded()"
+                 style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+            <md-progress-linear ng-show="!userGroupsLoaded()" md-mode="indeterminate"
+                                class="md-accent"></md-progress-linear>
 
-            <div class="ui-filter-dtl-area">
-                <ul class="card-list clearfix line">
+            <div class="card-container">
+                <ul class="card-list">
                     <li class="card-item" ng-repeat="userGroup in userGroups  | orderBy:'name'">
                         <div class="card"
                              ng-class="{'card-selected': selectedUserGroup(userGroup.id)}"
@@ -22,196 +23,199 @@
                     </li>
                 </ul>
             </div>
-            </div>
-        </article>
+        </md-content>
+    </article>
+
+
     <article class="grid_50p">
-        <div class="inside" md-whiteframe="1">
-            <h3>File Upload</h3>
+        <md-content class="inside" md-whiteframe="5">
+            <div class="title">File Upload</div>
 
-            <div class="line clearfix">
+            <div layout="row">
+                <input class="ng-hide" id="input-file-id" type="file" ng-model="csvFile"
+                       file-change="handler($event,files)"/>
+                <label for="input-file-id" class="md-button md-raised md-primary">Choose a CSV File</label>
 
-                <div class="line clearfix ng-scope">
-                    <div class="grid_4 first column" style="line-height: 30px;">
-                        <label for="file" class="ng-binding">CSV File:</label>
-                    </div>
-                    <div class="last column">
-                        <input type="file" id="file" file-change="handler($event,files)"
-                               ng-model="csvFile"/>
-                    </div>
-                </div>
-                <div class="line clearfix ng-scope">
-                    <div class="grid_4 first column" style="line-height: 30px;">
-                        <label for="delimiter" class="ng-binding">CSV Delimiter:</label>
-                    </div>
-                    <div class="last column">
-                        <input id="delimiter" class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
-                               style="height: 30px;" ng-model="delimiter" type="text" placeholder=",">
-                    </div>
-                </div>
+                <div layout="column" layout-align="center"><span>{{csvFileName}}</span></div>
+
             </div>
-        </div>
+            <div layout="column" layout-padding style="padding-bottom: 0;">
+                <md-input-container class="md-block">
+                    <label for="delimiter">CSV Delimiter</label>
+                    <input id="delimiter" class="ng-valid md-input ng-dirty ng-valid-parse ng-touched"
+                           ng-model="delimiter"/>
+                </md-input-container>
+            </div>
+        </md-content>
     </article>
     <article class="grid_100p">
-        <div class="inside" md-whiteframe="1">
-            <h3>File Preview</h3>
+        <md-content class="inside" md-whiteframe="5">
+            <div class="title">File Preview</div>
 
             <div class="line clearfix">
-                <span>The preview table is only showing the 10 first rows.</span>
-
-                <div class="line clearfix">
-                    <div>
-                        <table class="dgrid-row-table table table-condensed">
-                            <thead>
-                            <tr>
-                                <th ng-repeat="header in csvHeader">{{header}}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="row in csvRows | limitTo:10">
-                                <td ng-repeat="column in row track by $index">{{column}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <md-table-container>
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column ng-repeat="header in csvHeader">{{header}}</th>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row ng-repeat="row in csvRows | limitTo: previewByPage: (previewPage - 1) * previewByPage">
+                            <td md-cell ng-repeat="column in row track by $index">{{column}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <md-table-pagination md-limit="previewByPage" md-limit-options="[5, 10, 20, 50, 100]"
+                                     md-page="previewPage"
+                                     md-total="{{csvRows.length}}"></md-table-pagination>
             </div>
-        </div>
+        </md-content>
     </article>
     <article class="grid_100p">
-        <div class="inside" md-whiteframe="1">
-            <h3>Fields Matching</h3>
+        <md-content class="inside" md-whiteframe="5">
+            <div class="title">Fields Matching</div>
+            <md-content layout-padding layout-gt-sm="row" layout="column" style="padding-top: 0;">
 
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="email" class="ng-binding">Email:</label>
-                </div>
-                <div class="last column">
-                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                            style="height: 30px;" ng-model="importUsers.email">
-                        <option ng-repeat="field in fields track by $index" value={{$index}}
-                                class="ng-binding ng-scope">{{field}}
-                        </option>
-                    </select>
-                </div>
-            </div>
+                <md-input-container class="md-block flex-gt-sm">
+                    <label for="email">Email:</label>
+                    <md-select id="email" ng-model="importUsers.email">
+                        <md-option ng-repeat="field in fields track by $index" value={{$index}}>
+                            {{field}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
 
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="phone" class="ng-binding">Phone:</label>
-                </div>
-                <div class="last column">
-                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                            style="height: 30px;" ng-model="importUsers.phone">
-                        <option ng-repeat="field in fields track by $index" value={{$index}}
-                                class="ng-binding ng-scope">{{field}}
-                        </option>
-                    </select>
-                </div>
-            </div>
+                <md-input-container class="md-block flex-gt-sm">
+                    <label for="phone">Phone:</label>
+                    <md-select id="phone" ng-model="importUsers.phone">
+                        <md-option ng-repeat="field in fields track by $index" value={{$index}}>
+                            {{field}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
 
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="organization" class="ng-binding">Organization:</label>
-                </div>
-                <div class="last column">
-                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                            style="height: 30px;" ng-model="importUsers.organization">
-                        <option ng-repeat="field in fields track by $index" value={{$index}}
-                                class="ng-binding ng-scope">{{field}}
-                        </option>
-                    </select>
-                </div>
-            </div>
+                <md-input-container class="md-block flex-gt-sm">
+                    <label for="organization">Organization:</label>
+                    <md-select id="organization" ng-model="importUsers.organization">
+                        <md-option ng-repeat="field in fields track by $index" value={{$index}}>
+                            {{field}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
 
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="purpose" class="ng-binding">Purpose of Visit:</label>
-                </div>
-                <div class="last column">
-                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                            style="height: 30px;" ng-model="importUsers.purpose">
-                        <option ng-repeat="field in fields track by $index" value={{$index}}
-                                class="ng-binding ng-scope">{{field}}
-                        </option>
-                    </select>
-                </div>
-            </div>
+                <md-input-container class="md-block flex-gt-sm">
+                    <label for="purpose">Purpose of Visit:</label>
+                    <md-select id="purpose" ng-model="importUsers.purpose">
+                        <md-option ng-repeat="field in fields track by $index" value={{$index}}>
+                            {{field}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
 
-            <div class="line clearfix">
-                <div class="grid_4 first column">
-                    <label for="deliverMethod">Deliver Method:</label>
-                </div>
-                <div class="last column">
-                    <select class="input_5 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                            style="height: 30px;" id="deliverMethod" ng-model="importUsers.deliverMethod"
-                            ng-selected="user.deliverMethod">
-                        <option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
-                        </option>
+                <md-input-container class="md-block flex-gt-sm">
+                    <label for="deliver">Deliver Method:</label>
+                    <md-select id="deliver" ng-model="importUsers.deliverMethod"
+                               ng-selected="importUsers.deliverMethod">
+                        <md-option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
+                        </md-option>
+                        <md-option value="EMAIL"
+                                   class="ng-binding ng-scope">Email
+                        </md-option>
+                        <md-option value="SMS"
+                                   class="ng-binding ng-scope">Sms
+                        </md-option>
+                        <md-option value="EMAIL_AND_SMS"
+                                   class="ng-binding ng-scope">Email and sms
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </md-content>
 
-                        <option value="EMAIL"
-                                class="ng-binding ng-scope">Email
-                        </option>
 
-                        <option value="SMS"
-                                class="ng-binding ng-scope">Sms
-                        </option>
-
-                        <option value="EMAIL_AND_SMS"
-                                class="ng-binding ng-scope">Email and sms
-                        </option>
-
-                    </select>
-                </div>
-            </div>
             <div class="clearfix">
-                <button ng-click="reset()">Reset</button>
-                <input ng-disabled="isNotValid()" type="button" class="button"
-                       ng-click="create()"
-                       value="Create">
+                <md-button ng-click="reset()">Reset</md-button>
+                <md-button ng-disabled="isNotValid() || importProcessed" class="md-raised md-primary"
+                           ng-click="create()">
+                    Create
+                </md-button>
             </div>
-        </div>
+        </md-content>
     </article>
     <article class="grid_100p">
-        <div class="inside" md-whiteframe="1">
-            <h3>Import Result</h3>
-            <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl"
-                    ng-click="open('exportBulk')" style="margin: 5px 0">Export
-            </button>
-            <uib-progressbar max="max" value="(createdAccountsFinished/numberOfAccounts)*100"><span
-                    style="color:white; white-space:nowrap;">{{createdAccountsFinished}} / {{numberOfAccounts}}</span>
-            </uib-progressbar>
-
-            <div style="position: relative; min-height: 50px;">
-                <div class="dgrid dgrid-grid ui-widget dgrid-autoheight">
-                    <div class="dgrid-header dgrid-header-row ui-widget dgrid-autoheight" role="grid">
-                        <table st-safe-src="credentialsMaster" st-table="credentials"
-                               class="dgrid-row-table table table-condensed">
-                            <thead>
-                            <tr>
-                                <th ng-repeat="header in bulkResultHeaders"
-                                    class="dgrid-cell dgrid-column-1 dgrid-selector"
-                                    role="columnheader">
-                                    <div class="dgrid-resize-header-container">{{header}}</div>
-                                    <div class="dgrid-resize-handle resizeNode-1"></div>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="credential in bulkResult">
-                                <td ng-repeat="field in credential">
-                                    <div>{{field}}</div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <md-content class="inside" md-whiteframe="5">
+            <div class="title">
+                <span>Created Accounts: {{accountsDone}} / {{numberOfAccounts}}</span>
+                <span flex></span>
+                <span style="float: right">Success: {{bulkResult.length}} | Errors {{bulkError.length}}</span>
             </div>
-        </div>
-        <div class="inside" md-whiteframe="1">
-            <h3>Bulk Errors</h3>
+            <md-progress-linear md-mode="indeterminate" class="md-accent" ng-show="initImport">
+            </md-progress-linear>
+            <md-progress-linear md-mode="determinate" class="md-accent" ng-hide="initImport"
+                                value="{{(createdAccountsFinished/numberOfAccounts)*100}}">
+            </md-progress-linear>
+            <md-button class='md-raised md-primary' ng-controller="ModalCtrl"
+                       ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
+                       ng-disabled="bulkResult == 0 || importProcessed">
+                Download
+            </md-button>
 
-            <div ng-repeat="error in bulkError">{{error}}</div>
-        </div>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column ng-repeat="header in bulkResultHeaders">
+                            {{header}}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row
+                        ng-repeat="credential in bulkResult | limitTo: importByPage: (importPage - 1) * importByPage">
+                        <td md-cell ng-repeat="field in credential">
+                            <div>
+                                {{field}}
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="importByPage" md-limit-options="[10, 20, 50, 100]"
+                                 md-page="importPage"
+                                 md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
+        </md-content>
+        <md-content class="inside" md-whiteframe="1">
+            <div class="title">Errors</div>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column style="width: 30%">
+                            Account
+                        </th>
+                        <th md-column>
+                            Error
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody md-body style="width: 70%">
+                    <tr md-row
+                        ng-repeat="error in bulkError | limitTo: errorByPage: (errorPage - 1) * errorByPage">
+                        <td md-cell>
+                            {{error.account}}
+                        </td>
+                        <td md-cell>
+                            {{error.message}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="errorByPage" md-limit-options="[10, 20, 50, 100]"
+                                 md-page="errorPage"
+                                 md-total="{{bulkError.length}}"></md-table-pagination>
+        </md-content>
     </article>
-</section><div class="pt-r">
+</section>

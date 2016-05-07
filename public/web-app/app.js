@@ -321,7 +321,6 @@ identity.controller('DialogExportController', function ($scope, $mdDialog, items
     // items is injected in the controller, not its scope!
     $scope.credentials = items.credentials;
     $scope.exportFields = items.exportFields;
-    console.log($scope.credentials, $scope.exportFields);
     $scope.close = function () {
         // Easily hides most recent dialog shown...
         // no specific instance reference is needed.
@@ -351,6 +350,7 @@ identity.controller('DialogExportController', function ($scope, $mdDialog, items
 
 
     $scope.getExportHeaderBulk = function () {
+        $scope.exportFields[0] = '#' + $scope.exportFields[0];
         return $scope.exportFields;
     };
     $scope.exportBulk = function () {

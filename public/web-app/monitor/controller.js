@@ -83,10 +83,9 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
     $scope.$watch('userTypes', function () {
         $scope.refresh();
     }, true);
-    $scope.$watch('userGroups', function () {
-        $scope.refresh();
-    }, true);
+
     $scope.$watch("userGroups", function () {
+        $scope.refresh();
         $scope.userGroupsLoaded = function () {
             return userGroupsService.isLoaded();
         };
