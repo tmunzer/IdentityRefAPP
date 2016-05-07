@@ -63,13 +63,16 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
         };
     });
     $scope.$watch("table.filter", function(){
-        $scope.credentials = [];
-        credentials.forEach(function(credential){
-            if($scope.table.filter == ""
-                || credential.userName.indexOf($scope.table.filter) >= 0
-                || credential.email.indexOf($scope.table.filter) >= 0
-                || credential.phone.indexOf($scope.table.filter) >= 0) $scope.credentials.push(credential);
-        })
+            $scope.credentials = [];
+            credentials.forEach(function(credential){
+                console.log(credential);
+                if($scope.table.filter == ""
+                    || (credential.userName && credential.userName.indexOf($scope.table.filter) >= 0)
+                    || (credential.email && credential.email.indexOf($scope.table.filter) >= 0)
+                    || (credential.phone && credential.phone.indexOf($scope.table.filter) >= 0))
+                    $scope.credentials.push(credential);
+            })
+
     });
     $scope.selectAll = function () {
         $scope.credentials.forEach(function (cred) {
@@ -92,32 +95,13 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
             $scope.requestForCredentials.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
                 else {
+                    credentials = promise;
                     $scope.credentials = promise;
                 }
             });
         }
     };
-    $scope.getExportHeader = function () {
-        var header = [];
-        $scope.exportFields.forEach(function (field) {
-            if (field.selected) header.push(field.name);
-        });
-        header[0] = '#' + header[0];
-        return header;
-    };
-    $scope.export = function () {
-        if ($scope.credentials) {
-            var exportData = [];
-            $scope.credentials.forEach(function (credential) {
-                var user = {};
-                $scope.exportFields.forEach(function (field) {
-                    if (field.selected) user[field.name] = credential[field.name];
-                });
-                exportData.push(user);
-            });
-            return exportData;
-        }
-    };
+
     $scope.deleteCredentials = function (ev) {
         var ids = [];
         var userNames = [];

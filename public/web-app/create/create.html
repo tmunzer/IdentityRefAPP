@@ -1,21 +1,11 @@
-<nav>
-    <div class="top-button" style="top:2px">
-        <md-button ng-href="#/create/single">
-                <i class="fa fa-user"></i>
-                <span>Single</span>
-        </md-button>
-        <md-button ng-href="#/create/bulk">
-            <i class="fa fa-users"></i>
-            <span>Bulk</span>
-        </md-button>
-
-    </div>
-</nav>
 <section>
     <article class="grid_50p">
         <div class="inside" md-whiteframe="5">
             <div class="title">User Group</div>
-
+            <div ng-show="userGroupsLoaded()"
+                 style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+            <md-progress-linear ng-show="!userGroupsLoaded()" md-mode="indeterminate"
+                                class="md-accent"></md-progress-linear>
 
             <div class="card-container">
                 <ul class="card-list">
@@ -35,215 +25,195 @@
             </div>
         </div>
     </article>
-    <article ng-s ng-show="displayUserDetails('single')" class="grid_50p">
-        <div class="inside" md-whiteframe="5">
-            <div class="title">User Details</div>
 
-            <div style="display: flex; text-align: center">
-                <div class="grid_33p">
-                    <label for="usernameCB">Username</label>
+    <article class="grid_50p">
+        <md-content class="inside" md-whiteframe="5">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Single">
+                    <md-content>
+                        <h3 class="title">User Details</h3>
 
-                    <div class="control">
-                        <input disabled="" class="ace-switch ace-switch-7" type="checkbox" id="usernameCB"
-                               ng-model="username.name"/>
-                        <span class="lbl switch-label"></span>
-                    </div>
-                </div>
-                <div class="grid_33p">
-                    <label for="emailCB">Email address</label>
+                        <div layout="row" class="md-padding" layout-wrap style="padding-bottom: 0">
+                            <div flex="33">
+                                <md-checkbox disabled="" ng-model="username.name">
+                                    Username
+                                </md-checkbox>
+                            </div>
+                            <div flex="33">
+                                <md-checkbox ng-disabled="disableEmail" ng-model="username.email">
+                                    Email address
+                                </md-checkbox>
+                            </div>
+                            <div flex="33">
+                                <md-checkbox ng-disabled="disablePhone" ng-model="username.phone">
+                                    Phone number
+                                </md-checkbox>
+                            </div>
+                        </div>
+                    </md-content>
+                    <md-content layout-padding layout="column" style="padding-top: 0;">
+                        <div layout-gt-sm="row" class="layout-gt-sm-row">
+                            <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
+                                <label for="firstName">First Name</label>
+                                <input id="firstName" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
+                                       ng-model="user.firstName"/>
 
-                    <div class="control">
-                        <input ng-disabled="disableEmail" class="ace-switch ace-switch-7" type="checkbox"
-                               id="emailCB" ng-model="username.email"/>
-                        <span class="lbl switch-label"></span>
-                    </div>
-                </div>
+                                <div class="md-errors-spacer"></div>
+                            </md-input-container>
+                            <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
+                                <label for="lastName">Last Name</label>
+                                <input id="lastName" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
+                                       ng-model="user.lastName"/>
+                            </md-input-container>
+                        </div>
 
-                <div class="grid_33p">
-                    <label for="phoneCB">Phone number</label>
-
-                    <div class="control">
-                        <input ng-disabled="disablePhone" class="ace-switch ace-switch-7" type="checkbox"
-                               id="phoneCB" ng-model="username.phone"/>
-                        <span class="lbl switch-label"></span>
-                    </div>
-                </div>
-
-            </div>
-            <div layout="column" ng-cloak class="md-inline-form">
-                <md-content layout-padding>
-                    <div layout-gt-sm="row" class="layout-gt-sm-row">
-                        <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
-                            <label>First Name</label>
-                            <input class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
-                                   ng-model="user.firstName">
-
-                            <div class="md-errors-spacer"></div>
+                        <md-input-container class="md-block flex-gt-sm" ng-show="username.email">
+                            <label for="email">Email</label>
+                            <input id="email" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
+                                   ng-model="user.email" ng-pattern="/^.+@.+\..+$/"/>
                         </md-input-container>
-                        <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
-                            <label>Last Name</label>
-                            <input class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
-                                   ng-model="user.lastName">
+
+
+                        <md-input-container class="md-block flex-gt-sm" ng-show="username.phone">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input id="phoneNumber" class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="user.phone"/>
                         </md-input-container>
-                    </div>
-
-                    <md-input-container class="md-block flex-gt-sm" ng-show="username.email">
-                        <label>Email</label>
-                        <input class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
-                               ng-model="user.email">
-                    </md-input-container>
 
 
-                    <md-input-container class="md-block flex-gt-sm" ng-show="username.phone">
-                        <label>Phone Number</label>
-                        <input class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="user.phone">
-                    </md-input-container>
+                        <md-input-container class="md-block">
+                            <label for="organization">Organization</label>
+                            <input id="organization" class="ng-valid md-input ng-dirty ng-valid-parse ng-touched"
+                                   ng-model="user.organization"/>
+                        </md-input-container>
 
 
-                    <md-input-container class="md-block">
-                        <label>Organization</label>
-                        <input class="ng-valid md-input ng-dirty ng-valid-parse ng-touched"
-                               ng-model="user.organization">
-                    </md-input-container>
+                        <md-input-container class="md-block flex-gt-sm">
+                            <label for="purpose">Purpose of Visit</label>
+                            <input id="purpose" class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="user.purpose"/>
+                        </md-input-container>
+                        <md-input-container class="md-block flex-gt-sm">
+                            <label>Deliver Method:</label>
+                            <md-select ng-model="user.deliverMethod" ng-selected="user.deliverMethod">
+                                <md-option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
+                                </md-option>
+
+                                <md-option value="EMAIL"
+                                           class="ng-binding ng-scope">Email
+                                </md-option>
+
+                                <md-option value="SMS"
+                                           class="ng-binding ng-scope">Sms
+                                </md-option>
+
+                                <md-option value="EMAIL_AND_SMS"
+                                           class="ng-binding ng-scope">Email and sms
+                                </md-option>
+
+                            </md-select>
+                        </md-input-container>
+                        <div class="clearfix">
+                            <md-button ng-click="reset('single')">Reset</md-button>
+                            <md-button ng-disabled="isNotValid('single')" class="md-primary md-raised"
+                                       ng-click="save('single')">
+                                Create
+                            </md-button>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Bulk">
+                    <md-content>
+                        <h3 class="title">Bulk Parameters</h3>
+                        <md-content layout-padding layout="column" style="padding-top: 0;">
+
+                            <md-input-container class="md-block flex-gt-sm">
+                                <label for="prefix">Prefix</label>
+                                <input id="prefix" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
+                                       ng-class="{invalid: bulk.prefixIsNotValid}"
+                                       ng-model="bulk.prefix"/>
+
+                                <div class="md-errors-spacer"></div>
+                            </md-input-container>
+                            <md-input-container class="md-block flex-gt-sm">
+                                <label for="domain">Domain Name</label>
+                                <input id="domain" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
+                                       ng-class="{invalid: bulk.domainIsNotValid}"
+                                       ng-model="bulk.domain"/>
+                            </md-input-container>
 
 
-                    <md-input-container class="md-block flex-gt-sm">
-                        <label>Purpose of Visit</label>
-                        <input class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="user.purpose">
-                    </md-input-container>
-                    <md-input-container class="md-block flex-gt-sm">
-                        <label>Deliver Method:</label>
-                        <md-select ng-model="user.deliverMethod" ng-selected="user.deliverMethod">
-                            <md-option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
-                            </md-option>
+                            <md-input-container class="md-block flex-gt-sm">
+                                <label for="example" class="ng-binding">Example:</label>
 
-                            <md-option value="EMAIL"
-                                       class="ng-binding ng-scope">Email
-                            </md-option>
-
-                            <md-option value="SMS"
-                                       class="ng-binding ng-scope">Sms
-                            </md-option>
-
-                            <md-option value="EMAIL_AND_SMS"
-                                       class="ng-binding ng-scope">Email and sms
-                            </md-option>
-
-                        </md-select>
-                    </md-input-container>
-
-                </md-content>
-            </div>
+                                <input disabled="" class="ng-pristine ng-untouched ng-valid ng-empty"
+                                       id="example" type="text"
+                                       value="{{bulk.prefix}}_00001@{{bulk.domain}}"/>
+                            </md-input-container>
 
 
-            <div class="clearfix">
-                <md-button ng-click="reset('single')">Reset</md-button>
-                <md-button ng-disabled="isNotValid('single')" class="md-primary" ng-click="save('single')">
-                    Create
-                </md-button>
-            </div>
-        </div>
+                            <md-input-container class="md-block flex-gt-sm">
+                                <label for="numberOfAccounts" class="ng-binding">Number of accounts
+                                    (1-{{bulk.maxNumberOfAccounts}}):</label>
+
+                                <input class="ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-model="bulk.numberOfAccounts" id="numberOfAccounts" type="number" min="0"
+                                       max="{{bulk.maxNumberOfAccounts}}"/>
+                            </md-input-container>
+                            </div>
+                            <div class="clearfix">
+                                <md-button ng-click="reset('bulk')">Reset</md-button>
+                                <md-button ng-disabled="isNotValid('bulk')" class="md-raised md-primary "
+                                           ng-click="save('bulk')">Save
+                                </md-button>
+                            </div>
+                        </md-content>
+
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
     </article>
 
 
-    <article ng-show="displayUserDetails('bulk')" class="grid_50p">
-        <div class="inside" md-whiteframe="1">
-            <h3>Bulk Parameters</h3>
-
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="prefix" class="ng-binding">Prefix:</label>
-                </div>
-                <div class="last column">
-                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
-                           ng-class="{invalid: bulk.prefixIsNotValid}"
-                           style="height: 30px;" id="prefix" type="text" ng-model="bulk.prefix">
-                </div>
-            </div>
-
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="domain" class="ng-binding">Domain:</label>
-                </div>
-                <div class="last column">
-                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
-                           ng-class="{invalid: bulk.domainIsNotValid}"
-                           style="height: 30px;" id="domain" type="text" ng-model="bulk.domain">
-                </div>
-            </div>
-
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="example" class="ng-binding">Example:</label>
-                </div>
-                <div class="last column">
-                    <input disabled="" class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
-                           style="height: 30px;" id="example" type="text"
-                           value="{{bulk.prefix}}_00001@{{bulk.domain}}">
-                </div>
-            </div>
-
-            <div class="line clearfix ng-scope">
-                <div class="grid_4 first column">
-                    <label for="numberOfAccounts" class="ng-binding">Number of accounts
-                        (1-{{bulk.maxNumberOfAccounts}}):</label>
-                </div>
-                <div class="last column">
-                    <input class="input_5 ng-pristine ng-untouched ng-valid ng-empty"
-                           ng-model="bulk.numberOfAccounts"
-                           style="height: 30px;" id="numberOfAccounts" type="number" min="0"
-                           max="{{bulk.maxNumberOfAccounts}}">
-                </div>
-            </div>
-            <div class="clearfix">
-                <button ng-click="reset('bulk')">Reset</button>
-                <input ng-disabled="isNotValid('bulk')" type="button" class="button"
-                       ng-click="save('bulk')"
-                       value="Save">
-            </div>
-        </div>
-    </article>
     <article class="grid_100p" ng-show="displayBulkResult('bulk')">
-        <div class="inside" md-whiteframe="1">
-            <h3>Bulk Result</h3>
-            <button class='ui-button ui-button-dBlue ui-button-small' ng-controller="ModalCtrl"
-                    ng-click="open('exportBulk')" style="margin: 5px 0">Export
-            </button>
-            <uib-progressbar max="max" value="(createdAccountsFinished/bulk.numberOfAccounts)*100"><span
-                    style="color:white; white-space:nowrap;">{{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</span>
-            </uib-progressbar>
+        <md-contact class="inside" md-whiteframe="5">
+            <div class="title">Created Accounts: {{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</div>
+            <md-progress-linear md-mode="determinate"  class="md-accent" value="{{(createdAccountsFinished/bulk.numberOfAccounts)*100}}">
+            </md-progress-linear>
+            <md-button class="md-primary md-raised" ng-controller="ModalCtrl"
+                       ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
+                    ng-disabled="createdAccountsFinished != bulk.numberOfAccounts">
+                Export
+            </md-button>
 
-            <div style="position: relative; min-height: 50px;">
-                <div class="dgrid dgrid-grid ui-widget dgrid-autoheight">
-                    <div class="dgrid-header dgrid-header-row ui-widget dgrid-autoheight" role="grid">
-                        <table st-safe-src="credentialsMaster" st-table="credentials"
-                               class="dgrid-row-table table table-condensed">
-                            <thead>
-                            <tr>
-                                <th ng-repeat="header in bulkResultHeaders"
-                                    class="dgrid-cell dgrid-column-1 dgrid-selector"
-                                    role="columnheader">
-                                    <div class="dgrid-resize-header-container">{{header}}</div>
-                                    <div class="dgrid-resize-handle resizeNode-1"></div>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="credential in bulkResult">
-                                <td ng-repeat="field in credential">
-                                    <div>{{field}}</div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="inside" md-whiteframe="1">
-            <h3>Bulk Errors</h3>
-
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="table.order">
+                    <tr md-row>
+                        <th md-column ng-repeat="header in bulkResultHeaders">
+                            {{header}}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row
+                        ng-repeat="credential in bulkResult | limitTo: itemsByPage: (currentPage - 1) * itemsByPage">
+                        <td md-cell ng-repeat="field in credential">
+                            <div>
+                                {{field}}
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </md-table-container>
+            <md-table-pagination md-limit="itemsByPage" md-limit-options="[10, 20, 50, 100]"
+                                 md-page="currentPage"
+                                 md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
+        </md-contact>
+        <md-contact class="inside" md-whiteframe="5">
+            <div class="title">Bulk Errors</div>
+            <div ng-show="bulkError.length == 0">No Error</div>
             <div ng-repeat="error in bulkError">{{error}}</div>
-        </div>
+    </md-contact>
     </article>
 </section>

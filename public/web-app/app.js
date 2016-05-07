@@ -216,82 +216,146 @@ identity.directive('fileChange', ['$parse', function ($parse) {
 }]);
 
 
-identity.controller('ModalCtrl', function ($scope, $mdDialog) {
-    $scope.animationsEnabled = true;
+identity.controller('ModalCtrl', function ($scope, $rootScope, $mdDialog) {
+    $rootScope.displayed = false;
     $scope.$on('apiError', function (event, apiError) {
-        var test = $mdDialog.show({
-            controller: 'DialogController',
-            templateUrl: 'views/modalErrorContent.html',
-            escapeToClose: false,
-            locals: {
-                items: {
-                    apiErrorStatus: apiError.status,
-                    apiErrorMessage: apiError.message,
-                    apiErrorCode: apiError.code
+        if (!$rootScope.displayed) {
+            $rootScope.displayed = true;
+            $mdDialog.show({
+                controller: 'DialogController',
+                templateUrl: 'views/modalErrorContent.html',
+                escapeToClose: false,
+                locals: {
+                    items: {
+                        apiErrorStatus: apiError.status,
+                        apiErrorMessage: apiError.message,
+                        apiErrorCode: apiError.code
+                    }
                 }
-            }
-        });
+            }).then(function () {
+                $rootScope.displayed = false;
+            });
+        }
     });
     $scope.$on('apiWarning', function (event, apiWarning) {
-        $mdDialog.show({
-            controller: 'DialogController',
-            templateUrl: 'views/modalWarningContent.html',
-            escapeToClose: false,
-            locals: {
-                items: {
-                    apiWarningStatus: apiWarning.status,
-                    apiWarningMessage: apiWarning.message,
-                    apiWarningCode: apiWarning.code
+        if (!$rootScope.displayed) {
+            $rootScope.displayed = true;
+            $mdDialog.show({
+                controller: 'DialogController',
+                templateUrl: 'views/modalWarningContent.html',
+                escapeToClose: false,
+                locals: {
+                    items: {
+                        apiWarningStatus: apiWarning.status,
+                        apiWarningMessage: apiWarning.message,
+                        apiWarningCode: apiWarning.code
+                    }
                 }
-            }
-        });
+            }).then(function () {
+                $rootScope.displayed = false;
+            });
+        }
     });
-    $scope.$on('newSingle', function (event, account) {
-        $mdDialog.show({
-            controller: 'DialogController',
-            templateUrl: 'views/modalSingleContent.html',
-            escapeToClose: false,
-            locals: {
-                items: {
-                    loginName: account.loginName,
-                    password: account.password,
-                    ssid: account.ssid,
-                    startTime: account.startTime,
-                    endTime: account.endTime,
-                    authType: account.authType
+    $scope.$on('createSingle', function (event, account) {
+        if (!$rootScope.displayed) {
+            $rootScope.displayed = true;
+            $mdDialog.show({
+                controller: 'DialogController',
+                templateUrl: 'views/modalSingleContent.html',
+                locals: {
+                    items: {
+                        loginName: account.loginName,
+                        password: account.password,
+                        ssid: account.ssid,
+                        startTime: account.startTime,
+                        endTime: account.endTime,
+                        authType: account.authType
+                    }
                 }
-            }
-        });
+            }).then(function () {
+                $rootScope.displayed = false;
+            });
+        }
     });
 
-    $scope.open = function (template) {
+    $scope.open = function (template, items) {
         var modalTemplateUrl = "";
+        var controller = "";
         switch (template) {
             case 'about':
+                controller = "DialogController";
                 modalTemplateUrl = 'modalAboutContent.html';
                 break;
             case 'export':
+                controller = 'DialogExportController';
                 modalTemplateUrl = 'views/modalExportContent.html';
                 break;
             case 'exportBulk':
+                controller = "DialogExportController";
                 modalTemplateUrl = 'views/modalBulkContent.html';
                 break;
         }
         $mdDialog.show({
-            controller: 'DialogController',
+            controller: controller,
             templateUrl: modalTemplateUrl,
             escapeToClose: false,
             locals: {
-                items: {}
+                items: items
             }
         });
     };
 });
 
 
-identity.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
+identity.controller('DialogController', function ($scope, $mdDialog, items) {
+    // items is injected in the controller, not its scope!
+    $scope.items = items;
     $scope.close = function () {
-        $uibModalInstance.close('close');
+        // Easily hides most recent dialog shown...
+        // no specific instance reference is needed.
+        $mdDialog.hide();
     };
 });
 
+identity.controller('DialogExportController', function ($scope, $mdDialog, items) {
+    // items is injected in the controller, not its scope!
+    $scope.credentials = items.credentials;
+    $scope.exportFields = items.exportFields;
+    console.log($scope.credentials, $scope.exportFields);
+    $scope.close = function () {
+        // Easily hides most recent dialog shown...
+        // no specific instance reference is needed.
+        $mdDialog.hide();
+    };
+    $scope.getExportHeader = function () {
+        var header = [];
+        $scope.exportFields.forEach(function (field) {
+            if (field.selected) header.push(field.name);
+        });
+        header[0] = '#' + header[0];
+        return header;
+    };
+    $scope.export = function () {
+        if ($scope.credentials) {
+            var exportData = [];
+            $scope.credentials.forEach(function (credential) {
+                var user = {};
+                $scope.exportFields.forEach(function (field) {
+                    if (field.selected) user[field.name] = credential[field.name];
+                });
+                exportData.push(user);
+            });
+            return exportData;
+        }
+    };
+
+
+    $scope.getExportHeaderBulk = function () {
+        return $scope.exportFields;
+    };
+    $scope.exportBulk = function () {
+        if ($scope.credentials) {
+            return $scope.credentials;
+        }
+    };
+});

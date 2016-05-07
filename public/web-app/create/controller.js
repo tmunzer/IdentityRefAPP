@@ -1,6 +1,10 @@
 angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, $location, userGroupsService, createService, credentialsService) {
     var requestForUserGroups = null;
     var initialized = false;
+    // pagination
+    $scope.itemsByPage = 10;
+    $scope.currentPage = 1;
+
 
     if (initialized) requestForUserGroups.abort();
     requestForUserGroups = userGroupsService.getUserGroups();
@@ -21,15 +25,18 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
         numberOfAccounts: 0,
         maxNumberOfAccounts: 1000
     };
+    $scope.createdAccountsFinished = 0;
+
     $scope.bulk = angular.copy(masterBulk);
 
     $scope.bulkResultHeaders = [];
     $scope.bulkResult = [];
     $scope.bulkError = [];
-    var masterUser = newUser.getUser();
 
-    $scope.userFields = newUser.getUserFieldsToDisplay();
-    $scope.deliverMethod = newUser.getDeliverMethod();
+    var masterUser = createService.getUser();
+
+    $scope.userFields = createService.getUserFieldsToDisplay();
+    $scope.deliverMethod = createService.getDeliverMethod();
     $scope.username = {
         name: false,
         email: true,
@@ -48,7 +55,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
 
     $scope.displayUserDetails = function (path) {
         //return !!((path === $location.path().toString().split("/")[2]) && $scope.user.groupId !== 0);
-        return !!((path === $location.path().toString().split("/")[2]));
+        return ((path === $location.path().toString().split("/")[2]));
     };
 
     $scope.displayBulkResult = function () {
@@ -57,6 +64,11 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     $scope.displayBulkError = function () {
         return $scope.bulkError.length > 0;
     };
+    $scope.$watch("userGroups", function () {
+        $scope.userGroupsLoaded = function () {
+            return userGroupsService.isLoaded();
+        };
+    });
     $scope.$watch("user.deliverMethod", function (newVal) {
         $scope.disableEmail = false;
         $scope.disablePhone = false;
@@ -89,16 +101,19 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     });
 
     $scope.isNotValid = function (creationType) {
-        if (creationType === "single") {
-            if ($scope.user.deliverMethod == "EMAIL") return $scope.user.email == "";
-            if ($scope.user.deliverMethod == "SMS") return $scope.user.phone == "";
-            if ($scope.user.deliverMethod == "EMAIL_AND_SMS") return ($scope.user.email == "" && $scope.user.phone == "");
-            else return ($scope.user.email == "" && $scope.user.phone == "");
-        }
-        else if (creationType === "bulk") {
-            return (
-            $scope.bulk.prefixIsNotValid ||
-            $scope.bulk.domainIsNotValid);
+        if ($scope.user.groupId == 0) return true;
+        else {
+            if (creationType === "single") {
+                if ($scope.user.deliverMethod == "EMAIL") return $scope.user.email == "";
+                if ($scope.user.deliverMethod == "SMS") return $scope.user.phone == "";
+                if ($scope.user.deliverMethod == "EMAIL_AND_SMS") return ($scope.user.email == "" && $scope.user.phone == "");
+                else return ($scope.user.email == "" && $scope.user.phone == "");
+            }
+            else if (creationType === "bulk") {
+                return (
+                $scope.bulk.prefixIsNotValid ||
+                $scope.bulk.domainIsNotValid);
+            }
         }
     };
 
@@ -120,12 +135,12 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     };
     $scope.save = function (creationType) {
         if (creationType === "single") {
-            newUser.saveUser($scope.user).then(function (promise) {
+            createService.saveUser($scope.user).then(function (promise) {
                 if (promise && promise.error) {
                     $rootScope.$broadcast("apiWarning", promise.error);
                 } else {
                     console.log(promise);
-                    $rootScope.$broadcast('newSingle', promise);
+                    $rootScope.$broadcast('createSingle', promise);
                 }
             });
         } else if (creationType === "bulk") {
@@ -148,11 +163,11 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                         }
                         stringAccount = $scope.bulk.prefix + '_' + fillingNumber + currentAccount + '@' + $scope.bulk.domain;
                         credentials.forEach(function (credential) {
-                            if (credential.userName === stringAccount) alreadyExists = true;
+                            if (credential.userName.toLowerCase() === stringAccount.toLowerCase()) alreadyExists = true;
                         });
                         if (!alreadyExists) {
                             createdAccountsInitiated++;
-                            newUser.saveUser({
+                            createService.saveUser({
                                 groupId: $scope.user.groupId,
                                 email: stringAccount,
                                 policy: "GUEST",
@@ -177,14 +192,6 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                     }
                 }
             });
-        }
-    };
-    $scope.getBulkExportHeader = function () {
-        return $scope.bulkResultHeaders;
-    };
-    $scope.bulkExport = function () {
-        if ($scope.bulkResult) {
-            return $scope.bulkResult;
         }
     };
     $scope.reset();

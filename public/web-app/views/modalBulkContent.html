@@ -1,17 +1,27 @@
-<div class="modal-header">
-    <h4 class="modal-title">Bulk creation</h4>
-</div>
-<div class="modal-body">
-    <table style="text-align: left">
-        <tbody>
-        <tr>
-            <th style="padding: 10px;">Number of created accounts: </th>
-            <td>{{createdAccountsFinished}}</td>
-        </tr>
-        </tbody>
-    </table>
-    <a class="btn btn-primary" ng-csv="bulkExport()" csv-header="getBulkExportHeader()" filename="bulkAccounts.csv">Export to CSV</a>
-</div>
-<div class="modal-footer">
-    <a class="btn btn-primary" ng-click="close()">Close</a>
-</div>
+<md-dialog aria-label="ExportBulk">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Export Bulk Accounts</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <div class="md-dialog-content">
+            <table style="text-align: left">
+                <tbody>
+                <tr>
+                    <th style="padding: 10px;">Number of created accounts:</th>
+                    <td>{{credentials.length}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+        <md-button class="md-primary md-raised " ng-csv="exportBulk()"
+                   csv-header="getExportHeaderBulk()" filename="bulkAccounts.csv">Export to CSV
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
+
+

@@ -9,7 +9,7 @@
 
             <span>Values to exports</span>
             <ul>
-                <li ng-repeat="field in items.exportFields">
+                <li ng-repeat="field in exportFields">
                     <label class="checkbox">
                         <input type="checkbox" data-name={{field.name}}
                                class="J-check-any" ng-model="field.selected"
@@ -22,7 +22,7 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-primary" ng-click="close()">Cancel</md-button>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
         <md-button class="md-primary md-raised " ng-csv="export()"
                    csv-header="getExportHeader()" filename="accounts.csv">Export to CSV
         </md-button>
