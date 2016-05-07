@@ -45,7 +45,7 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
             });
         }
     });
-    
+
     $scope.$watch("userGroups", function () {
         $scope.refresh();
         $scope.userGroupsLoaded = function () {
