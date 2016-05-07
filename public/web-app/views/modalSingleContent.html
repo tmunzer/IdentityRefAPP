@@ -1,34 +1,41 @@
-<div class="modal-header">
-    <h4 class="modal-title">New account created</h4>
-</div>
-<div class="modal-body">
-    <table style="text-align: left">
-        <tr>
-            <th style="padding: 10px;">Username: </th>
-            <td>{{loginName}}</td>
-        </tr>
-        <tr>
-            <th style="padding: 10px;">Password: </th>
-            <td>{{password}}</td>
-        </tr>
-        <tr>
-            <th style="padding: 10px;">SSID: </th>
-            <td>{{ssid | ssidStringFromArray}}</td>
-        </tr>
-        <tr>
-            <th style="padding: 10px;">Start Time: </th>
-            <td>{{activeTime}}</td>
-        </tr>
-        <tr>
-            <th style="padding: 10px;">End Time: </th>
-            <td>{{expireTime}}</td>
-        </tr>
-        <tr>
-            <th style="padding: 10px;">Auth Type: </th>
-            <td>{{authType}}</td>
-        </tr>
-    </table>
-</div>
-<div class="modal-footer">
-    <a class="btn btn-primary" ng-click="close()">Close</a>
-</div>
+<md-dialog aria-label="New Uder">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">New account created</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <div class="md-dialog-content">
+            <table style="text-align: left">
+                <tr>
+                    <th style="padding: 10px;">Username: </th>
+                    <td>{{items.loginName}}</td>
+                </tr>
+                <tr>
+                    <th style="padding: 10px;">Password: </th>
+                    <td>{{items.password}}</td>
+                </tr>
+                <tr>
+                    <th style="padding: 10px;">SSID: </th>
+                    <td>{{items.ssid | ssidStringFromArray}}</td>
+                </tr>
+                <tr>
+                    <th style="padding: 10px;">Start Time: </th>
+                    <td>{{items.activeTime}}</td>
+                </tr>
+                <tr>
+                    <th style="padding: 10px;">End Time: </th>
+                    <td>{{items.expireTime}}</td>
+                </tr>
+                <tr>
+                    <th style="padding: 10px;">Auth Type: </th>
+                    <td>{{items.authType}}</td>
+                </tr>
+            </table>
+            </div>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button  ng-click="close()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>
+

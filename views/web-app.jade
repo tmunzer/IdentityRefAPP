@@ -9,7 +9,6 @@ html
         link(rel='stylesheet' href='/css/ah-tm.sizes.css')
         link(rel='stylesheet' href='/css/ah-tm.tags.css')
         link(rel='stylesheet' href='/css/ah-tm.cards.css')
-        link(rel='stylesheet' href='/css/ah-tm.checkbox.css')
         link(rel='stylesheet' href='/css/ah-tm.header.css')
         link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
         link(rel="stylesheet" href="/bower_components/angular-material-data-table/dist/md-data-table.min.css")
@@ -23,7 +22,18 @@ html
         script(src="/bower_components/angular-material-data-table/dist/md-data-table.min.js")
         script(src="/bower_components/angular-route/angular-route.min.js")
         script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
+
         script(src="/web-app/app.js")
+        script(src="/web-app/routes.js")
+        script(src="/web-app/filters/filters.js")
+        script(src="/web-app/create/controller.js")
+        script(src="/web-app/create/service.js")
+        script(src="/web-app/credentials/controller.js")
+        script(src="/web-app/credentials/service.js")
+        script(src="/web-app/import/controller.js")
+        script(src="/web-app/import/service.js")
+        script(src="/web-app/monitor/controller.js")
+        script(src="/web-app/monitor/service.js")
         script(src="/web-app/ng-sanitize.js")
         script(src="/bower_components/ng-csv/build/ng-csv.min.js")
         block include
@@ -31,22 +41,26 @@ html
     body(ng-app="identity")
         div.modal.fade.bs-example-modal-lg(ng-controller="ModalCtrl")
             script(type="text/ng-template" id="modalAboutContent.html")
-                div.modal-header
-                    h4.modal-title Account details
-                div.modal-body
-                    table(style="text-align: left;")
-                        tbody
-                            tr
-                                th(style="padding: 5px 10px;") HMNG Server:
-                                td(style="padding: 5px 10px;")= server
-                            tr
-                                th(style="padding: 5px 10px;") Owner ID:
-                                td(style="padding: 5px 10px;")= ownerId
-                            tr
-                                th(style="padding: 5px 10px;") Access Token:
-                                td(style="padding: 5px 10px;")= accessToken
-                div.modal-footer
-                    a(class="btn btn-primary" ng-click="close()") Close
+                md-dialog(aria-label="List dialog")
+                    md-toolbar
+                        div.md-toolbar-tools
+                            h2Account details
+                    md-dialog-content
+                        div.md-dialog-content
+                            table
+                                tbody
+                                    tr
+                                        th(style="padding: 5px 10px;") HMNG Server:
+                                        td(style="padding: 5px 10px;")= server
+                                    tr
+                                        th(style="padding: 5px 10px;") Owner ID:
+                                        td(style="padding: 5px 10px;")= ownerId
+                                    tr
+                                        th(style="padding: 5px 10px;") Access Token:
+                                        td(style="padding: 5px 10px;")= accessToken
+                    md-dialog-actions(layout="row")
+                        md-button(ng-click="close()") Close
+
 
         header(ng-controller="HeaderCtrl")
             div.head-inner

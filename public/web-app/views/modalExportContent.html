@@ -1,22 +1,31 @@
-<md-dialog aria-label="List dialog" class="md-default-theme md-transition-in">
+<md-dialog aria-label="Export">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Export Accounts</h2>
+        </div>
+    </md-toolbar>
     <md-dialog-content class="md-dialog-content">
-        <h2 class="md-title">Export Accounts</h2>
-        <span>Values to exports</span>
-        <ul>
-            <li ng-repeat="field in exportFields">
-                <label class="checkbox">
-                    <input type="checkbox" data-name={{field.name}}
-                           class="J-check-any" ng-model="field.selected"
-                           ng-change="change()">
-                    <span class="lbl fn-ellipsis" title={{field.name}}>{{field.display}}</span>
-                </label>
+        <div class="md-dialog-content">
 
-            </li>
-        </ul>
+            <span>Values to exports</span>
+            <ul>
+                <li ng-repeat="field in items.exportFields">
+                    <label class="checkbox">
+                        <input type="checkbox" data-name={{field.name}}
+                               class="J-check-any" ng-model="field.selected"
+                               ng-change="change()">
+                        <span class="lbl fn-ellipsis" title={{field.name}}>{{field.display}}</span>
+                    </label>
+
+                </li>
+            </ul>
+        </div>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-primary md-button ng-scope md-default-theme md-ink-ripple" ng-click="closeDialog()">Cancel</md-button>
-        <md-button class="md-primary md-button md-default-theme md-ink-ripple" ng-csv="export()" csv-header="getExportHeader()" filename="accounts.csv">Export to CSV</md-button>
+        <md-button class="md-primary" ng-click="close()">Cancel</md-button>
+        <md-button class="md-primary md-raised " ng-csv="export()"
+                   csv-header="getExportHeader()" filename="accounts.csv">Export to CSV
+        </md-button>
     </md-dialog-actions>
 </md-dialog>
 

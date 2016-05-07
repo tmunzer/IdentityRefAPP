@@ -3,7 +3,6 @@ md-list {
 }
 
 md-list * {
-    outline: none;
     font-size: small;
     overflow: hidden;
 }

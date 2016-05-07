@@ -6,7 +6,7 @@ header {
     font-family: "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
     min-width: 1220px;
     position: fixed;
-    z-index: 1000;
+    z-index: 10;
     border-top: 2px solid rgb(255, 195, 15);
 }
 /*============================================== /
