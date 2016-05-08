@@ -29,7 +29,27 @@ html
 
 
         div(layout="column" layout-gt-sm="row" layout-align="center center")
-                div(style="height: 500px;width: 450px;" layout-margin)
+
+            div(style="height: 500px;width: 450px;" layout-margin)
+                div.inside(md-whiteframe="5" style="height: 100%, width: 100%")
+                    md-toolbar
+                        div.md-toolbar-tools
+                            h2 Access with your <br>HMNG Account?
+                    md-content(layout="column")
+                        form(id="OAuth" action="https://cloud.aerohive.com/thirdpartylogin" method="get")
+                            input(type="hidden" name="client_id" value= client_id)
+                            input(type="hidden" name="redirect_uri" value= redirect_uri)
+                            div(style="margin: 30px;text-align: left;")
+                                span You can use the OAuth authentication system to use this application with your HiveManager NG account.
+                            div(style="margin: 30px;text-align: left;")
+                                span="You can find some information about OAuth on the "
+                                a.link(href="https://en.wikipedia.org/wiki/OAuth" target="_blank") OAuth Wiki page
+                                span .
+                            div(style="width: 100%; text-align: center;")
+                                md-button.md-raised.md-primary(type="submit") Go to HMNG Authentication page
+
+
+            div(style="height: 500px;width: 450px;" layout-margin)
                     div.inside(md-whiteframe="5" style="height: 100%, width: 100%")
                         md-toolbar
                             div.md-toolbar-tools
@@ -57,20 +77,3 @@ html
 
 
 
-                div(style="height: 500px;width: 450px;" layout-margin)
-                    div.inside(md-whiteframe="5" style="height: 100%, width: 100%")
-                        md-toolbar
-                            div.md-toolbar-tools
-                                h2 Access with your <br>HMNG Account?
-                        md-content(layout="column")
-                            form(id="OAuth" action="https://cloud.aerohive.com/thirdpartylogin" method="get")
-                                input(type="hidden" name="client_id" value= client_id)
-                                input(type="hidden" name="redirect_uri" value= redirect_uri)
-                                div(style="margin: 30px;text-align: left;")
-                                    span You can use the OAuth authentication system to use this application with your HiveManager NG account.
-                                div(style="margin: 30px;text-align: left;")
-                                    span="You can find some information about OAuth on the "
-                                    a.link(href="https://en.wikipedia.org/wiki/OAuth" target="_blank") OAuth Wiki page
-                                    span .
-                                div(style="width: 100%; text-align: center;")
-                                    md-button.md-raised.md-primary(type="submit") Go to HMNG Authentication page
