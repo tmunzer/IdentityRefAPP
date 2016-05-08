@@ -63,7 +63,15 @@ router.delete('/identity/credentials', function (req, res, next) {
         else res.json(result);
     })
 });
-
+router.put('/identity/credentials/renew', function(req, res, next){
+    var id = "";
+    console.log(req.query);
+    if (req.query.hasOwnProperty("id")) id = req.query.id;
+        API.identity.credentials.renewCredential(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, id, null, null, function (err, result) {
+            if (err) res.json({error: err});
+            else res.json(result);
+        })
+});
 router.get('/monitor/devices', function (req, res, next) {
     var credentialType = [""];
     var userGroup = [""];

@@ -1,5 +1,5 @@
 
-angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
+angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser, renewUser) {
     $scope.test = null;
     var requestForUserGroups = null;
     var initialized = false;
@@ -34,6 +34,9 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
             $scope.userGroups = promise.userGroups;
+            $scope.userGroupsLoaded = function () {
+                return userGroupsService.isLoaded();
+            };
             $scope.requestForCredentials = credentialsService.getCredentials();
             $scope.requestForCredentials.then(function (promise) {
                 initialized = true;
@@ -48,9 +51,6 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
 
     $scope.$watch("userGroups", function () {
         $scope.refresh();
-        $scope.userGroupsLoaded = function () {
-            return userGroupsService.isLoaded();
-        };
     });
     $scope.$watch("credentials", function () {
         $scope.credentialsLoaded = function () {
@@ -141,7 +141,52 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
             })
         }
     };
+    $scope.renewCredentials = function (ev) {
+        var ids = [];
+        var userNames = [];
+        $scope.credentials.forEach(function (credential) {
+            if (credential.selected) {
+                ids.push(credential.id);
+                userNames.push(credential.userName);
+            }
+        });
+        if (ids.length == 1) {
+            var confirm = $mdDialog.confirm()
+                .title('Are you sure?')
+                .textContent('Do you want to renew the account ' + userNames[0] + '?')
+                .ariaLabel('Confirmation')
+                .targetEvent(ev)
+                .ok('Please do it!')
+                .cancel('Cancel');
+            $mdDialog.show(confirm).then(function () {
+                credentialsService.setIsLoaded(false);
+                var deleteCredentials = renewUser.renewCredentials(ids);
+                deleteCredentials.then(function (promise) {
+                    credentialsService.setIsLoaded(true);
+                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
+                    else $scope.refresh();
+                });
+            })
 
+        } else if (ids.length > 1) {
+            var confirm = $mdDialog.confirm()
+                .title('Are you sure?')
+                .textContent('Do you want to renew these ' + ids.length + ' accounts?')
+                .ariaLabel('Confirmation')
+                .targetEvent(ev)
+                .ok('Please do it!')
+                .cancel('Cancel');
+            $mdDialog.show(confirm).then(function () {
+                credentialsService.setIsLoaded(false);
+                var deleteCredentials = renewUser.renewCredentials(ids);
+                deleteCredentials.then(function (promise) {
+                    credentialsService.setIsLoaded(true);
+                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
+                    else $scope.refresh();
+                });
+            })
+        }
+    };
     $scope.export = function () {
         $mdDialog.show({
             templateUrl: 'views/modalExportContent.html',

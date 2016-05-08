@@ -14,7 +14,7 @@ header {
 / ============================================== */
 .head-inner {
     position: fixed;
-    height: 75px;
+    height: 76px;
     width: 96%;
     margin: 0 2% 0 2%;
     background-color: #175797;
@@ -60,6 +60,7 @@ header {
 }
 .head-button .head-nav a {
     padding: 30px 20px;
+
 }
 .head-button li a,
 .head-button li i,
@@ -112,7 +113,8 @@ img {
     filter: alpha(opacity=100);
     -webkit-transition: opacity 1s ease;
     transition: opacity 1s ease;
-    margin: 0;
+    margin: 1px 0 0 0;
+    height: 75px;
     padding: 0;
 }
 

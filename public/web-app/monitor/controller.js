@@ -28,12 +28,12 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
     if (requestForUserGroups) requestForUserGroups.abort();
     requestForUserGroups = userGroupsService.getUserGroups();
     requestForUserGroups.then(function (promise) {
-        if (promise && promise.error) {
-            console.log(promise);
-            $scope.$broadcast("apiError", promise.error);
-        }
+        if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
             $scope.userGroups = promise.userGroups;
+            $scope.userGroupsLoaded = function () {
+                return userGroupsService.isLoaded();
+            };
             $scope.requestForMonitor = monitorService.getDevices();
             $scope.requestForMonitor.then(function (promise) {
                 initialized = true;
@@ -86,10 +86,7 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
 
     $scope.$watch("userGroups", function () {
         $scope.refresh();
-        $scope.userGroupsLoaded = function () {
-            return userGroupsService.isLoaded();
-        };
-    });
+    }, true);
     $scope.$watch("connected", function () {
         filterConnectionState();
     });

@@ -39,6 +39,9 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
             $scope.userGroups = promise.userGroups;
+            $scope.userGroupsLoaded = function () {
+                return userGroupsService.isLoaded();
+            };
         }
     });
 
@@ -65,9 +68,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
         parseCsv();
     }, true);
     $scope.$watch("userGroups", function () {
-        $scope.userGroupsLoaded = function () {
-            return userGroupsService.isLoaded();
-        };
+
     });
 
 

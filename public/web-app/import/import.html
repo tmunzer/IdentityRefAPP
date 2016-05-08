@@ -1,58 +1,72 @@
 <section>
     <article class="grid_50p">
-        <md-content class="inside" md-whiteframe="5">
-            <div class="title">User Group</div>
-            <div ng-show="userGroupsLoaded()"
-                 style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
-            <md-progress-linear ng-show="!userGroupsLoaded()" md-mode="indeterminate"
-                                class="md-accent"></md-progress-linear>
+        <div class="inside" md-whiteframe="5">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>User Groups</h2>
+                </div>
+            </md-toolbar>
+            <md-content>
+                <div ng-show="userGroupsLoaded()"
+                     style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+                <md-progress-linear ng-show="!userGroupsLoaded()" md-mode="indeterminate"
+                                    class="md-accent"></md-progress-linear>
 
-            <div class="card-container">
-                <ul class="card-list">
-                    <li class="card-item" ng-repeat="userGroup in userGroups  | orderBy:'name'">
-                        <div class="card"
-                             ng-class="{'card-selected': selectedUserGroup(userGroup.id)}"
-                             ng-click="selectUserGroup(userGroup.id)">
-                            <div class="card-con">
-                                <p class="card-title">{{userGroup.name}}</p>
+                <div class="card-container">
+                    <ul class="card-list">
+                        <li class="card-item" ng-repeat="userGroup in userGroups  | orderBy:'name'">
+                            <div class="card"
+                                 ng-class="{'card-selected': selectedUserGroup(userGroup.id)}"
+                                 ng-click="selectUserGroup(userGroup.id)">
+                                <div class="card-con">
+                                    <p class="card-title">{{userGroup.name}}</p>
 
-                                <p class="card-des">SSID:
-                                    {{userGroup.ssids|ssidStringFromArray}}</p>
+                                    <p class="card-des">SSID:
+                                        {{userGroup.ssids|ssidStringFromArray}}</p>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </md-content>
+                        </li>
+                    </ul>
+                </div>
+            </md-content>
+        </div>
     </article>
 
 
     <article class="grid_50p">
-        <md-content class="inside" md-whiteframe="5">
-            <div class="title">File Upload</div>
+        <div class="inside" md-whiteframe="5">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>File Upload</h2>
+                </div>
+            </md-toolbar>
 
-            <div layout="row">
+            <md-content layout="row">
                 <input class="ng-hide" id="input-file-id" type="file" ng-model="csvFile"
                        file-change="handler($event,files)"/>
                 <label for="input-file-id" class="md-button md-raised md-primary">Choose a CSV File</label>
 
                 <div layout="column" layout-align="center"><span>{{csvFileName}}</span></div>
 
-            </div>
-            <div layout="column" layout-padding style="padding-bottom: 0;">
+            </md-content>
+            <md-content layout="column" layout-padding style="padding-bottom: 0;">
                 <md-input-container class="md-block">
                     <label for="delimiter">CSV Delimiter</label>
                     <input id="delimiter" class="ng-valid md-input ng-dirty ng-valid-parse ng-touched"
                            ng-model="delimiter"/>
                 </md-input-container>
-            </div>
-        </md-content>
+            </md-content>
+        </div>
     </article>
     <article class="grid_100p">
-        <md-content class="inside" md-whiteframe="5">
-            <div class="title">File Preview</div>
+        <div class="inside" md-whiteframe="5">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>File Preview</h2>
+                </div>
+            </md-toolbar>
+            <md-content>
 
-            <div class="line clearfix">
                 <md-table-container>
                     <table md-table>
                         <thead md-head>
@@ -60,7 +74,8 @@
                             <th md-column ng-repeat="header in csvHeader">{{header}}</th>
                         </thead>
                         <tbody md-body>
-                        <tr md-row ng-repeat="row in csvRows | limitTo: previewByPage: (previewPage - 1) * previewByPage">
+                        <tr md-row
+                            ng-repeat="row in csvRows | limitTo: previewByPage: (previewPage - 1) * previewByPage">
                             <td md-cell ng-repeat="column in row track by $index">{{column}}
                             </td>
                         </tr>
@@ -70,12 +85,17 @@
                 <md-table-pagination md-limit="previewByPage" md-limit-options="[5, 10, 20, 50, 100]"
                                      md-page="previewPage"
                                      md-total="{{csvRows.length}}"></md-table-pagination>
-            </div>
-        </md-content>
+
+            </md-content>
+        </div>
     </article>
     <article class="grid_100p">
-        <md-content class="inside" md-whiteframe="5">
-            <div class="title">Fields Matching</div>
+        <div class="inside" md-whiteframe="5">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Fields Matching</h2>
+                </div>
+            </md-toolbar>
             <md-content layout-padding layout-gt-sm="row" layout="column" style="padding-top: 0;">
 
                 <md-input-container class="md-block flex-gt-sm">
@@ -134,88 +154,101 @@
             </md-content>
 
 
-            <div class="clearfix">
+            <md-content class="clearfix">
                 <md-button ng-click="reset()">Reset</md-button>
                 <md-button ng-disabled="isNotValid() || importProcessed" class="md-raised md-primary"
                            ng-click="create()">
                     Create
                 </md-button>
-            </div>
-        </md-content>
+            </md-content>
+
+        </div>
     </article>
     <article class="grid_100p">
-        <md-content class="inside" md-whiteframe="5">
-            <div class="title">
-                <span>Created Accounts: {{accountsDone}} / {{numberOfAccounts}}</span>
-                <span flex></span>
-                <span style="float: right">Success: {{bulkResult.length}} | Errors {{bulkError.length}}</span>
-            </div>
-            <md-progress-linear md-mode="indeterminate" class="md-accent" ng-show="initImport">
-            </md-progress-linear>
-            <md-progress-linear md-mode="determinate" class="md-accent" ng-hide="initImport"
-                                value="{{(createdAccountsFinished/numberOfAccounts)*100}}">
-            </md-progress-linear>
-            <md-button class='md-raised md-primary' ng-controller="ModalCtrl"
-                       ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
-                       ng-disabled="bulkResult == 0 || importProcessed">
-                Download
-            </md-button>
+        <div class="inside" md-whiteframe="5">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <span>Created Accounts: {{accountsDone}} / {{numberOfAccounts}}</span>
+                    <span flex></span>
+                    <span style="float: right">Success: {{bulkResult.length}} | Errors {{bulkError.length}}</span>
+                </div>
+            </md-toolbar>
+            <md-content>
+                <md-progress-linear md-mode="indeterminate" class="md-accent" ng-show="initImport">
+                </md-progress-linear>
+                <md-progress-linear md-mode="determinate" class="md-accent" ng-hide="initImport"
+                                    value="{{(createdAccountsFinished/numberOfAccounts)*100}}">
+                </md-progress-linear>
+                <md-button class='md-raised md-primary' ng-controller="ModalCtrl"
+                           ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
+                           ng-disabled="bulkResult == 0 || importProcessed">
+                    Download
+                </md-button>
 
-            <md-table-container>
-                <table md-table>
-                    <thead md-head>
-                    <tr md-row>
-                        <th md-column ng-repeat="header in bulkResultHeaders">
-                            {{header}}
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody md-body>
-                    <tr md-row
-                        ng-repeat="credential in bulkResult | limitTo: importByPage: (importPage - 1) * importByPage">
-                        <td md-cell ng-repeat="field in credential">
-                            <div>
-                                {{field}}
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </md-table-container>
-            <md-table-pagination md-limit="importByPage" md-limit-options="[10, 20, 50, 100]"
-                                 md-page="importPage"
-                                 md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
-        </md-content>
-        <md-content class="inside" md-whiteframe="1">
-            <div class="title">Errors</div>
-            <md-table-container>
-                <table md-table>
-                    <thead md-head>
-                    <tr md-row>
-                        <th md-column style="width: 30%">
-                            Account
-                        </th>
-                        <th md-column>
-                            Error
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody md-body style="width: 70%">
-                    <tr md-row
-                        ng-repeat="error in bulkError | limitTo: errorByPage: (errorPage - 1) * errorByPage">
-                        <td md-cell>
-                            {{error.account}}
-                        </td>
-                        <td md-cell>
-                            {{error.message}}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </md-table-container>
-            <md-table-pagination md-limit="errorByPage" md-limit-options="[10, 20, 50, 100]"
-                                 md-page="errorPage"
-                                 md-total="{{bulkError.length}}"></md-table-pagination>
-        </md-content>
+                <md-table-container>
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column ng-repeat="header in bulkResultHeaders">
+                                {{header}}
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row
+                            ng-repeat="credential in bulkResult | limitTo: importByPage: (importPage - 1) * importByPage">
+                            <td md-cell ng-repeat="field in credential">
+                                <div>
+                                    {{field}}
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <md-table-pagination md-limit="importByPage" md-limit-options="[10, 20, 50, 100]"
+                                     md-page="importPage"
+                                     md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
+            </md-content>
+        </div>
+    </article>
+    <article class="grid_100p">
+        <div class="inside" md-whiteframe="5">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Errors</h2>
+                </div>
+            </md-toolbar>
+            <md-content>
+                <md-table-container>
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column style="width: 30%">
+                                Account
+                            </th>
+                            <th md-column>
+                                Error
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody md-body style="width: 70%">
+                        <tr md-row
+                            ng-repeat="error in bulkError | limitTo: errorByPage: (errorPage - 1) * errorByPage">
+                            <td md-cell>
+                                {{error.account}}
+                            </td>
+                            <td md-cell>
+                                {{error.message}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <md-table-pagination md-limit="errorByPage" md-limit-options="[10, 20, 50, 100]"
+                                     md-page="errorPage"
+                                     md-total="{{bulkError.length}}"></md-table-pagination>
+            </md-content>
+        </div>
     </article>
 </section>

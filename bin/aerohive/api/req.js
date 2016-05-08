@@ -35,7 +35,7 @@ module.exports.POST = function (vpcUrl, accessToken, path, data, callback) {
     var body = JSON.stringify(data);
     httpRequest(options, callback, body);
 };
-module.exports.PUT = function (vpcUrl, accessToken, path, data, callback) {
+module.exports.PUT = function (vpcUrl, accessToken, path, callback) {
     var options = {
         host: vpcUrl,
         port: 443,
@@ -49,8 +49,7 @@ module.exports.PUT = function (vpcUrl, accessToken, path, data, callback) {
             'Content-Type': 'application/json'
         }
     };
-    var body = JSON.stringify(data);
-    httpRequest(options, callback, body);
+    httpRequest(options, callback);
 };
 module.exports.DELETE = function (vpcUrl, accessToken, path, callback) {
     var options = {
@@ -96,8 +95,15 @@ function httpRequest(options, callback, body){
                     callback(null, result.data);
                     break;
                 default:
+                    var error = {};
                     console.error(result);
-                    callback(result.error, result.data);
+                    if (result.error.hasOwnProperty('status')) error.status = result.error.status;
+                    else error.status = result.result.status;
+                    if (result.error.hasOwnProperty('message')) error.message = result.error.message;
+                    else error.message = result.error;
+                    if (result.error.hasOwnProperty('code')) error.code = result.error.code;
+                    else error.code = "";
+                    callback(error, result.data);
                     break;
 
             }

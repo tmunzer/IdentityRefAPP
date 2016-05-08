@@ -4,14 +4,20 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     // pagination
     $scope.itemsByPage = 10;
     $scope.currentPage = 1;
+    $scope.errorPage = 1;
+    $scope.errorByPage = 10;
 
-
+    if (requestForUserGroups) requestForUserGroups.abort();
     requestForUserGroups = userGroupsService.getUserGroups();
     requestForUserGroups.then(function (promise) {
         initialized = true;
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
         else {
+            $scope.userGroups = angular.copy([]);
             $scope.userGroups = angular.copy(promise.userGroups);
+            $scope.userGroupsLoaded = function () {
+                return userGroupsService.isLoaded();
+            };
         }
     });
 
@@ -63,11 +69,12 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     $scope.displayBulkError = function () {
         return $scope.bulkError.length > 0;
     };
+
     $scope.$watch("userGroups", function () {
-        $scope.userGroupsLoaded = function () {
-            return userGroupsService.isLoaded();
-        };
+
+
     });
+
     $scope.$watch("user.deliverMethod", function (newVal) {
         $scope.disableEmail = false;
         $scope.disablePhone = false;
@@ -162,7 +169,10 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                         }
                         stringAccount = $scope.bulk.prefix + '_' + fillingNumber + currentAccount + '@' + $scope.bulk.domain;
                         credentials.forEach(function (credential) {
-                            if (credential.userName.toLowerCase() === stringAccount.toLowerCase()) alreadyExists = true;
+                            if (credential.userName.toLowerCase() === stringAccount.toLowerCase()) {
+                                alreadyExists = true;
+                                $scope.bulkError.push({account: credential.userName, message: "userName already exists"});
+                            }
                         });
                         if (!alreadyExists) {
                             createdAccountsInitiated++;
@@ -173,7 +183,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                                 'deliverMethod': 'NO_DELIVERY'
                             }).then(function (promise2) {
                                 if (promise2 && promise2.error) {
-                                    $scope.bulkError.push(promise2.error);
+                                    $scope.bulkError.push({account: promise2.error.errorParams.item.replace("credential (", "").replace(")", ""), message: promise2.error.message});
                                 } else {
                                     if ($scope.bulkResultHeaders.length == 0) {
                                         for (var key in promise2) {

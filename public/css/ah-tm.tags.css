@@ -14,22 +14,12 @@ body {
 * {
     outline: none;
 }
-/*============================================== /
-/ ================== NAV ==================== /
-/ ============================================== */
-nav {
-    margin: 10px 0;
-    background-color: #175797;
-    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
-    text-align: center;
-    height: 50px;
-    border-radius: 4px;
-}
 
-nav .md-button {
-   color: white !important;
+a.link, a.link:visited {
+    color: rgb(102,187,106);
+    text-decoration: none;
+    font-weight: 500;
 }
-
 
 /*============================================== /
 / ================== ASIDE ==================== /
@@ -63,12 +53,12 @@ article > .inside{
     display: inline-block;
     width: 100%;
 }
-article > .inside .title {
+article > .inside .title, md-toolbar {
     border-radius: 3px 3px 0 0;
 }
 
 article .title {
-    background-color: #0085DC;
+    background-color: rgb(30,136,229);
     padding: 10px;
     text-align: left;
     font-size: 20px;
@@ -89,7 +79,7 @@ li {
 }
 
 h3, .h3 {
-    background-color: #0085DC;
+    background-color: rgb(30,136,229);
     padding: 10px;
     text-align: left;
     font-size: 12px;

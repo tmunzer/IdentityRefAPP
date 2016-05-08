@@ -3,56 +3,57 @@
         <input type="hidden" ng-controller="ModalCtrl">
         <article class="grid">
             <div class="inside" md-whiteframe="5">
-                <div style='width:100%'>
-                    <div class="title">Filter By
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2>Filter By</h2>
                     </div>
-                    <div>
-                        <h3>User Type</h3>
-                        <md-list>
-                            <md-list-item ng-repeat="userType in userTypes">
-                                <md-checkbox data-name={{userType.name}} ng-model="userType.selected"
-                                             ng-change="change()" aria-label="Display/Hide User Type">
-                                </md-checkbox>
-                                <span class="lbl fn-ellipsis"
-                                      title={{userType.name}}>{{userType.name | userType}}</span>
-                            </md-list-item>
-                        </md-list>
-                        <h3>Status</h3>
-                        <md-list>
-                            <md-list-item>
-                                <md-checkbox data-name="Connected" ng-model="connected"
-                                             ng-change="change()" aria-label="Display/Hide connected users">
-                                </md-checkbox>
-                                  <span class="lbl fn-ellipsis"
-                                        title="Connected">Connected</span>
-                            </md-list-item>
-                            <md-list-item>
-                                <md-checkbox data-name="Not Connected"
-                                             class="J-check-any" ng-model="notConnected"
-                                             ng-change="change()" aria-label="Display/hide not connected users">
-                                </md-checkbox>
-                                <span class="lbl fn-ellipsis" title="Not Connected">Not Connected</span>
-                            </md-list-item>
-                        </md-list>
-                        <h3>User Group</h3>
-                        <md-list ng-show="userGroupsLoaded()">
-                            <md-list-item ng-repeat="userGroup in userGroups | orderBy:'name'"
-                                          >
-                                <md-checkbox data-name={{userGroup.name}} ng-model="userGroup.selected"
-                                             ng-change="change()" aria-label="Select User Group">
+                </md-toolbar>
 
-                                </md-checkbox>
-                                <span class="lbl fn-ellipsis"
-                                      title={{userGroup.name}}>{{userGroup.name}}</span>
-                            </md-list-item>
-                        </md-list>
-                        <div  style="padding: 0;"  ng-show="!userGroupsLoaded()">
-                            <div layout="row" layout-align="space-around">
-                                <md-progress-circular md-mode="indeterminate" class="md-accent"></md-progress-circular>
-                            </div>
+                <div>
+                    <h3>User Type</h3>
+                    <md-list>
+                        <md-list-item ng-repeat="userType in userTypes">
+                            <md-checkbox data-name={{userType.name}} ng-model="userType.selected"
+                                         ng-change="change()" aria-label="Display/Hide User Type">
+                            </md-checkbox>
+                            <span class="lbl fn-ellipsis"
+                                  title={{userType.name}}>{{userType.name | userType}}</span>
+                        </md-list-item>
+                    </md-list>
+                    <h3>Status</h3>
+                    <md-list>
+                        <md-list-item>
+                            <md-checkbox data-name="Connected" ng-model="connected"
+                                         ng-change="change()" aria-label="Display/Hide connected users">
+                            </md-checkbox>
+                              <span class="lbl fn-ellipsis"
+                                    title="Connected">Connected</span>
+                        </md-list-item>
+                        <md-list-item>
+                            <md-checkbox data-name="Not Connected"
+                                         class="J-check-any" ng-model="notConnected"
+                                         ng-change="change()" aria-label="Display/hide not connected users">
+                            </md-checkbox>
+                            <span class="lbl fn-ellipsis" title="Not Connected">Not Connected</span>
+                        </md-list-item>
+                    </md-list>
+                    <h3>User Group</h3>
+                    <md-list ng-show="userGroupsLoaded()">
+                        <md-list-item ng-repeat="userGroup in userGroups | orderBy:'name'">
+                            <md-checkbox data-name={{userGroup.name}} ng-model="userGroup.selected"
+                                         ng-change="change()" aria-label="Select User Group">
+
+                            </md-checkbox>
+                            <span class="lbl fn-ellipsis"
+                                  title={{userGroup.name}}>{{userGroup.name}}</span>
+                        </md-list-item>
+                    </md-list>
+                    <div  style="padding: 0;"  ng-show="!userGroupsLoaded()">
+                        <div layout="row" layout-align="space-around">
+                            <md-progress-circular md-mode="indeterminate" class="md-accent"></md-progress-circular>
                         </div>
-
                     </div>
+
                 </div>
             </div>
         </article>
@@ -61,12 +62,14 @@
 
     <section class="right">
         <article class="grid_100p">
-            <md-content class="inside" md-whiteframe="5">
-                <md-toolbar class="title" layout="row">
-                    <span>Number of users: {{devices.length}}</span>
+            <div class="inside" md-whiteframe="5">
+                <md-toolbar layout="row" >
+                    <div class="md-toolbar-tools">
+                        <h2>Number of users: {{devices.length}}</h2>
+                    </div>
                     <span flex></span>
 
-                    <div class="md-toolbar-tools" id='table-search' ng-show="query.show">
+                    <div class="md-toolbar-tools" id='table-search' ng-show="query.show" style="padding-top:15px">
                         <md-input-container md-no-float class="md-block" style="width: 100%">
                             <md-icon class="material-icons fa fa-search"></md-icon>
                             <input ng-model="query.filter" placeholder="Search">
@@ -81,7 +84,7 @@
                             <div class="md-ripple-container"></div>
                         </button>
                     </div>
-                    <div class="md-toolbar-tools" ng-hide="query.show">
+                    <div class="md-toolbar-tools" ng-hide="query.show" style="padding-top:15px">
                         <div flex></div>
                         <button class="md-icon-button md-button" type="button"
                                 ng-click="query.show = true" aria-label="filter_list">
@@ -101,6 +104,8 @@
                         </md-button>
                     </div>
                 </md-toolbar>
+            <md-content class="inside" md-whiteframe="5">
+
 
 
                 <div ng-show="monitorLoaded()" style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
@@ -115,7 +120,7 @@
 
 
                             <md-table-container>
-                                <table md-table multiple>
+                                <table md-table>
                                     <thead md-head>
                                     <tr md-row>
                                         <th md-column style="width: 5%">
@@ -156,7 +161,7 @@
                                             <div><a ng-click="showClients(user)" style="{{clientsLink(user)}}">{{user.clients.length}}
                                                 client(s)</a>
                                                 <table ng-show="user.showClients">
-                                                    <thead>
+                                                    <thead >
                                                     <tr>
                                                         <th>Status</th>
                                                         <th>HostName</th>

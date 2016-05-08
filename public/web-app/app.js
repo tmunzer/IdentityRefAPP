@@ -3,24 +3,26 @@ angular.module('Monitor', []);
 angular.module('Credentials', []);
 angular.module("Create", []);
 angular.module("Import", []);
-var identity = angular.module("identity",
-    ["ngRoute",
-        'ui.bootstrap',
-        'ngSanitize',
-        'ngCsv',
-        'ngMaterial',
-        'ngMessages',
-        'md.data.table',
-        'CustomFilters',
-        'Monitor',
-        'Credentials',
-        'Create',
-        'Import']);
+var identity = angular.module("identity", [
+    "ngRoute",
+    'ui.bootstrap',
+    'ngSanitize',
+    'ngCsv',
+    'ngMaterial',
+    'ngMessages',
+    'md.data.table',
+    'CustomFilters',
+    'Monitor',
+    'Credentials',
+    'Create',
+    'Import']);
 
 identity
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
-            .primaryPalette("blue")
+            .primaryPalette("blue", {
+                'default': '600'
+            })
             .accentPalette('green', {
                 'default': '400' // by default use shade 400 from the pink palette for primary intentions
             });
@@ -55,25 +57,28 @@ identity.factory("userGroupsService", function ($http, $q) {
 
 
     function getUserGroups() {
-        userGroups = [];
         isLoaded = false;
+        if (promise) promise.abort();
+
         var canceller = $q.defer();
         var request = $http({
             url: "/api/identity/userGroup",
             method: "POST",
             timeout: canceller.promise
         });
-        if (promise) promise.abort();
+
         promise = request.then(
             function (response) {
                 if (response.data.error) return response.data;
                 else {
+                    userGroups = [];
                     enableEmailApproval = response.data.enableEmailApproval;
                     response.data.userGroups.forEach(function (group) {
                         group["selected"] = false;
                         userGroups.push(group);
                     });
                     isLoaded = true;
+                    console.log(userGroups);
                     return {userGroups: userGroups, reqId: response.data.reqId};
                 }
             });
@@ -140,45 +145,6 @@ identity.factory("exportService", function () {
 });
 
 
-identity.factory("deleteUser", function ($http, $q) {
-
-    function deleteCredentials(ids) {
-
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/identity/credentials",
-            method: "DELETE",
-            params: {ids: ids},
-            timeout: canceller.promise
-        });
-        var promise = request.then(
-            function (response) {
-                if (response && response.data && response.data.error) return response.data;
-                else return response;
-            },
-            function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    return ($q.reject("error"));
-                }
-            });
-
-        promise.abort = function () {
-            canceller.resolve();
-        };
-        promise.finally(function () {
-            console.info("Cleaning up object references.");
-            promise.abort = angular.noop;
-            canceller = request = promise = null;
-        });
-
-        return promise;
-    }
-
-    return {
-        deleteCredentials: deleteCredentials
-    }
-});
 
 
 identity.controller("HeaderCtrl", function ($scope, $location) {
