@@ -1,0 +1,22 @@
+<md-dialog aria-label="Send By SMS">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Send By SMS</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <md-content style="width: 500px; height: 300px;">
+            <label style="left: 50px;">Phone Number</label>
+            <md-input-container class="md-block flex-gt-sm">
+                <input type="tel" ng-model="phone" id="phone" ng-intl-tel-input style="left: 50px;padding-left: 0;">
+                <div class="md-errors-spacer"></div>
+            </md-input-container>
+            You can send the account {{items.account.loginName}} to the Guest phone number, or to anyone else.
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary md-raised" ng-click="sendBySms()">Send</md-button>
+        <md-button class="md-primary" ng-click="back()">Back</md-button>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>

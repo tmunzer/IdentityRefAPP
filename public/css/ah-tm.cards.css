@@ -8,7 +8,7 @@
 .card-item {
     float: left;
     margin: 0 20px 15px 20px;
-    width: 40%;
+    width: 250px;
 }
 .card {
     transition: all 0.1s ease-in-out;

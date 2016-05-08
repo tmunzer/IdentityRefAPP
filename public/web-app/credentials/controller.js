@@ -44,6 +44,9 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
                 else {
                     credentials = promise;
                     $scope.credentials = promise;
+                    $scope.credentialsLoaded = function () {
+                        return credentialsService.isLoaded()
+                    };
                 }
             });
         }
@@ -51,12 +54,8 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
 
     $scope.$watch("userGroups", function () {
         $scope.refresh();
-    });
-    $scope.$watch("credentials", function () {
-        $scope.credentialsLoaded = function () {
-            return credentialsService.isLoaded()
-        };
-    });
+    }, true);
+
     $scope.$watch("table.filter", function(){
             $scope.credentials = [];
             credentials.forEach(function(credential){

@@ -1,82 +1,80 @@
 <div class="main-container">
-    <aside>
-        <input type="hidden" ng-controller="ModalCtrl">
-        <article class="grid">
-            <div class="inside" md-whiteframe="5">
-                <md-toolbar>
-                    <div class="md-toolbar-tools">
-                        <h2>Filter By</h2>
-                    </div>
-                </md-toolbar>
+    <input type="hidden" ng-controller="ModalCtrl">
+    <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
 
-                <div>
-                    <h3>User Type</h3>
-                    <md-list>
-                        <md-list-item ng-repeat="userType in userTypes">
-                            <md-checkbox data-name={{userType.name}} ng-model="userType.selected"
-                                         ng-change="change()" aria-label="Display/Hide User Type">
-                            </md-checkbox>
+        <md-toolbar>
+            <h2 class="md-toolbar-tools">
+                Filter By
+            </h2>
+        </md-toolbar>
+
+        <div>
+            <h3>User Type</h3>
+            <md-list>
+                <md-list-item ng-repeat="userType in userTypes">
+                    <md-checkbox data-name={{userType.name}} ng-model="userType.selected"
+                                 ng-change="change()" aria-label="Display/Hide User Type">
+                    </md-checkbox>
                             <span class="lbl fn-ellipsis"
                                   title={{userType.name}}>{{userType.name | userType}}</span>
-                        </md-list-item>
-                    </md-list>
-                    <h3>Status</h3>
-                    <md-list>
-                        <md-list-item>
-                            <md-checkbox data-name="Connected" ng-model="connected"
-                                         ng-change="change()" aria-label="Display/Hide connected users">
-                            </md-checkbox>
+                </md-list-item>
+            </md-list>
+            <h3>Status</h3>
+            <md-list>
+                <md-list-item>
+                    <md-checkbox data-name="Connected" ng-model="connected"
+                                 ng-change="change()" aria-label="Display/Hide connected users">
+                    </md-checkbox>
                               <span class="lbl fn-ellipsis"
                                     title="Connected">Connected</span>
-                        </md-list-item>
-                        <md-list-item>
-                            <md-checkbox data-name="Not Connected"
-                                         class="J-check-any" ng-model="notConnected"
-                                         ng-change="change()" aria-label="Display/hide not connected users">
-                            </md-checkbox>
-                            <span class="lbl fn-ellipsis" title="Not Connected">Not Connected</span>
-                        </md-list-item>
-                    </md-list>
-                    <h3>User Group</h3>
-                    <md-list ng-show="userGroupsLoaded()">
-                        <md-list-item ng-repeat="userGroup in userGroups | orderBy:'name'">
-                            <md-checkbox data-name={{userGroup.name}} ng-model="userGroup.selected"
-                                         ng-change="change()" aria-label="Select User Group">
+                </md-list-item>
+                <md-list-item>
+                    <md-checkbox data-name="Not Connected"
+                                 class="J-check-any" ng-model="notConnected"
+                                 ng-change="change()" aria-label="Display/hide not connected users">
+                    </md-checkbox>
+                    <span class="lbl fn-ellipsis" title="Not Connected">Not Connected</span>
+                </md-list-item>
+            </md-list>
+            <h3>User Group</h3>
+            <md-list ng-show="userGroupsLoaded()">
+                <md-list-item ng-repeat="userGroup in userGroups | orderBy:'name'">
+                    <md-checkbox data-name={{userGroup.name}} ng-model="userGroup.selected"
+                                 ng-change="change()" aria-label="Select User Group">
 
-                            </md-checkbox>
+                    </md-checkbox>
                             <span class="lbl fn-ellipsis"
                                   title={{userGroup.name}}>{{userGroup.name}}</span>
-                        </md-list-item>
-                    </md-list>
-                    <div  style="padding: 0;"  ng-show="!userGroupsLoaded()">
-                        <div layout="row" layout-align="space-around">
-                            <md-progress-circular md-mode="indeterminate" class="md-accent"></md-progress-circular>
-                        </div>
-                    </div>
-
+                </md-list-item>
+            </md-list>
+            <div style="padding: 0;" ng-show="!userGroupsLoaded()">
+                <div layout="row" layout-align="space-around">
+                    <md-progress-circular md-mode="indeterminate" class="md-accent"></md-progress-circular>
                 </div>
             </div>
-        </article>
-    </aside>
+
+        </div>
+
+    </md-sidenav>
 
 
-    <section class="right">
-        <article class="grid_100p">
-            <div class="inside" md-whiteframe="5">
-                <md-toolbar layout="row" >
+    <md-content style="padding-bottom: 15px; width: 100%">
+        <article md-whiteframe="5">
+            <md-content>
+                <md-toolbar layout="row">
                     <div class="md-toolbar-tools">
                         <h2>Number of users: {{devices.length}}</h2>
                     </div>
                     <span flex></span>
 
-                    <div class="md-toolbar-tools" id='table-search' ng-show="query.show" style="padding-top:15px">
-                        <md-input-container md-no-float class="md-block" style="width: 100%">
-                            <md-icon class="material-icons fa fa-search"></md-icon>
-                            <input ng-model="query.filter" placeholder="Search">
+                    <div class="md-toolbar-tools" id='table-search' ng-show="query.show">
+                        <md-input-container md-no-float class="md-block search-tool">
+                            <md-icon class="material-icons search-tool">search</md-icon>
+                            <input ng-model="query.filter" class="search-tool" placeholder="Search">
                         </md-input-container>
                         <button class="md-icon-button md-button" type="button"
                                 ng-click="removeFilter()" aria-label="close">
-                            <md-icon class="fa fa-close fa-lg material-icons">
+                            <md-icon class="material-icons">close
                                 <md-tooltip md-direction="bottom">
                                     Close
                                 </md-tooltip>
@@ -84,11 +82,11 @@
                             <div class="md-ripple-container"></div>
                         </button>
                     </div>
-                    <div class="md-toolbar-tools" ng-hide="query.show" style="padding-top:15px">
+                    <div class="md-toolbar-tools" ng-hide="query.show">
                         <div flex></div>
                         <button class="md-icon-button md-button" type="button"
                                 ng-click="query.show = true" aria-label="filter_list">
-                            <md-icon class=" fa fa-search fa-lg material-icons">
+                            <md-icon class="material-icons">search
                                 <md-tooltip md-direction="bottom">
                                     Search
                                 </md-tooltip>
@@ -96,7 +94,7 @@
                             <div class="md-ripple-container"></div>
                         </button>
                         <md-button class="md-icon-button" ng-click="refresh()" aria-label="refresh_list">
-                            <md-icon class="fa fa-refresh fa-lg material-icon">
+                            <md-icon class="material-icon">refresh
                                 <md-tooltip md-direction="bottom">
                                     Refresh
                                 </md-tooltip>
@@ -104,12 +102,12 @@
                         </md-button>
                     </div>
                 </md-toolbar>
-            <md-content class="inside" md-whiteframe="5">
+            </md-content>
 
-
-
+            <md-content>
                 <div ng-show="monitorLoaded()" style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
-                <md-progress-linear ng-show="!monitorLoaded()" md-mode="indeterminate"  class="md-accent"></md-progress-linear>
+                <md-progress-linear ng-show="!monitorLoaded()" md-mode="indeterminate"
+                                    class="md-accent"></md-progress-linear>
                 <div>
                     <div style="position: relative; min-height: 150px;">
                         <div ng-show="!monitorLoaded()"
@@ -142,12 +140,11 @@
                                         ng-repeat="user in devices | orderBy: 'userName' | limitTo: itemsByPage: (currentPage - 1) * itemsByPage">
                                         <td md-cell>
                                             <div style="text-align: center;">
-                                            <span class="fa-stack fa-lg tm">
+                                            <span>
                                                 <md-tooltip md-direction="left">
                                                     {{userString(user)}}
                                                 </md-tooltip>
-                                                <i class="fa fa-circle fa-stack-2x" style="{{userColor(user)}}"></i>
-                                                <i class="fa fa-wifi fa-stack-1x" style="color: white"></i>
+                                                <md-icon class="material-icon" style="{{userColor(user)}}">signal_wifi_4_bar</md-icon>
                                             </span>
                                             </div>
                                         </td>
@@ -161,7 +158,7 @@
                                             <div><a ng-click="showClients(user)" style="{{clientsLink(user)}}">{{user.clients.length}}
                                                 client(s)</a>
                                                 <table ng-show="user.showClients">
-                                                    <thead >
+                                                    <thead>
                                                     <tr>
                                                         <th>Status</th>
                                                         <th>HostName</th>
@@ -169,28 +166,25 @@
                                                         <th>OS</th>
                                                         <th>IP Address</th>
                                                         <th>User Profile</th>
-                                                        <th>VLAN</th>
                                                         <th>RSSI</th>
                                                         <th>SNR</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr ng-repeat="cli in user.clients ">
+                                                    <tr ng-repeat="cli in user.clients " style="text-align: center;">
                                                         <td>
                                                         <span class="fa-stack fa-lg tm"
                                                               uib-tooltip-html='clientString(cli)'
                                                               tooltip-placement="left" tooltip-class="customClass">
-                                                            <i class="fa fa-circle fa-stack-2x"
-                                                               style="{{clientColor(cli.clientHealth)}}"></i>
-                                                            <i class="fa fa-wifi fa-stack-1x" style="color: white"></i>
-                                                                </span>
+                                                            <md-icon class="material-icone"
+                                                               style="{{clientColor(cli.clientHealth)}}">signal_wifi_4_bar</md-icon>
+                                                            </span>
                                                         </td>
                                                         <td>{{cli.hostName}}</td>
                                                         <td>{{cli.clientMac}}</td>
                                                         <td>{{cli.os}}</td>
                                                         <td>{{cli.ip}}</td>
                                                         <td>{{cli.userProfile}}</td>
-                                                        <td>{{cli.vlan}}</td>
                                                         <td>{{cli.rssi}}</td>
                                                         <td>{{cli.snr}}</td>
                                                     </tr>
@@ -209,7 +203,7 @@
                         <div class="grid-mark" ng-style="monitorLoaded() === true && {'display': 'none'}"></div>
                     </div>
                 </div>
-</div>
-</article>
-</section>
+            </md-content>
+        </article>
+    </md-content>
 </div>

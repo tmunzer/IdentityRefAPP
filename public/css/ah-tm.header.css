@@ -1,14 +1,4 @@
-/*============================================== /
-/ ================== HEADER ==================== /
-/ ============================================== */
-header {
-    width: 100%;
-    font-family: "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
-    min-width: 1220px;
-    position: fixed;
-    z-index: 10;
-    border-top: 2px solid rgb(255, 195, 15);
-}
+
 /*============================================== /
 / ================== TOP HEADER ================ /
 / ============================================== */
@@ -26,7 +16,7 @@ header {
     color: white;
     text-align: center;
     position: relative;
-    z-index: 100;
+    z-index: 75;
     min-height: 75px;
     float: left;
 }

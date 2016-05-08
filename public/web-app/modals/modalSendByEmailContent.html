@@ -1,0 +1,24 @@
+<md-dialog aria-label="Send By SMS">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Send By SMS</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <md-content>
+            <md-input-container class="md-block flex-gt-sm">
+                <label for="prefix">Email Address</label>
+                <input id="prefix" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
+                       ng-model="email"/>
+                <div class="md-errors-spacer"></div>
+            </md-input-container>
+            You can send the account {{items.account.loginName}} to the Guest email address, or to anyone else.
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary md-raised" ng-click="sendByEmail()">Send</md-button>
+        <md-button class="md-primary" ng-click="back()">Back</md-button>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>
+

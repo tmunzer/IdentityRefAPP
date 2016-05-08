@@ -11,7 +11,8 @@ module.exports.monitor = {
         GET: require(appRoot + "/bin/aerohive/api/monitor/device").GET
     },
     client: {
-        GET: require(appRoot + "/bin/aerohive/api/monitor/client").GET
+        clientsList: require(appRoot + "/bin/aerohive/api/monitor/client").clientsList,
+        clientDetails: require(appRoot + "/bin/aerohive/api/monitor/client").clientDetails
     }
 };
 

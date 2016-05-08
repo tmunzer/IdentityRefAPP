@@ -33,6 +33,9 @@ module.exports.POST = function (vpcUrl, accessToken, path, data, callback) {
         }
     };
     var body = JSON.stringify(data);
+    console.log('========------------===========');
+    console.log(options);
+    console.log(body);
     httpRequest(options, callback, body);
 };
 module.exports.PUT = function (vpcUrl, accessToken, path, callback) {

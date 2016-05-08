@@ -13,7 +13,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
         groupId: 0
     };
     $scope.importUsers = angular.copy(masterImportUsers);
-    $scope.result = false;
+
     $scope.numberOfAccounts = 0;
     $scope.accountsDone = 0;
     var csvFile = undefined;
@@ -34,6 +34,9 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
 
     $scope.importProcessed = false;
     $scope.initImport = false;
+
+    $scope.diplayPreview = false;
+    $scope.displayResult = false;
 
     userGroupsService.getUserGroups().then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -57,6 +60,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
         $scope.csvFileName = files[0].name;
         var reader = new FileReader();
         reader.onload = function (e) {
+            $scope.diplayPreview = true;
             csvFile = reader.result;
             parseCsv();
         };
@@ -125,7 +129,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsSe
 
 
     $scope.create = function () {
-        $scope.result = true;
+        $scope.displayResult = true;
         $scope.initImport = true;
         $scope.importProcessed = true;
         $scope.accountsDone = 0;

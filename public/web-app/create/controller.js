@@ -139,6 +139,9 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
             $scope.bulk = angular.copy(masterBulk);
         }
     };
+    $scope.qrc = function(){
+        $rootScope.$broadcast('createSingle', {loginName: "moi3@ah-lab.fr", password:"p", ssid:['s']});
+    };
     $scope.save = function (creationType) {
         if (creationType === "single") {
             createService.saveUser($scope.user).then(function (promise) {

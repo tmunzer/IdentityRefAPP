@@ -72,6 +72,18 @@ router.put('/identity/credentials/renew', function(req, res, next){
             else res.json(result);
         })
 });
+router.post('/identity/credentials/deliver', function(req, res, next){
+    if (req.body.hasOwnProperty("hmCredentialDeliveryInfoVo")){
+        var hmCredentialDeliveryInfoVo = req.body.hmCredentialDeliveryInfoVo;
+        console.log(req.query);
+        if (req.query.hasOwnProperty("id")) id = req.query.id;
+        API.identity.credentials.deliverCredential(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
+            console.log(err, result);
+            if (err) res.json({error: err});
+            else res.json(result);
+        })
+    }
+});
 router.get('/monitor/devices', function (req, res, next) {
     var credentialType = [""];
     var userGroup = [""];
@@ -100,7 +112,7 @@ router.get('/monitor/devices', function (req, res, next) {
                     reqDone++;
                 }
                 if (reqDone == reqMax) {
-                    API.monitor.client.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, function (err, clients) {
+                    API.monitor.client.clientsList(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, function (err, clients) {
                         if (err) res.json({error: err});
                         else {
                             credentials.forEach(function (credential) {
@@ -116,5 +128,54 @@ router.get('/monitor/devices', function (req, res, next) {
             })
         });
     });
+});
+
+router.get('/identity/status', function(req, res, next){
+    var clientStatus = {
+        connected: false,
+        os: "N/A",
+        ssid: "N/A",
+        radioHealth: "N/A",
+        networkHealth: "N/A",
+        applicationHealth: "N/A",
+        hostName: "N/A",
+        ip: "N/A",
+        userProfile: "N/A",
+        clientMac: "N/A",
+        radioBand: "N/A",
+        clientProtocol: "N/A"
+    };
+    var userName = "";
+
+    if (req.query.hasOwnProperty('userName')) {
+        userName = req.query.userName;
+        API.monitor.client.clientsList(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, function (err, clients) {
+            if (err) res.json(err);
+            else {
+                clients.forEach(function(client){
+                    if (client.userName === userName){
+                        clientStatus = {
+                            connected: true,
+                            os: client.os,
+                            ssid: client.ssid,
+                            radioHealth: client.radioHealth,
+                            networkHealth: client.networkHealth,
+                            applicationHealth: client.applicationHealth,
+                            hostName: client.hostName,
+                            ip: client.ip,
+                            userProfile: client.userProfile,
+                            clientMac: client.clientMac
+                        };
+                        API.monitor.client.clientDetails(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, client.clientId, function (err, clientDetails) {
+                            if (err) res.json({data: clientStatus});
+                            clientStatus.radioBand = clientDetails.radioBand;
+                            clientStatus.clientProtocol = clientDetails.clientProtocol;
+                            res.json({data: clientStatus});
+                        });
+                    }
+                });
+            }
+        });
+    } else res.json({});
 });
 module.exports = router;

@@ -40,6 +40,9 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error, "MonitorCtrl");
                 else {
                     devices = promise;
+                    $scope.monitorLoaded = function () {
+                        return monitorService.isLoaded()
+                    };
                     filterConnectionState();
                 }
             });
@@ -93,15 +96,10 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
     $scope.$watch("notConnected", function () {
         filterConnectionState();
     });
-    $scope.$watch("devices", function () {
-        $scope.monitorLoaded = function () {
-            return monitorService.isLoaded()
-        };
-    });
     $scope.$watch("query.filter", function () {
         filterConnectionState();
-
     });
+
     $scope.refresh = function () {
         if (initialized) {
             $scope.requestForMonitor.abort();

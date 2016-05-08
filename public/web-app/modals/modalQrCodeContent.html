@@ -1,0 +1,147 @@
+<md-dialog aria-label="QRCode">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Connection QRCode for {{items.account.loginName}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <md-content style="text-align: center; padding: 10px">
+            <div class="md-dialog-content" style="padding: 0">
+                <qrcode version="10" error-correction-level="M" size="150" data="{{items.string}}"></qrcode>
+            </div>
+        </md-content>
+        <md-content layout-gt-sm="row" layout="column">
+            <md-content md-whiteframe="3" style="margin:5px;width: 250px;">
+
+                <h3>Connection Status</h3>
+
+                <div ng-show="clientConnected"
+                     style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+                <md-progress-linear ng-show="!clientConnected" md-mode="indeterminate"
+                                    class="md-accent"></md-progress-linear>
+
+                <md-table-container>
+                    <table md-table style="text-align: left">
+                        <tbody md-body>
+                        <tr md-row style="height: 40px;">
+                            <th md-cell style="width: 30%">Connection Status:</th>
+                            <td md-cell style="width: 70%; padding-right: 0;">
+                                <div style="text-align: center;">
+                                <span>
+                                    <md-tooltip md-direction="left">
+                                        {{userString(items.account.loginName, connectionStatus.connected)}}
+                                    </md-tooltip>
+                                    <md-icon class="material-icon" style="{{userColor(connectionStatus.connected)}}">
+                                        signal_wifi_4_bar
+                                    </md-icon>
+                                </span>
+                                </div>
+                        </tr>
+                        <tr md-row style="height: 40px;">
+                            <th md-cell>SSID</th>
+                            <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.ssid}}</td>
+                        </tr>
+                        <tr md-row style="height: 40px;">
+                            <th md-cell>IP Address</th>
+                            <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.ip}}</td>
+                        </tr>
+                        <tr md-row style="height: 40px;">
+                            <th md-cell>Radio Health</th>
+                            <td md-cell style="width: 70%; padding-right: 0;">
+                                <div style="text-align: center;">
+                                <span>
+                                    <md-tooltip md-direction="left">
+                                        {{connectionStatus.radioHealth}}
+                                    </md-tooltip>
+                                    <md-icon class="material-icon"
+                                             style="{{healthColor(connectionStatus.radioHealth)}}">
+                                        signal_wifi_4_bar
+                                    </md-icon>
+                                </span>
+                                </div>
+
+                        </tr>
+                        <tr md-row style="height: 40px;">
+                            <th md-cell>Network Health</th>
+                            <td md-cell style="width: 70%; padding-right: 0;">
+                                <div style="text-align: center;">
+                                <span>
+                                    <md-tooltip md-direction="left">
+                                        {{connectionStatus.networkHealth}}
+                                    </md-tooltip>
+                                    <md-icon class="material-icon"
+                                             style="{{healthColor(connectionStatus.networkHealth)}}">
+                                        signal_wifi_4_bar
+                                    </md-icon>
+                                </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr md-row style="height: 40px;">
+                            <th md-cell>Application Health</th>
+                            <td md-cell style="width: 70%; padding-right: 0;">
+                                <div style="text-align: center;">
+                                <span>
+                                    <md-tooltip md-direction="left">
+                                        {{connectionStatus.applicationHealth}}
+                                    </md-tooltip>
+                                    <md-icon class="material-icon"
+                                             style="{{healthColor(connectionStatus.applicationHealth)}}">
+                                        signal_wifi_4_bar
+                                    </md-icon>
+                                </span>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </md-content>
+            <md-content md-whiteframe="3" style="margin:5px;width: 250px;">
+
+                <h3>Client Details</h3>
+                <div ng-show="clientConnected"
+                     style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+                <md-progress-linear ng-show="!clientConnected" md-mode="indeterminate"
+                                    class="md-accent"></md-progress-linear>
+
+
+                <table md-table style="text-align: left">
+                    <tbody md-body>
+                    <tr md-row style="height: 40px;">
+                        <th md-cell style="width: 30%">Device OS</th>
+                        <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.os}}</td>
+                    </tr>
+                    <tr md-row style="height: 40px;">
+                        <th md-cell>HostName</th>
+                        <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.hostName}}</td>
+                    </tr>
+                    <tr md-row style="height: 40px;">
+                        <th md-cell>User Profile</th>
+                        <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.userProfile}}</td>
+                    </tr>
+                    <tr md-row style="height: 40px;">
+                        <th md-cell>MAC Address</th>
+                        <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.clientMac}}</td>
+                    </tr>
+                    <tr md-row style="height: 40px;">
+                        <th md-cell>Radio Band</th>
+                        <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.radioBand}}</td>
+                    </tr>
+                    <tr md-row style="height: 40px;">
+                        <th md-cell>802.11 Standard</th>
+                        <td md-cell style="width: 70%; padding-right: 0;">{{connectionStatus.clientProtocol}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </md-table-container>
+            </md-content>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-raised md-primary" ng-click="back(items.account)">Go Back</md-button>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>
+
