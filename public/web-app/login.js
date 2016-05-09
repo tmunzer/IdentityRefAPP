@@ -11,16 +11,17 @@ login
             });
     });
 
-login.controller('LoginCtrl', function($scope){
-    $scope.vpcUrl =  "";
+login.controller('LoginCtrl', function ($scope) {
+    $scope.vpcUrl = "";
     $scope.ownerId = "";
     $scope.accessToker = "";
+    $scope.tlsOp = true;
 
-
-    $scope.reset = function(){
-        $scope.vpcUrl =  "";
+    $scope.reset = function () {
+        $scope.vpcUrl = "";
         $scope.ownerId = "";
-        $scope.accessToker = "";
+        $scope.accessToken = "";
+        $scope.tlsOp = true;
     }
 });
 

@@ -1,12 +1,12 @@
 var api = require(appRoot + "/bin/aerohive/api/req");
 
 
-module.exports.clientsList = function (vpcUrl, accessToken, ownerId, callback) {
+module.exports.clientsList = function (xapi, callback) {
 
-    var path = '/xapi/v1/monitor/clients?ownerId=' + ownerId;
+    var path = '/xapi/v1/monitor/clients?ownerId=' + xapi.ownerId;
 
     // send the API request
-    api.GET(vpcUrl, accessToken, path, function (err, result) {
+    api.GET(xapi, path, function (err, result) {
         if (err){
             callback(err, result);
         }
@@ -18,12 +18,12 @@ module.exports.clientsList = function (vpcUrl, accessToken, ownerId, callback) {
 
     })
 };
-module.exports.clientDetails = function (vpcUrl, accessToken, ownerId, clientId, callback) {
+module.exports.clientDetails = function (xapi, clientId, callback) {
 
-    var path = '/xapi/v1/monitor/clients/'+clientId+'?ownerId=' + ownerId;
+    var path = '/xapi/v1/monitor/clients/'+clientId+'?ownerId=' + xapi.ownerId;
 
     // send the API request
-    api.GET(vpcUrl, accessToken, path, function (err, result) {
+    api.GET(xapi, path, function (err, result) {
         if (err){
             callback(err, result);
         }

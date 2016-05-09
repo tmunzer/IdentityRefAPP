@@ -13,9 +13,13 @@ router.get('/reg', function (req, res) {
             if (data.hasOwnProperty("error")) Error.render(data.error, "conf", req, res);
             else if (data.hasOwnProperty("data")) {
                 for (var owner in data.data) {
-                    req.session.ownerID = data.data[owner].ownerId;
-                    req.session.vpcUrl = data.data[owner].vpcUrl.replace("https://", "");
-                    req.session.accessToken = data.data[owner].accessToken;
+                    req.session.xapi = {
+                        rejectUnauthorized: true,
+                        vpcUrl: data.data[owner].vpcUrl.replace("https://", ""),
+                        ownerId: data.data[owner].ownerId,
+                        accessToken: data.data[owner].accessToken
+                    };
+
                 }
                 console.log(req.session);
                 res.redirect('/web-app/');

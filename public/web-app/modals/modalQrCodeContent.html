@@ -4,10 +4,10 @@
             <h2 class="md-title">Connection QRCode for {{items.account.loginName}}</h2>
         </div>
     </md-toolbar>
-    <md-dialog-content class="md-dialog-content">
+    <md-dialog-content class="md-dialog-content" style="padding: 10px">
         <md-content style="text-align: center; padding: 10px">
             <div class="md-dialog-content" style="padding: 0">
-                <qrcode version="10" error-correction-level="M" size="150" data="{{items.string}}"></qrcode>
+                <qrcode version="8" error-correction-level="M" size="200" data="{{items.string}}"></qrcode>
             </div>
         </md-content>
         <md-content layout-gt-sm="row" layout="column">

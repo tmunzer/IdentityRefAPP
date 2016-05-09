@@ -1,4 +1,3 @@
-
 angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser, renewUser) {
     $scope.test = null;
     var requestForUserGroups = null;
@@ -28,7 +27,6 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
     };
 
 
-
     requestForUserGroups = userGroupsService.getUserGroups();
     requestForUserGroups.then(function (promise) {
         if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -52,21 +50,31 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
         }
     });
 
+
     $scope.$watch("userGroups", function () {
         $scope.refresh();
     }, true);
 
-    $scope.$watch("table.filter", function(){
-            $scope.credentials = [];
-            credentials.forEach(function(credential){
-                if($scope.table.filter == ""
-                    || (credential.userName && credential.userName.indexOf($scope.table.filter) >= 0)
-                    || (credential.email && credential.email.indexOf($scope.table.filter) >= 0)
-                    || (credential.phone && credential.phone.indexOf($scope.table.filter) >= 0))
-                    $scope.credentials.push(credential);
-            })
+    $scope.$watch("table.filter", function () {
+        $scope.credentials = [];
+        credentials.forEach(function (credential) {
+            if ($scope.table.filter == ""
+                || (credential.userName && credential.userName.indexOf($scope.table.filter) >= 0)
+                || (credential.email && credential.email.indexOf($scope.table.filter) >= 0)
+                || (credential.phone && credential.phone.indexOf($scope.table.filter) >= 0))
+                $scope.credentials.push(credential);
+        })
 
     });
+
+    $scope.onlyOneSelected = function () {
+        return $scope.selectedItems === 1;
+    };
+    $scope.moreThanOneSelected = function () {
+        return $scope.selectedItems >= 1;
+    };
+
+
     $scope.selectAll = function () {
         $scope.credentials.forEach(function (cred) {
             cred.selected = $scope.selectAllChecked;
@@ -74,12 +82,53 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
         if ($scope.selectAllChecked) $scope.selectedItems = $scope.credentials.length;
         else $scope.selectedItems = 0;
     };
-    $scope.selectOne = function (cred) {
-        cred.selected = !cred.selected;
+    $scope.selectOne = function (cred, row) {
+        if (row) cred.selected = !cred.selected;
+
         if (cred.selected) {
             $scope.selectedItems++;
         } else $scope.selectedItems--;
         $scope.selectAllChecked = $scope.selectedItems == $scope.credentials.length;
+    };
+
+
+    $scope.sendBySms = function () {
+        var credentials = [];
+        $scope.credentials.forEach(function (credential) {
+            if (credential.selected) {
+                credentials.push(credential);
+            }
+        });
+        if (credentials.length == 1) {
+            $mdDialog.show({
+                controller: 'DialogSendBySmsController',
+                templateUrl: 'modals/modalSendBySmsContent.html',
+                locals: {
+                    items: {
+                        account: credentials[0]
+                    }
+                }
+            });
+        }
+    };
+    $scope.sendByEmail = function () {
+        var credentials = [];
+        $scope.credentials.forEach(function (credential) {
+            if (credential.selected) {
+                credentials.push(credential);
+            }
+        });
+        if (credentials.length == 1) {
+            $mdDialog.show({
+                controller: 'DialogSendByEmailController',
+                templateUrl: 'modals/modalSendByEmailContent.html',
+                locals: {
+                    items: {
+                        account: credentials[0]
+                    }
+                }
+            });
+        }
     };
     $scope.refresh = function () {
         if (initialized) {

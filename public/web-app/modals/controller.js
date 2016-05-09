@@ -148,7 +148,7 @@ angular.module("Modals").controller("DialogSendByEmailController", function($sco
 
     $scope.sendByEmail = function(){
         sendCredentialsService.deliver(items.account.id, "EMAIL", $scope.email, null).then(function(promise){
-            if (promise.error) console.log(promise.error);
+            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
             else back();
         });
     };
@@ -168,7 +168,7 @@ angular.module("Modals").controller("DialogSendBySmsController", function($scope
 
     $scope.sendBySms = function(){
         sendCredentialsService.deliver(items.account.id, "SMS", null, $scope.phone).then(function(promise){
-            if (promise.error) console.log(promise.error);
+            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
             else back();
         });
     };
@@ -209,7 +209,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
         waitingForResponse = true;
         connectionStatusService.getStatus(userName).then(function (promise) {
             waitingForResponse = false;
-            if (promise.error) console.log(promise.error);
+            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
             else {
                 $scope.connectionStatus = promise.data;
                 if ($scope.connectionStatus.connected) $interval.cancel(checkStatus);

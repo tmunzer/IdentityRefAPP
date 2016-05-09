@@ -6,18 +6,21 @@
     </md-toolbar>
     <md-dialog-content class="md-dialog-content">
         <md-content>
+            <form name="sendByEmailForm">
             <md-input-container class="md-block flex-gt-sm">
-                <label for="prefix">Email Address</label>
-                <input id="prefix" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
-                       ng-model="email"/>
+                <label for="email">Email Address</label>
+                <input id="email" name="email" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
+                       ng-model="email" required/>
                 <div class="md-errors-spacer"></div>
             </md-input-container>
-            You can send the account {{items.account.loginName}} to the Guest email address, or to anyone else.
+            </form>
+            <span ng-show="items.account.loginName">You can send the account {{items.account.loginName}} to the Guest email address, or to anyone else.</span>
+            <span ng-show="items.account.userName">You can send the account {{items.account.userName}} to the Guest email address, or to anyone else.</span>
         </md-content>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-primary md-raised" ng-click="sendByEmail()">Send</md-button>
-        <md-button class="md-primary" ng-click="back()">Back</md-button>
+        <md-button class="md-primary md-raised" ng-click="sendByEmail()" ng-disabled="!sendByEmailForm.email.$valid">Send</md-button>
+        <md-button class="md-primary" ng-click="back()" ng-show="items.account.loginName">Back</md-button>
         <md-button class="md-primary" ng-click="close()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>

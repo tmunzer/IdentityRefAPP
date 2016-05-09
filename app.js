@@ -53,6 +53,9 @@ app.use('/', routes);
 app.use('/web-app/', webapp);
 app.use('/api/', api);
 app.use('/oauth', oauth);
+app.get('*', function(req, res) {
+    res.redirect('/');
+});
 
 app.get('/fail', function (req, res, next) {
   setTimeout(function () {

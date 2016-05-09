@@ -48,29 +48,56 @@ html
 
             div(style="height: 500px;width: 450px;" layout-margin)
                     div.inside(md-whiteframe="5" style="height: 100%, width: 100%")
-                        md-toolbar
-                            div.md-toolbar-tools
-                                h2 Already have your<br> API Access Token?
-                        md-content(layout="column" layout-padding)
-                            md-input-container
-                                label(for="vpcUrl") Server
-                                md-select(id="vpcUrl" name="vpcUrl" ng-model="vpcUrl")
-                                    md-option(value="cloud-va.aerohive.com") cloud-va.aerohive.com
-                                    md-option(value="cloud-ie.aerohive.com") cloud-ie.aerohive.com
-                            form(id="AT" action="/" method="post")
-                                input(type="hidden" name="vpcUrl" value='{{vpcUrl}}')
-                                md-input-container.md-block.flex-gt-sm
-                                    label(for="OwnerID") Owner Id
-                                    input(required="required" autocorrect="off" autocapitalize="none" id="ownerID" name="ownerID" type="text")
-                                md-input-container.md-block.flex-gt-sm
-                                    label(for="accessToken") Access Token
-                                    input(required="required" id="accessToken" name="accessToken" type="text")
-                                div(style="float: right")
-                                    md-button(ng-click="reset()") Reset
-                                    md-button.md-raised.md-primary(type="submit") Connect
-                            div
-                                span='For more information, a Quick Start Guide is available '
-                                a.link(href="/howto/" target='_blank') here
+                        md-tabs(md-dynamic-height md-border-bottom)
+                            md-tab(label="Cloud")
+                                md-toolbar
+                                    div.md-toolbar-tools
+                                        h2 Already have your<br> API Access Token?
+                                md-content(layout="column" layout-padding)
+                                    md-input-container
+                                        label(for="vpcUrlOl") Server
+                                        md-select(id="vpcUrlOl" name="vpcUrl" ng-model="vpcUrl")
+                                            md-option(value="cloud-va.aerohive.com") cloud-va.aerohive.com
+                                            md-option(value="cloud-ie.aerohive.com") cloud-ie.aerohive.com
+                                    form(id="ATOl" action="/" method="post")
+                                        input(type="hidden" name="vpcUrl" value='{{vpcUrl}}')
+                                        md-input-container.md-block.flex-gt-sm
+                                            label(for="OwnerIDOl") Owner Id
+                                            input(required="required" autocorrect="off" autocapitalize="none" id="ownerIDOl" name="ownerID" type="text")
+                                        md-input-container.md-block.flex-gt-sm
+                                            label(for="accessTokenOl") Access Token
+                                            input(required="required" id="accessTokenOl" name="accessToken" type="text")
+                                        div(style="float: right")
+                                            md-button(ng-click="reset()") Reset
+                                            md-button.md-raised.md-primary(type="submit") Connect
+                                    div
+                                        span='For more information, a Quick Start Guide is available '
+                                        a.link(href="/howto/" target='_blank') here
+                            md-tab(label="On Premise" ng-disabled='true')
+                                md-toolbar
+                                    div.md-toolbar-tools
+                                        h2 You have the HiveManager Virtual Appliance?
+                                md-content(layout="column" layout-padding)
+                                    span This server has to be able to reach the HiveManager NG VA.
+                                    md-input-container(style="padding-bottom: 0;margin-bottom: 0;")
+                                        md-checkbox(id="rejectUnauthorizedOp" name="rejectUnauthorized" ng-model="tlsOp" style="margin-bottom: 0;") Validate HTTPS certificate
+                                    form(id="ATOp" action="/op" method="post")
+                                        input(type="hidden" name="rejectUnauthorized" value='{{tlsOp}}')
+                                        md-input-container.md-block.flex-gt-sm
+                                            label(for="vpcUrlOp") HiveManager NG VA hostname
+                                            input(required="required" autocorrect="off" autocapitalize="none" id="vpcUrlOp" name="vpcUrl" type="text")
+                                        md-input-container.md-block.flex-gt-sm
+                                            label(for="OwnerIDOp") Owner Id
+                                            input(required="required" autocorrect="off" autocapitalize="none" id="ownerIDOp" name="ownerID" type="text")
+                                        md-input-container.md-block.flex-gt-sm
+                                            label(for="accessTokenOp") Access Token
+                                            input(required="required" id="accessTokenOp" name="accessToken" type="text")
+                                        div(style="float: right")
+                                            md-button(ng-click="reset()") Reset
+                                            md-button.md-raised.md-primary(type="submit") Connect
+                                    div
+                                        span='For more information, a Quick Start Guide is available '
+                                        a.link(href="/howto/" target='_blank') here
 
 
 
