@@ -11,7 +11,8 @@ module.exports.monitor = {
         GET: require(appRoot + "/bin/aerohive/api/monitor/device").GET
     },
     client: {
-        GET: require(appRoot + "/bin/aerohive/api/monitor/client").GET
+        clientsList: require(appRoot + "/bin/aerohive/api/monitor/client").clientsList,
+        clientDetails: require(appRoot + "/bin/aerohive/api/monitor/client").clientDetails
     }
 };
 
@@ -29,11 +30,14 @@ module.exports.clientlocation = {
 
 module.exports.identity = {
     userGroups: {
-        GET: require(appRoot + "/bin/aerohive/api/identity/userGroups").GET
+        getUserGroups: require(appRoot + "/bin/aerohive/api/identity/userGroups").getUserGroups
     },
     credentials: {
-        GET: require(appRoot + "/bin/aerohive/api/identity/credentials").GET,
-        POST: require(appRoot + "/bin/aerohive/api/identity/credentials").POST,
-        DELETE: require(appRoot + "/bin/aerohive/api/identity/credentials").DELETE
+        getCredentials: require(appRoot + "/bin/aerohive/api/identity/credentials").getCredentials,
+        createCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").createCredential,
+        deleteCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").deleteCredential,
+        deliverCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").deliverCredential,
+        renewCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").renewCredential,
+        updateCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").updateCredential
     }
 };

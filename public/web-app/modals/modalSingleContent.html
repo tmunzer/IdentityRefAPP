@@ -1,0 +1,51 @@
+<md-dialog aria-label="New User">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">New account created</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <md-content>
+            <div class="md-dialog-content">
+                <table style="text-align: left">
+                    <tr>
+                        <th style="padding: 10px;">Username:</th>
+                        <td>{{account.loginName}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;">Password:</th>
+                        <td>{{account.password}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;">SSID:</th>
+                        <td>{{account.ssid | ssidStringFromArray}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;">Start Time:</th>
+                        <td>{{account.activeTime}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;">End Time:</th>
+                        <td>{{account.expireTime}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;">Auth Type:</th>
+                        <td>{{account.authType}}</td>
+                    </tr>
+                </table>
+            </div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary md-raised" ng-click="qrcode()" style="display: inline;text-align: center;">Show QRCode (Android)</md-button>
+    </md-dialog-actions>
+    <md-dialog-actions>
+        <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="display: inline;text-align: center;">Send Configuration Profile (iOS)</md-button>
+    </md-dialog-actions>
+    <md-dialog-actions>
+        <md-button class="md-primary" ng-click="sendBySms()">Send by SMS</md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()">Send by E-mail</md-button>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>
+

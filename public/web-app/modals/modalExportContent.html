@@ -1,0 +1,31 @@
+<md-dialog aria-label="Export">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Export Accounts</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <div class="md-dialog-content">
+
+            <span>Values to exports</span>
+            <ul>
+                <li ng-repeat="field in exportFields">
+                    <label class="checkbox">
+                        <input type="checkbox" data-name={{field.name}}
+                               class="J-check-any" ng-model="field.selected"
+                               ng-change="change()">
+                        <span class="lbl fn-ellipsis" title={{field.name}}>{{field.display}}</span>
+                    </label>
+
+                </li>
+            </ul>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+        <md-button class="md-primary md-raised " ng-csv="export()"
+                   csv-header="getExportHeader()" filename="accounts.csv">Export to CSV
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
+

@@ -2,75 +2,122 @@ doctype html5
 html
     head
         title= title
-        link(rel='stylesheet' href='/css/font-awesome.min.css')
-        link(rel='stylesheet' href='/css/ah-styles.min.css')
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+
+        link(rel="stylesheet" href="/bower_components/intl-tel-input/build/css/intlTelInput.css")
+        link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
+        link(rel="stylesheet" href="/bower_components/angular-material-data-table/dist/md-data-table.min.css")
+        link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
         link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
-        link(rel='stylesheet' href='/css/borderContainer.css')
-        link(rel='stylesheet' href='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+        link(rel='stylesheet' href='/css/ah-tm.tags.css')
+        link(rel='stylesheet' href='/css/ah-tm.cards.css')
+        link(rel='stylesheet' href='/css/ah-tm.md-table.css')
+        link(rel='stylesheet' href='/css/ah-tm.md-list.css')
+
+        script(src="/bower_components/jquery/dist/jquery.min.js")
+
         script(src="/bower_components/angular/angular.min.js")
-        script(src="/bower_components/angular-smart-table/dist/smart-table.min.js")
+        script(src="/bower_components/angular-aria/angular-aria.js")
+        script(src="/bower_components/angular-animate/angular-animate.min.js")
+        script(src="/bower_components/angular-material/angular-material.js")
+        script(src="/bower_components/angular-messages/angular-messages.js")
+        script(src="/bower_components/angular-material-data-table/dist/md-data-table.min.js")
         script(src="/bower_components/angular-route/angular-route.min.js")
-        script(src="/bower_components/angular-bootstrap/ui-bootstrap.min.js")
+        script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
+        script(src="/bower_components/angular-qrcode/angular-qrcode.js")
+        script(src="/bower_components/qrcode-generator/js/qrcode.js")
+        script(src="/bower_components/intl-tel-input/build/js/intlTelInput.min.js")
+        script(src="/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js")
+        script(src="/bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.min.js")
+
         script(src="/web-app/app.js")
+        script(src="/web-app/routes.js")
+        script(src="/web-app/filters/filters.js")
+        script(src="/web-app/create/controller.js")
+        script(src="/web-app/create/service.js")
+        script(src="/web-app/credentials/controller.js")
+        script(src="/web-app/credentials/service.js")
+        script(src="/web-app/import/controller.js")
+        script(src="/web-app/import/service.js")
+        script(src="/web-app/monitor/controller.js")
+        script(src="/web-app/monitor/service.js")
+        script(src="/web-app/modals/controller.js")
+        script(src="/web-app/modals/service.js")
         script(src="/web-app/ng-sanitize.js")
         script(src="/bower_components/ng-csv/build/ng-csv.min.js")
-        block include
 
-    body.claro.fullaccess(ng-app="identity")
+    body(ng-app="identity").icons-docs(ng-controller="UserCtrl as UserCtrl")
         div.modal.fade.bs-example-modal-lg(ng-controller="ModalCtrl")
             script(type="text/ng-template" id="modalAboutContent.html")
-                div.modal-header
-                    h4.modal-title Account details
-                div.modal-body
-                    table(style="text-align: left;")
-                        tbody
-                            tr
-                                th(style="padding: 5px 10px;") HMNG Server:
-                                td(style="padding: 5px 10px;")= server
-                            tr
-                                th(style="padding: 5px 10px;") Owner ID:
-                                td(style="padding: 5px 10px;")= ownerId
-                            tr
-                                th(style="padding: 5px 10px;") Access Token:
-                                td(style="padding: 5px 10px;")= accessToken
-                div.modal-footer
-                    a(class="btn btn-primary" ng-click="close()") Close
+                md-dialog(aria-label="List dialog")
+                    md-toolbar
+                        div.md-toolbar-tools
+                            h2Account Details
+                    md-dialog-content
+                        div.md-dialog-content
+                            table
+                                tbody
+                                    tr
+                                        th(style="padding: 5px 10px;") HMNG Server:
+                                        td(style="padding: 5px 10px;")= server
+                                    tr
+                                        th(style="padding: 5px 10px;") Owner ID:
+                                        td(style="padding: 5px 10px;")= ownerId
+                                    tr
+                                        th(style="padding: 5px 10px;") Access Token:
+                                        td(style="padding: 5px 10px;")= accessToken
+                    md-dialog-actions(layout="row")
+                        md-button(ng-click="close()") Close
 
-        div.header(id="header" ng-controller="HeaderCtrl")
-            div.head-inner
-                h1.logo
-                    img.app-logo(src="/images/logo_nav.png" alt="Aerohive")
-                div.login-area(id="appHeader")
-                    ul.head-nav
-                div.login-area
-                    ul.head-nav
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('monitor')}")
-                            a.nav-dashboard(href="#/monitor/") Monitor
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('credentials')}")
-                            a.nav-dashboard(href="#/credentials/") Credentials
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('create')}")
-                            a.nav-dashboard(href="#/create/single") Create
-                        li(class = "nav-item" ng-class="{cur: nav.isActive('import')}")
-                            a.nav-dashboard(href="#/import/") Import
-                    div.head-options.hdrOptions
-                         div.ah-navsprite-icons.ah-navsprite-user
-                            div.head-sta-item.sta-user.hdrUser
-                                div.sta-item-con
-                                    div.sta-item-con-arrow
-                                    ul.user-list
-                                        li.user-list-item-first(ng-controller="ModalCtrl" ng-click="open('about')") Account Details
-                                        li
-                                            a(href="/logout/") Logout
-                                span.sta-item-bridge
-            div.head-bottom
-                div.sub-tabs
-                    ul.sub-create(ng-show="nav.isActive('create')")
-                        li(ng-class="{cur: subnav.isActive('single')}")
-                            a(href="#/create/single") Single Account
-                            span.arrow
-                        li(ng-class="{cur: subnav.isActive('bulk')}")
-                            a(href="#/create/bulk") Bulk Accounts
-                            span.arrow
 
-        div.clearfix(id="main")
+        header.md-page-header(ng-controller="HeaderCtrl")
+            div.header
+            md-toolbar.header.fixed(layout='row')
+
+                h1.logo.md-toolbar-tools
+                    img(src="/images/logo_nav.png" alt="Aerohive")
+                span(flex)
+                md-menu
+                    md-button(aria-label="menu" ng-click="UserCtrl.openMenu($mdOpenMenu, $event)")
+                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") Menu
+                        md-icon(class="material-icons" aria-label="menu") more_vert
+                    md-menu-content
+                        md-menu-item
+                            md-button(ng-controller="ModalCtrl" ng-click="open('about')")
+                                md-icon.material-icons(md-menu-align-target) info
+                                span Account Details
+                        md-menu-item
+                            md-button(href="/logout/")
+                                md-icon( md-menu-align-target) exit_to_app
+                                span Logout
+
+
+
+            md-toolbar.md-menu-toolbar(layout="row")
+                md-toolbar-filler(layout layout-align="center center" style="width:250px; background-color: white" hide-xs hide-sm hide-md)
+                md-menu-bar.main-menu
+
+                    md-button(href="#/monitor/" ng-class="{cur: nav.isActive('monitor')}")
+                        md-icon.material-icons.md-24 recent_actors
+                        div Monitor
+
+                    md-button(href="#/credentials/" ng-class="{cur: nav.isActive('credentials')}")
+                        md-icon.material-icons.md-24 contacts
+                        div Credentials
+
+                    md-button(href="#/create/single" ng-class="{cur: nav.isActive('create')}")
+                        md-icon.material-icons.md-24 person_add
+                        div Create
+
+                    md-button(href="#/import/" ng-class="{cur: nav.isActive('import')}")
+                        md-icon.material-icons.md-24 file_download
+                        div Import
+
+
+
+        div(id="main")
+            md-button.md-fab.md-warn.md-mini(aria-label="menu" style="position: fixed; bottom: 20px; left: 20px" ng-show="UserCtrl.showFab()" hide-gt-md ng-click='UserCtrl.sideNav("left")')
+                md-icon.material-icons.md-12 menu
             ng-view
+
+

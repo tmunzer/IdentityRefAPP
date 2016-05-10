@@ -3,7 +3,7 @@ var router = express.Router();
 var API = require(appRoot + "/bin/aerohive/api/main");
 /* GET users listing. */
 router.post('/identity/userGroup', function (req, res, next) {
-    API.identity.userGroups.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, function (err, result) {
+    API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, result) {
         if (err) res.json({error: err});
         else {
             result.reqId = req.body.reqId;
@@ -30,7 +30,7 @@ router.get('/identity/credentials', function (req, res, next) {
     credentialType.forEach(function (credential) {
         userGroup.forEach(function (group) {
             console.log(group);
-            API.identity.credentials.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
+            API.identity.credentials.getCredentials(req.session.xapi, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
                 if (err) res.json({error: err});
                 else {
                     result.forEach(function (account) {
@@ -50,7 +50,7 @@ router.get('/identity/credentials', function (req, res, next) {
 router.post('/identity/credentials', function (req, res, next) {
     var hmCredentialsRequestVo = {};
     if (req.body.hasOwnProperty('hmCredentialsRequestVo')) hmCredentialsRequestVo = req.body.hmCredentialsRequestVo;
-    API.identity.credentials.POST(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, hmCredentialsRequestVo, function (err, result) {
+    API.identity.credentials.createCredential(req.session.xapi, null, null, hmCredentialsRequestVo, function (err, result) {
         if (err) res.json({error: err});
         else res.json(result);
     })
@@ -58,12 +58,32 @@ router.post('/identity/credentials', function (req, res, next) {
 router.delete('/identity/credentials', function (req, res, next) {
     var ids = "";
     if (req.query.hasOwnProperty("ids")) ids = req.query.ids;
-    API.identity.credentials.DELETE(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, null, null, ids, function (err, result) {
+    API.identity.credentials.deleteCredential(req.session.xapi, null, null, ids, function (err, result) {
         if (err) res.json({error: err});
         else res.json(result);
     })
 });
-
+router.put('/identity/credentials/renew', function(req, res, next){
+    var id = "";
+    console.log(req.query);
+    if (req.query.hasOwnProperty("id")) id = req.query.id;
+        API.identity.credentials.renewCredential(req.session.xapi, id, null, null, function (err, result) {
+            if (err) res.json({error: err});
+            else res.json(result);
+        })
+});
+router.post('/identity/credentials/deliver', function(req, res, next){
+    if (req.body.hasOwnProperty("hmCredentialDeliveryInfoVo")){
+        var hmCredentialDeliveryInfoVo = req.body.hmCredentialDeliveryInfoVo;
+        console.log(req.query);
+        if (req.query.hasOwnProperty("id")) id = req.query.id;
+        API.identity.credentials.deliverCredential(req.session.xapi, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
+            console.log(err, result);
+            if (err) res.json({error: err});
+            else res.json(result);
+        })
+    }
+});
 router.get('/monitor/devices', function (req, res, next) {
     var credentialType = [""];
     var userGroup = [""];
@@ -83,7 +103,7 @@ router.get('/monitor/devices', function (req, res, next) {
     credentialType.forEach(function (credential) {
         userGroup.forEach(function (group) {
             console.log(group);
-            API.identity.credentials.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
+            API.identity.credentials.getCredentials(req.session.xapi, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
                 if (err) res.json({error: err});
                 else {
                     result.forEach(function (account) {
@@ -92,7 +112,7 @@ router.get('/monitor/devices', function (req, res, next) {
                     reqDone++;
                 }
                 if (reqDone == reqMax) {
-                    API.monitor.client.GET(req.session.vpcUrl, req.session.accessToken, req.session.ownerID, function (err, clients) {
+                    API.monitor.client.clientsList(req.session.xapi, function (err, clients) {
                         if (err) res.json({error: err});
                         else {
                             credentials.forEach(function (credential) {
@@ -108,5 +128,54 @@ router.get('/monitor/devices', function (req, res, next) {
             })
         });
     });
+});
+
+router.get('/identity/status', function(req, res, next){
+    var clientStatus = {
+        connected: false,
+        os: "N/A",
+        ssid: "N/A",
+        radioHealth: "N/A",
+        networkHealth: "N/A",
+        applicationHealth: "N/A",
+        hostName: "N/A",
+        ip: "N/A",
+        userProfile: "N/A",
+        clientMac: "N/A",
+        radioBand: "N/A",
+        clientProtocol: "N/A"
+    };
+    var userName = "";
+
+    if (req.query.hasOwnProperty('userName')) {
+        userName = req.query.userName;
+        API.monitor.client.clientsList(req.session.xapi, function (err, clients) {
+            if (err) res.json(err);
+            else {
+                clients.forEach(function(client){
+                    if (client.userName === userName){
+                        clientStatus = {
+                            connected: true,
+                            os: client.os,
+                            ssid: client.ssid,
+                            radioHealth: client.radioHealth,
+                            networkHealth: client.networkHealth,
+                            applicationHealth: client.applicationHealth,
+                            hostName: client.hostName,
+                            ip: client.ip,
+                            userProfile: client.userProfile,
+                            clientMac: client.clientMac
+                        };
+                        API.monitor.client.clientDetails(req.session.xapi, client.clientId, function (err, clientDetails) {
+                            if (err) res.json({data: clientStatus});
+                            clientStatus.radioBand = clientDetails.radioBand;
+                            clientStatus.clientProtocol = clientDetails.clientProtocol;
+                            res.json({data: clientStatus});
+                        });
+                    }
+                });
+            }
+        });
+    } else res.json({});
 });
 module.exports = router;

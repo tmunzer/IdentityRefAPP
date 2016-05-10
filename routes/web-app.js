@@ -3,12 +3,12 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    if (req.session.vpcUrl && req.session.ownerID && req.session.accessToken) {
+    if (req.session.xapi) {
         res.render('web-app', {
             title: 'Identity',
-            server: req.session.vpcUrl,
-            ownerId: req.session.ownerID,
-            accessToken: req.session.accessToken
+            server: req.session.xapi.vpcUrl,
+            ownerId: req.session.xapi.ownerId,
+            accessToken: req.session.xapi.accessToken
         });
     } else res.redirect("/");
 });

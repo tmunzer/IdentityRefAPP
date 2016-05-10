@@ -1,0 +1,25 @@
+<md-dialog aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>HTTP {{items.apiErrorStatus}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <table style="text-align: left">
+                <tr>
+                    <th style="padding: 10px;">Error Message:</th>
+                    <td>{{items.apiErrorMessage}}</td>
+                </tr>
+                <tr>
+                    <th style="padding: 10px;">Error Code:</th>
+                    <td>{{items.apiErrorCode}}</td>
+                </tr>
+            </table>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button href="/web-app/"> Try to reload the page</md-button>
+        <md-button href="/logout/" class="md-raised md-primary"> Try to use other credentials</md-button>
+    </md-dialog-actions>
+</md-dialog>

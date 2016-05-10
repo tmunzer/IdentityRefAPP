@@ -1,0 +1,27 @@
+<md-dialog aria-label="ExportBulk">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Export Bulk Accounts</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <div class="md-dialog-content">
+            <table style="text-align: left">
+                <tbody>
+                <tr>
+                    <th style="padding: 10px;">Number of created accounts:</th>
+                    <td>{{credentials.length}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+        <md-button class="md-primary md-raised " ng-csv="exportBulk()"
+                   csv-header="getExportHeaderBulk()" filename="bulkAccounts.csv">Export to CSV
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
+
+

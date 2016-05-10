@@ -1,135 +1,10 @@
 
 body {
-    font: 12px helvetica,arial,san-serif !important;
-}
-
-.head-inner > .logo {
     margin: 0;
 }
 
-.dropdown button {
-    width: 100px;
-    border: 1px solid #5897FB;
-    padding: 0.5em 0.5em 0.2em 18px;
-    background-color: #799EB7;
-    color: #FFF;
-    margin-top: 0.34em;
-}
 
-.dropdown.large button,
-.dropdown.medium button,
-.dropdown.tree button {
-    padding: 1em 1em 1em 18px;
-}
 
-.dropdown button:hover {
-    background-color: #4C7D99;
-}
-
-.dropdown {
-    width: 100px;
-}
-.dropdown.medium button,
-ul.dropdown-menu.medium,
-.dropdown.medium {
-    width: 200px !important;
-}
-.dropdown.tree button,
-ul.dropdown-menu.tree,
-.dropdown.tree {
-    width: 196px !important;
-}
-.dropdown.tree {
-    height: 35px;
-}
-
-.dropdown.large button,
-ul.dropdown-menu.large,
-.dropdown.large,
-.login-form input {
-    width: 323px !important;
-}
-
-.init-text {
-    float: left;
-}
-
-.caret {
-    float: right;
-    border-top: 4px solid #fff;}
-.dropdown .caret {
-    margin-top: 4px;
-}
-
-ul.dropdown-menu {
-    margin: 0;
-    padding: 0;
-    width: 100px;
-    min-width: 100px !important;
-    height: auto;
-    overflow-x: hidden;
-    border-radius: 0;
-
-}
-
-.dropdown-menu > li {
-    padding: 0.2em;
-    border-bottom: 1px solid #789FB6;
-    color: #000;
-}
-.dropdown-menu.large > li {
-    padding: 1em;
-}
-.dropdown-menu.tree > li,
-.dropdown-menu.medium > li {
-    padding: 2px 0 2px 15px;
-    font-size: 12px;
-}
-.dropdown-menu > li > span {
-    margin-left: 15px;
-}
-
-.dropdown-menu > li:hover,
-.dropdown-menu > li:hover > i,
-.dropdown-menu > li:hover > div > i{
-    background-color: #4C7D99;
-    color: #FFF;
-    cursor: pointer;
-}
-
-i.fa {
-    margin-right: 1em;
-    color: gray;
-}
-
-.dropdown-title {
-    background-color: gray;
-    color: white;
-    padding: 0;
-    float: left;
-    margin: 0;
-    cursor: default;
-}
-
-.dropdown-title > input {
-    margin: 0;
-    height: 3em;
-}
-.dropdown-hr {
-    margin: 0;
-}
-
-span.separator {
-    background-color: gray;
-    width: 5em;
-    color: gray;
-}
-
-.top-menu {
-    display: inline-flex;
-    width: 100%;
-    background: gray;
-}
 
 button.blue-button {
     background-color: #0092D1;
@@ -261,18 +136,7 @@ li.location {
     margin: 0 0 5px 0;
     width: 100% ! important;
 }
-.compare {
-    height: 30px;
-    text-align: left;
-    line-height: 30px !important;
-    padding-left: 5px;
-    font: 12px helvetica,arial,san-serif;
-    vertical-align: middle;
-}
-span.compare {
-    font-weight: bold;
-    text-transform: uppercase;
-}
+
 .widget-number {
     position: relative;
     top: 0;
@@ -311,57 +175,11 @@ span.compare {
 .widget-label:hover .health-progress-bar-help {
     display: block;
 }
-.health-progress-bar-help {
-    right: 3px;
-}
-.health-progress-help-info {
-    width: 250px;
-    left: 250px;
-    top: 30px;
-    z-index: 100;
-    font: 12px helvetica,arial,san-serif;
-    text-transform: none;
-}
-.health-progress-help-info-rect {
-    left: 208px;
-    top: -5px;
-    border-left: 8px solid transparent;
-    border-bottom: 10px solid #f2f7fa;
-    border-right: 8px solid transparent;
-}
 
 .entity-timeline-bar-time {
     margin-top: 0;
 }
 
-.modal,
-.btn {
-    border-radius: 0;
-}
-.btn-primary {
-    color: #fff !important;
-}
-.ui-tab-active .arrow-left{
-    margin-left: -1px !important;
-}
-.ui-tab-active .arrow-left::before {
-    left: 0;
-}
-.ui-tab-active .arrow-left::after {
-    left: -2px;
-}
-
-.user-list li a {
-    color: #fff;
-    margin: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-.user-list li a:hover {
-    color: #9de7f9;
-    text-decoration-line: inherit;
-}
 
 span.help-tip::before {
     border-left: 8px solid #525252 !important;
@@ -374,22 +192,6 @@ span.help-tip {
     height: 25px !important;
 }
 
-table {
-    width: 100% !important;
-    font-size: 12px !important;
-
-}
-.table tbody tr:hover {
-    background-color: #fff8ea;
-    transition:all 0.2s ease-in-out;
-
-}
-.table tbody tr {
-    transition:all 0.2s ease-in-out;
-}
-table td {
-    cursor: default;
-}
 
 .ui-select-card {
     transition:all 0.1s ease-in-out;
@@ -404,21 +206,8 @@ table tfoot td {
     padding: 0 !important;
 }
 
-ul.pagination {
-    margin: 0 !important;
-}
 
-.progress {
-    border-radius: 0;
-    margin-top: 20px;
-}
 
-.progress-bar {
-    height: 100%;
-    text-align: center;
-    background-color:#62c462;
-
-}
 input.invalid,textarea.invalid,select.invalid {
     color:#b94a48;
     border-color:#ee5f5b
@@ -445,4 +234,23 @@ input.invalid,textarea.invalid,select.invalid {
 }
 .tooltip.customClass .red {
     color: #d04d49;
+}
+
+
+
+table {
+    width: 100% !important;
+    font-size: 12px !important;
+
+}
+.table tbody tr:hover {
+    background-color: #fff8ea;
+    transition:all 0.2s ease-in-out;
+
+}
+.table tbody tr {
+    transition:all 0.2s ease-in-out;
+}
+table td {
+    cursor: default;
 }
