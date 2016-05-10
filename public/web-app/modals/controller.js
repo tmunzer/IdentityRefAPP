@@ -139,7 +139,17 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
             }
         });
     };
-
+    $scope.iOSProfile = function(){
+        $mdDialog.show({
+            controller: 'DialogSendIosProfileController',
+            templateUrl: 'modals/modalSendIosProfileContent.html',
+            locals: {
+                items: {
+                    account: $scope.account
+                }
+            }
+        });
+    }
 });
 
 angular.module("Modals").controller("DialogSendByEmailController", function($scope, $rootScope, $mdDialog, sendCredentialsService, items){
@@ -152,6 +162,33 @@ angular.module("Modals").controller("DialogSendByEmailController", function($sco
             else back();
         });
     };
+    $scope.back = function () {
+        $rootScope.$broadcast('createSingle', items.account);
+    };
+    $scope.close = function () {
+        // Easily hides most recent dialog shown...
+        // no specific instance reference is needed.
+        $mdDialog.hide();
+    };
+});
+
+angular.module("Modals").controller("DialogSendIosProfileController", function($scope, $rootScope, $mdDialog, iOSProfileService, items){
+    $scope.email = "";
+    $scope.items = items;
+    $scope.isWorking = false;
+    $scope.success = false;
+
+    $scope.sendIosProfile = function(){
+        $scope.isWorking = true;
+        iOSProfileService.sendProfile(items.account.loginName, items.account.activeTime, items.account.ssid, items.account.password, $scope.email).then(function(promise){
+            $scope.isWorking = false;
+            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
+            else $scope.success = true;
+        });
+    };
+    $scope.$watch("email", function(){
+        $scope.success = false;
+    });
     $scope.back = function () {
         $rootScope.$broadcast('createSingle', items.account);
     };

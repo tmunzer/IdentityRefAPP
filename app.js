@@ -49,10 +49,12 @@ var routes = require('./routes/login');
 var webapp = require('./routes/web-app');
 var api = require('./routes/api');
 var oauth = require('./routes/oauth');
+var mailer = require('./routes/mailer');
 app.use('/', routes);
 app.use('/web-app/', webapp);
 app.use('/api/', api);
 app.use('/oauth', oauth);
+app.use('/mailer', mailer);
 app.get('*', function(req, res) {
     res.redirect('/');
 });
