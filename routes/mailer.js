@@ -11,7 +11,7 @@ transporter.verify(function(error, success) {
     if (error) {
         console.log(error);
     } else {
-        console.log('Connection to the SMTP server is Ok. I\' ready to send your messages');
+        console.log('Connection to the SMTP server is Ok. I\'m ready to send your messages');
     }
 });
 
