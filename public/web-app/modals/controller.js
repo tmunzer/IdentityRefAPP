@@ -96,10 +96,10 @@ angular.module('Modals').controller('DialogController', function ($scope, $mdDia
 
 angular.module('Modals').controller('DialogSingleController', function ($scope, $mdDialog, items) {
     // items is injected in the controller, not its scope!
-    console.log(items);
+
     $scope.account = items.account;
-    console.log($scope.account);
-    var qrcodeString = "WIFI:S:" + $scope.account.ssid + ";T:WPA;P:" + $scope.account.password + ";;";
+
+
     $scope.close = function () {
         // Easily hides most recent dialog shown...
         // no specific instance reference is needed.
@@ -133,7 +133,6 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
             templateUrl: 'modals/modalQrCodeContent.html',
             locals: {
                 items: {
-                    string: qrcodeString,
                     account: $scope.account
                 }
             }
@@ -238,6 +237,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
     $scope.clientConnected = false;
     var waitingForResponse = false;
     $scope.items = items;
+    $scope.qrcodeString = "WIFI:S:" + $scope.items.account.ssid + ";T:WPA;P:" + $scope.items.account.password + ";;";
     /**
      * Loads and populates the notifications
      */
