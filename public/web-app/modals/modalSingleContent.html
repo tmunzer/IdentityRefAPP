@@ -22,11 +22,11 @@
                     </tr>
                     <tr>
                         <th style="padding: 10px;">Start Time:</th>
-                        <td>{{account.activeTime}}</td>
+                        <td>{{account.activeTime | date : 'short' }}</td>
                     </tr>
                     <tr>
                         <th style="padding: 10px;">End Time:</th>
-                        <td>{{account.expireTime}}</td>
+                        <td>{{account.expireTime | date : 'short' }}</td>
                     </tr>
                     <tr>
                         <th style="padding: 10px;">Auth Type:</th>
@@ -37,14 +37,14 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-primary md-raised" ng-click="qrcode()" style="display: inline;text-align: center;">Show QRCode (Android)</md-button>
+        <md-button class="md-primary md-raised" ng-click="qrcode()" style="width: 100%;">Show QRCode (Android)</md-button>
     </md-dialog-actions>
     <md-dialog-actions>
-        <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="display: inline;text-align: center;">Send Configuration Profile (iOS)</md-button>
+        <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="width: 100%;">Send Configuration Profile (iOS)</md-button>
     </md-dialog-actions>
     <md-dialog-actions>
-        <md-button class="md-primary" ng-click="sendBySms()">Send by SMS</md-button>
-        <md-button class="md-primary" ng-click="sendByEmail()">Send by E-mail</md-button>
+        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="true">Send by SMS</md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="true">Send by E-mail</md-button>
         <md-button class="md-primary" ng-click="close()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>
