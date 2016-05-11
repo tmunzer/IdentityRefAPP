@@ -38,7 +38,7 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
             });
         }
     });
-    $scope.$on('createSingle', function (event, account) {
+    $scope.$on('createSingle', function (event, user, account) {
         if (!$rootScope.displayed) {
             $rootScope.displayed = true;
             $mdDialog.show({
@@ -46,6 +46,7 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
                 templateUrl: 'modals/modalSingleContent.html',
                 locals: {
                     items: {
+                        user: user,
                         account: account
                     }
                 }
@@ -94,34 +95,48 @@ angular.module('Modals').controller('DialogController', function ($scope, $mdDia
     };
 });
 
-angular.module('Modals').controller('DialogSingleController', function ($scope, $mdDialog, items) {
+angular.module('Modals').controller('DialogSingleController', function ($scope, $rootScope, $mdDialog, items, createService) {
     // items is injected in the controller, not its scope!
-
+    $scope.user = items.user;
     $scope.account = items.account;
 
+    if (!$scope.account) {
+        createService.saveUser($scope.user).then(function (promise) {
+            if (promise && promise.error) {
+                $mdDialog.hide();
+                $rootScope.displayed = false;
+                $rootScope.$broadcast("apiWarning", promise.error);
+            } else {
+                console.log(promise);
+                $scope.account = promise;
+            }
+        });
+    }
 
     $scope.close = function () {
         // Easily hides most recent dialog shown...
         // no specific instance reference is needed.
         $mdDialog.hide();
     };
-    $scope.sendBySms = function(){
+    $scope.sendBySms = function () {
         $mdDialog.show({
             controller: 'DialogSendBySmsController',
             templateUrl: 'modals/modalSendBySmsContent.html',
             locals: {
                 items: {
+                    user: $scope.user,
                     account: $scope.account
                 }
             }
         });
     };
-    $scope.sendByEmail = function(){
+    $scope.sendByEmail = function () {
         $mdDialog.show({
             controller: 'DialogSendByEmailController',
             templateUrl: 'modals/modalSendByEmailContent.html',
             locals: {
                 items: {
+                    user: $scope.user,
                     account: $scope.account
                 }
             }
@@ -133,17 +148,19 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
             templateUrl: 'modals/modalQrCodeContent.html',
             locals: {
                 items: {
+                    user: $scope.user,
                     account: $scope.account
                 }
             }
         });
     };
-    $scope.iOSProfile = function(){
+    $scope.iOSProfile = function () {
         $mdDialog.show({
             controller: 'DialogSendIosProfileController',
             templateUrl: 'modals/modalSendIosProfileContent.html',
             locals: {
                 items: {
+                    user: $scope.user,
                     account: $scope.account
                 }
             }
@@ -151,45 +168,24 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
     }
 });
 
-angular.module("Modals").controller("DialogSendByEmailController", function($scope, $rootScope, $mdDialog, sendCredentialsService, items){
-    $scope.email = "";
-    $scope.items = items;
-
-    $scope.sendByEmail = function(){
-        sendCredentialsService.deliver(items.account.id, "EMAIL", $scope.email, null).then(function(promise){
-            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
-            else back();
-        });
-    };
-    $scope.back = function () {
-        $rootScope.$broadcast('createSingle', items.account);
-    };
-    $scope.close = function () {
-        // Easily hides most recent dialog shown...
-        // no specific instance reference is needed.
-        $mdDialog.hide();
-    };
-});
-
-angular.module("Modals").controller("DialogSendIosProfileController", function($scope, $rootScope, $mdDialog, iOSProfileService, items){
-    $scope.email = "";
-    $scope.items = items;
+angular.module("Modals").controller("DialogSendByEmailController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
+    $scope.email = items.user.email;
+    $scope.user = items.user;
+    $scope.account = items.account;
     $scope.isWorking = false;
     $scope.success = false;
+    $scope.failed = false;
 
-    $scope.sendIosProfile = function(){
+    $scope.sendByEmail = function () {
         $scope.isWorking = true;
-        iOSProfileService.sendProfile(items.account.loginName, items.account.activeTime, items.account.ssid, items.account.password, $scope.email).then(function(promise){
+        sendCredentialsService.deliver(items.account.id, "EMAIL", $scope.email, null).then(function (promise) {
             $scope.isWorking = false;
-            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
+            if (promise && promise.error) $scope.failed = promise.error;
             else $scope.success = true;
         });
     };
-    $scope.$watch("email", function(){
-        $scope.success = false;
-    });
     $scope.back = function () {
-        $rootScope.$broadcast('createSingle', items.account);
+        $rootScope.$broadcast('createSingle', items.user, items.account);
     };
     $scope.close = function () {
         // Easily hides most recent dialog shown...
@@ -198,18 +194,51 @@ angular.module("Modals").controller("DialogSendIosProfileController", function($
     };
 });
 
-angular.module("Modals").controller("DialogSendBySmsController", function($scope, $rootScope, $mdDialog, sendCredentialsService, items){
-   $scope.phone = "";
-    $scope.items = items;
+angular.module("Modals").controller("DialogSendIosProfileController", function ($scope, $rootScope, $mdDialog, iOSProfileService, items) {
+    $scope.email = items.user.email;
+    $scope.user = items.user;
+    $scope.account = items.account;
+    $scope.isWorking = false;
+    $scope.success = false;
 
-    $scope.sendBySms = function(){
-        sendCredentialsService.deliver(items.account.id, "SMS", null, $scope.phone).then(function(promise){
-            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
-            else back();
+    $scope.sendIosProfile = function () {
+        $scope.isWorking = true;
+        iOSProfileService.sendProfile(items.account.loginName, items.account.activeTime, items.account.ssid, items.account.password, $scope.email).then(function (promise) {
+            $scope.isWorking = false;
+            if (promise && promise.error) $rootScope.$broadcast("apiWarning", promise.error);
+            else $scope.success = true;
+        });
+    };
+    $scope.$watch("email", function () {
+        $scope.success = false;
+    });
+    $scope.back = function () {
+        $rootScope.$broadcast('createSingle', items.user, items.account);
+    };
+    $scope.close = function () {
+        // Easily hides most recent dialog shown...
+        // no specific instance reference is needed.
+        $mdDialog.hide();
+    };
+});
+
+angular.module("Modals").controller("DialogSendBySmsController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
+    $scope.phone = items.user.phone;
+    $scope.user = items.user;
+    $scope.account = items.account;
+    $scope.isWorking = false;
+    $scope.success = false;
+    $scope.failed = false;
+
+    $scope.sendBySms = function () {
+        sendCredentialsService.deliver(items.account.id, "SMS", null, $scope.phone).then(function (promise) {
+            $scope.isWorking = false;
+            if (promise && promise.error) $scope.failed = promise.error;
+            else $scope.success = true;
         });
     };
     $scope.back = function () {
-        $rootScope.$broadcast('createSingle', items.account);
+        $rootScope.$broadcast('createSingle', items.user, items.account);
     };
     $scope.close = function () {
         // Easily hides most recent dialog shown...
@@ -220,6 +249,9 @@ angular.module("Modals").controller("DialogSendBySmsController", function($scope
 
 angular.module('Modals').controller('DialogQrCodeController', function ($scope, $rootScope, $mdDialog, $interval, connectionStatusService, items) {
     // items is injected in the controller, not its scope!
+    $scope.user = items.user;
+    $scope.account = items.account;
+
     $scope.connectionStatus = {
         connected: false,
         os: "N/A",
@@ -236,8 +268,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
     };
     $scope.clientConnected = false;
     var waitingForResponse = false;
-    $scope.items = items;
-    $scope.qrcodeString = "WIFI:S:" + $scope.items.account.ssid + ";T:WPA;P:" + $scope.items.account.password + ";;";
+    $scope.qrcodeString = "WIFI:S:" + $scope.account.ssid + ";T:WPA;P:" + $scope.account.password + ";;";
     /**
      * Loads and populates the notifications
      */
@@ -246,7 +277,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
         waitingForResponse = true;
         connectionStatusService.getStatus(userName).then(function (promise) {
             waitingForResponse = false;
-            if (promise.error) $rootScope.$broadcast("apiWarning", promise.error);
+            if (promise && promise.error) $rootScope.$broadcast("apiWarning", promise.error);
             else {
                 $scope.connectionStatus = promise.data;
                 if ($scope.connectionStatus.connected) $interval.cancel(checkStatus);
@@ -258,7 +289,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
     //Put in interval, first trigger after 10 seconds
     var checkStatus = $interval(function () {
         if (!waitingForResponse) {
-            this.checkConnection($scope.items.account.loginName);
+            this.checkConnection($scope.account.loginName);
         }
     }.bind(this), 1000);
 
@@ -278,7 +309,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
 
     $scope.back = function () {
         $interval.cancel(checkStatus);
-        $rootScope.$broadcast('createSingle', items.account);
+        $rootScope.$broadcast('createSingle', items.user, items.account);
     };
     $scope.close = function () {
         // Easily hides most recent dialog shown...

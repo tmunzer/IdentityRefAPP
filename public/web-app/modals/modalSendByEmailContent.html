@@ -4,9 +4,15 @@
             <h2 class="md-title">Send By Email</h2>
         </div>
     </md-toolbar>
+    <div ng-show="!isWorking"
+         style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+    <md-progress-linear ng-show="isWorking" md-mode="indeterminate"
+                        class="md-accent"></md-progress-linear>
     <md-dialog-content class="md-dialog-content">
         <md-content>
-            <form name="sendByEmailForm">
+            <span ng-show="account.loginName">You can send the account {{account.loginName}} to the Guest email address, or to anyone else.</span>
+            <span ng-show="account.userName">You can send the account {{account.userName}} to the Guest email address, or to anyone else.</span>
+            <form name="sendByEmailForm"  style="margin-top: 50px;">
             <md-input-container class="md-block flex-gt-sm">
                 <label for="email">Email Address</label>
                 <input id="email" name="email" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
@@ -14,13 +20,15 @@
                 <div class="md-errors-spacer"></div>
             </md-input-container>
             </form>
-            <span ng-show="items.account.loginName">You can send the account {{items.account.loginName}} to the Guest email address, or to anyone else.</span>
-            <span ng-show="items.account.userName">You can send the account {{items.account.userName}} to the Guest email address, or to anyone else.</span>
+            <div style="text-align: center; color: green; height: 40px; vertical-align: bottom; line-height: 40px;">
+                <span style="color: green" ng-show="success">Email sent successfully to {{email}}!</span>
+                <span style="color: red" ng-show="failed">{{failed}}</span>
+            </div>
         </md-content>
     </md-dialog-content>
     <md-dialog-actions>
         <md-button class="md-primary md-raised" ng-click="sendByEmail()" ng-disabled="!sendByEmailForm.email.$valid">Send</md-button>
-        <md-button class="md-primary" ng-click="back()" ng-show="items.account.loginName">Back</md-button>
+        <md-button class="md-primary" ng-click="back()" ng-show="account.loginName">Back</md-button>
         <md-button class="md-primary" ng-click="close()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>

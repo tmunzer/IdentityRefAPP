@@ -139,19 +139,12 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
             $scope.bulk = angular.copy(masterBulk);
         }
     };
-    $scope.qrc = function(){
-        $rootScope.$broadcast('createSingle', {loginName: "moi3@ah-lab.fr", password:"p", ssid:['s']});
+    $scope.qrc = function () {
+        $rootScope.$broadcast('createSingle', {loginName: "moi3@ah-lab.fr", password: "p", ssid: ['s']});
     };
     $scope.save = function (creationType) {
         if (creationType === "single") {
-            createService.saveUser($scope.user).then(function (promise) {
-                if (promise && promise.error) {
-                    $rootScope.$broadcast("apiWarning", promise.error);
-                } else {
-                    console.log(promise);
-                    $rootScope.$broadcast('createSingle', promise);
-                }
-            });
+            $rootScope.$broadcast('createSingle', $scope.user);
         } else if (creationType === "bulk") {
             $scope.bulk.result = true;
             var requestForCredentials = credentialsService.getCredentials();
@@ -174,7 +167,10 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                         credentials.forEach(function (credential) {
                             if (credential.userName.toLowerCase() === stringAccount.toLowerCase()) {
                                 alreadyExists = true;
-                                $scope.bulkError.push({account: credential.userName, message: "userName already exists"});
+                                $scope.bulkError.push({
+                                    account: credential.userName,
+                                    message: "userName already exists"
+                                });
                             }
                         });
                         if (!alreadyExists) {
@@ -186,7 +182,10 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                                 'deliverMethod': 'NO_DELIVERY'
                             }).then(function (promise2) {
                                 if (promise2 && promise2.error) {
-                                    $scope.bulkError.push({account: promise2.error.errorParams.item.replace("credential (", "").replace(")", ""), message: promise2.error.message});
+                                    $scope.bulkError.push({
+                                        account: promise2.error.errorParams.item.replace("credential (", "").replace(")", ""),
+                                        message: promise2.error.message
+                                    });
                                 } else {
                                     if ($scope.bulkResultHeaders.length == 0) {
                                         for (var key in promise2) {

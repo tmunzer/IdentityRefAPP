@@ -4,7 +4,17 @@
             <h2 class="md-title">New account created</h2>
         </div>
     </md-toolbar>
-    <md-dialog-content class="md-dialog-content">
+    <div ng-show="account"
+         style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+    <md-progress-linear ng-show="!account" md-mode="indeterminate"
+                        class="md-accent"></md-progress-linear>
+    <md-dialog-content class="md-dialog-content" ng-show="!account">
+        <md-content>
+            <div>Your Account is beeing created.</div>
+            <div>Please wait...</div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-content class="md-dialog-content" ng-show="account">
         <md-content>
             <div class="md-dialog-content">
                 <table style="text-align: left">
@@ -36,15 +46,15 @@
             </div>
         </md-content>
     </md-dialog-content>
-    <md-dialog-actions>
+    <md-dialog-actions ng-show="account">
         <md-button class="md-primary md-raised" ng-click="qrcode()" style="width: 100%;">Show QRCode (Android)</md-button>
     </md-dialog-actions>
-    <md-dialog-actions>
+    <md-dialog-actions ng-show="account">
         <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="width: 100%;">Send Configuration Profile (iOS)</md-button>
     </md-dialog-actions>
-    <md-dialog-actions>
-        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="true">Send by SMS</md-button>
-        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="true">Send by E-mail</md-button>
+    <md-dialog-actions ng-show="account">
+        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="false">Send by SMS</md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="false">Send by E-mail</md-button>
         <md-button class="md-primary" ng-click="close()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>

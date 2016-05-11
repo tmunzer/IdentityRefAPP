@@ -1,13 +1,13 @@
 <md-dialog aria-label="QRCode">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 class="md-title">Connection QRCode for {{items.account.loginName}}</h2>
+            <h2 class="md-title">Connection QRCode for {{account.loginName}}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content class="md-dialog-content" style="padding: 10px">
         <md-content style="text-align: center; padding: 10px">
             <div class="md-dialog-content" style="padding: 0">
-                <qrcode version="8" error-correction-level="M" size="200" data="{{items.string}}"></qrcode>
+                <qrcode version="8" error-correction-level="M" size="200" data="{{qrcodeString}}"></qrcode>
             </div>
         </md-content>
         <md-content layout-gt-sm="row" layout="column">
@@ -29,7 +29,7 @@
                                 <div style="text-align: center;">
                                 <span>
                                     <md-tooltip md-direction="left">
-                                        {{userString(items.account.loginName, connectionStatus.connected)}}
+                                        {{userString(account.loginName, connectionStatus.connected)}}
                                     </md-tooltip>
                                     <md-icon class="material-icon" style="{{userColor(connectionStatus.connected)}}">
                                         signal_wifi_4_bar
@@ -140,7 +140,7 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-raised md-primary" ng-click="back(items.account)">Go Back</md-button>
+        <md-button class="md-primary" ng-click="back()">Go Back</md-button>
         <md-button class="md-primary" ng-click="close()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>
