@@ -129,6 +129,10 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
         });
     }
 
+    $scope.isPPSK = function(){
+        return $scope.account.authType === "PPSK";
+    };
+
     $scope.close = function () {
         // Easily hides most recent dialog shown...
         // no specific instance reference is needed.
@@ -430,9 +434,6 @@ angular.module('Modals').controller('RenewSingleUserController', function ($scop
         };
     }
 
-    $scope.isPPSK = function(){
-        return $scope.user.authType === "PPSK";
-    };
 
     $scope.close = function () {
         // Easily hides most recent dialog shown...

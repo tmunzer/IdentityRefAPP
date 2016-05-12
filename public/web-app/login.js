@@ -17,11 +17,5 @@ login.controller('LoginCtrl', function ($scope) {
     $scope.accessToker = "";
     $scope.tlsOp = true;
 
-    $scope.reset = function () {
-        $scope.vpcUrl = "";
-        $scope.ownerId = "";
-        $scope.accessToken = "";
-        $scope.tlsOp = true;
-    }
 });
 
