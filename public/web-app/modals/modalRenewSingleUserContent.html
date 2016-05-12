@@ -1,0 +1,48 @@
+<md-dialog aria-label="Renew User">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Renew Account</h2>
+        </div>
+    </md-toolbar>
+    <div ng-show="!isWorking"
+         style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+    <md-progress-linear ng-show="isWorking" md-mode="indeterminate"
+                        class="md-accent"></md-progress-linear>
+    <md-dialog-content class="md-dialog-content" ng-show="isWorking">
+        <md-content>
+            <div>The account {{account.userName}} is beeing renewed.</div>
+            <div>Please wait...</div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-content class="md-dialog-content" ng-show="!isWorking">
+        <md-content ng-show="success">
+            <div>The validity period for the account {{user.userName}} is extended from {{user.expireTime | date: 'short'}} to {{expireTime | date: 'short'}}.</div>
+            <div class="md-dialog-content">
+                <table style="text-align: left">
+                    <tr>
+                        <th style="padding: 10px;">Username:</th>
+                        <td>{{user.userName}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;">SSID:</th>
+                        <td>{{user.ssid | ssidStringFromArray}}</td>
+                    </tr>
+                      <tr>
+                        <th style="padding: 10px;">Auth Type:</th>
+                        <td>{{user.credentialType}}</td>
+                    </tr>
+                </table>
+            </div>
+        </md-content>
+        <md-content  ng-show="failed">
+            <div>It is not possible to renew the account {{user.userName}}...</div>
+            <div style="color: red">{{failed}}</div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions ng-show="success || failed">
+        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="!success">Send by SMS</md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="!success">Send by E-mail</md-button>
+        <md-button class="md-primary" ng-click="close()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>
+

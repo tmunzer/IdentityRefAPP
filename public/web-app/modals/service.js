@@ -165,3 +165,47 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
         sendProfile: sendProfile
     }
 });
+
+
+angular.module("Modals").factory("renewUserService", function ($http, $q) {
+
+    function renewCredentials(id) {
+
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/identity/credentials/renew",
+            method: "PUT",
+            params: {id: id},
+            timeout: canceller.promise
+        });
+        var promise = request.then(
+            function (response) {
+                if (response) {
+                 if ( response.data && response.data.error) return response.data;
+                 else return response;
+                }
+                else return true;
+            },
+            function (response) {
+                if (response.status >= 0) {
+                    console.log("error");
+                    return ($q.reject("error"));
+                }
+            });
+
+        promise.abort = function () {
+            canceller.resolve();
+        };
+        promise.finally(function () {
+            console.info("Cleaning up object references.");
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+        });
+
+        return promise;
+    }
+
+    return {
+        renewCredentials: renewCredentials
+    }
+});

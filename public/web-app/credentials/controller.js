@@ -1,4 +1,4 @@
-angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser, renewUser) {
+angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $rootScope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
     $scope.test = null;
     var requestForUserGroups = null;
     var initialized = false;
@@ -190,49 +190,24 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
         }
     };
     $scope.renewCredentials = function (ev) {
-        var ids = [];
-        var userNames = [];
+        var user;
         $scope.credentials.forEach(function (credential) {
             if (credential.selected) {
-                ids.push(credential.id);
-                userNames.push(credential.userName);
+                user = credential;
             }
         });
-        if (ids.length == 1) {
+        if (user) {
             var confirm = $mdDialog.confirm()
                 .title('Are you sure?')
-                .textContent('Do you want to renew the account ' + userNames[0] + '?')
+                .textContent('Do you want to renew the account ' + user.userName + '?')
                 .ariaLabel('Confirmation')
                 .targetEvent(ev)
                 .ok('Please do it!')
                 .cancel('Cancel');
             $mdDialog.show(confirm).then(function () {
-                credentialsService.setIsLoaded(false);
-                var deleteCredentials = renewUser.renewCredentials(ids);
-                deleteCredentials.then(function (promise) {
-                    credentialsService.setIsLoaded(true);
-                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
-                    else $scope.refresh();
-                });
+                $rootScope.$broadcast("renewSingleUser", user);
             })
 
-        } else if (ids.length > 1) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to renew these ' + ids.length + ' accounts?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
-                credentialsService.setIsLoaded(false);
-                var deleteCredentials = renewUser.renewCredentials(ids);
-                deleteCredentials.then(function (promise) {
-                    credentialsService.setIsLoaded(true);
-                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
-                    else $scope.refresh();
-                });
-            })
         }
     };
     $scope.export = function () {

@@ -55,6 +55,23 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
             });
         }
     });
+    $scope.$on('renewSingleUser', function (event, user, account) {
+        if (!$rootScope.displayed) {
+            $rootScope.displayed = true;
+            $mdDialog.show({
+                controller: 'RenewSingleUserController',
+                templateUrl: 'modals/modalRenewSingleUserContent.html',
+                locals: {
+                    items: {
+                        user: user,
+                        account: account
+                    }
+                }
+            }).then(function () {
+                $rootScope.displayed = false;
+            });
+        }
+    });
 
     $scope.open = function (template, items) {
         var modalTemplateUrl = "";
@@ -107,7 +124,6 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
                 $rootScope.displayed = false;
                 $rootScope.$broadcast("apiWarning", promise.error);
             } else {
-                console.log(promise);
                 $scope.account = promise;
             }
         });
@@ -125,7 +141,8 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
             locals: {
                 items: {
                     user: $scope.user,
-                    account: $scope.account
+                    account: $scope.account,
+                    back: "createSingle"
                 }
             }
         });
@@ -137,7 +154,8 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
             locals: {
                 items: {
                     user: $scope.user,
-                    account: $scope.account
+                    account: $scope.account,
+                    back: "createSingle"
                 }
             }
         });
@@ -169,6 +187,8 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
 });
 
 angular.module("Modals").controller("DialogSendByEmailController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
+    $scope.back = items.back;
+    console.log('email', items);
     if (items.user){
         $scope.email = items.user.email;
         $scope.user = items.user;
@@ -190,7 +210,7 @@ angular.module("Modals").controller("DialogSendByEmailController", function ($sc
         });
     };
     $scope.back = function () {
-        $rootScope.$broadcast('createSingle', items.user, items.account);
+        $rootScope.$broadcast(items.back, items.user, items.account);
     };
     $scope.close = function () {
         // Easily hides most recent dialog shown...
@@ -228,6 +248,8 @@ angular.module("Modals").controller("DialogSendIosProfileController", function (
 });
 
 angular.module("Modals").controller("DialogSendBySmsController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
+    $scope.back = items.back;
+    console.log('sms', items);
     if (items.user){
         $scope.email = items.user.phone;
         $scope.user = items.user;
@@ -248,7 +270,7 @@ angular.module("Modals").controller("DialogSendBySmsController", function ($scop
         });
     };
     $scope.back = function () {
-        $rootScope.$broadcast('createSingle', items.user, items.account);
+        $rootScope.$broadcast(items.back, items.user, items.account);
     };
     $scope.close = function () {
         // Easily hides most recent dialog shown...
@@ -369,5 +391,76 @@ angular.module('Modals').controller('DialogExportController', function ($scope, 
         if ($scope.credentials) {
             return $scope.credentials;
         }
+    };
+});
+
+
+
+angular.module('Modals').controller('RenewSingleUserController', function ($scope, $mdDialog, renewUserService, items) {
+
+    $scope.user = items.user;
+
+    $scope.success = false;
+    $scope.failed = false;
+    $scope.activeTime = "";
+    $scope.expireTime = "";
+
+    if (!items.account) {
+        $scope.account = {
+            loginName : $scope.user.userName,
+            id: $scope.user.id
+        };
+        $scope.isWorking = true;
+        var renewCredential = renewUserService.renewCredentials($scope.user.id);
+        renewCredential.then(function (promise) {
+            $scope.isWorking = false;
+            if (promise && promise.error) $scope.failed = promise.error;
+            else {
+                $scope.success = true;
+                $scope.activeTime = promise.data.activeTime;
+                $scope.expireTime = promise.data.expireTime;
+
+            }
+        });
+    } else {
+        $scope.success = true;
+        $scope.account = {
+            loginName : $scope.user.userName,
+            id: $scope.user.id
+        };
+    }
+
+
+
+    $scope.close = function () {
+        // Easily hides most recent dialog shown...
+        // no specific instance reference is needed.
+        $mdDialog.hide();
+    };
+    $scope.sendBySms = function () {
+        $mdDialog.show({
+            controller: 'DialogSendBySmsController',
+            templateUrl: 'modals/modalSendBySmsContent.html',
+            locals: {
+                items: {
+                    user: $scope.user,
+                    account: $scope.account,
+                    back: "renewSingleUser"
+                }
+            }
+        });
+    };
+    $scope.sendByEmail = function () {
+        $mdDialog.show({
+            controller: 'DialogSendByEmailController',
+            templateUrl: 'modals/modalSendByEmailContent.html',
+            locals: {
+                items: {
+                    user: $scope.user,
+                    account: $scope.account,
+                    back: "renewSingleUser"
+                }
+            }
+        });
     };
 });
