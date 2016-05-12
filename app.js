@@ -59,9 +59,7 @@ app.use('/web-app/', webapp);
 app.use('/api/', api);
 app.use('/oauth', oauth);
 app.use('/mailer', mailer);
-app.get('*', function(req, res) {
-    res.redirect('/');
-});
+
 
 app.get('/fail', function (req, res, next) {
   setTimeout(function () {
@@ -70,6 +68,9 @@ app.get('/fail', function (req, res, next) {
 
     res.send('Hello World');
   }, 1000);
+});
+app.get('*', function(req, res) {
+    res.redirect('/');
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
