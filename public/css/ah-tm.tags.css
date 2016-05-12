@@ -132,3 +132,8 @@ md-input-container.search-tool {
 .intl-tel-input {
     display: table-cell;
 }
+
+.createPage .intl-tel-input
+{
+display: flex; padding-left: 70px;
+}

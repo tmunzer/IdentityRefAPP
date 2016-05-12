@@ -73,17 +73,23 @@
                         </div>
 
                         <md-input-container class="md-block flex-gt-sm" ng-show="username.email">
-                            <label for="email">Email</label>
+                            <label for="email">
+                                <span ng-show="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color:rgba(33, 150, 243, 0.75)">Email<span style="color:red">*</span></span>
+                                <span ng-hide="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'">Email</span>
+                            </label>
                             <input id="email" type="email"
                                    ng-model="user.email" ng-pattern="/^.+@.+\..+$/"
                                    ng-required="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'"/>
                         </md-input-container>
 
-                            <label for="phoneNumber" ng-show="username.phone">Phone Number</label>
-                            <md-input-container class="md-block  flex-gt-sm" ng-show="username.phone" style="margin-top: 0;padding-top: 0;">
-                                <input style="left: 50px;padding-left: 0;"
+
+                            <md-input-container class="md-block flex-gt-sm createPage" ng-show="username.phone" style="margin-top: 0;padding-top: 0;">
+                                <label for="phoneNumber" ng-show="username.phone">
+                                    <span ng-show="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color:rgba(33, 150, 243, 0.75)">Phone<span style="color:red">*</span></span>
+                                    <span ng-hide="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'">Phone</span>
+                                </label>
+                                <input style="left: 50px;padding-left: 0"
                                        type="tel" name="user.phone" ng-model="phone" id="phoneNumber"
-                                       ng-class="{'md-input-invalid': user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'}"
                                        ng-intl-tel-input
                                        ng-required="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'">
                             </md-input-container>

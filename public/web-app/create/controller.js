@@ -121,6 +121,8 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     $scope.usernameField = function (field) {
         $scope.username[field] = true;
     };
+
+
     $scope.reset = function (creationType) {
         if (creationType === "single" || !creationType) {
             if ($scope.user && $scope.user.groupId > 0) {
