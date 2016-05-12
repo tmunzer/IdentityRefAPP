@@ -70,11 +70,6 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
         return $scope.bulkError.length > 0;
     };
 
-    $scope.$watch("userGroups", function () {
-
-
-    });
-
     $scope.$watch("user.deliverMethod", function (newVal) {
         $scope.disableEmail = false;
         $scope.disablePhone = false;

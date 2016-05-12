@@ -59,8 +59,8 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
         $scope.credentials = [];
         credentials.forEach(function (credential) {
             if ($scope.table.filter == ""
-                || (credential.userName && credential.userName.indexOf($scope.table.filter) >= 0)
-                || (credential.email && credential.email.indexOf($scope.table.filter) >= 0)
+                || (credential.userName && credential.userName.toString().toLowerCase().indexOf($scope.table.filter.toString().toLowerCase()) >= 0)
+                || (credential.email && credential.email.toString().toLowerCase().indexOf($scope.table.filter.toString().toLowerCase()) >= 0)
                 || (credential.phone && credential.phone.indexOf($scope.table.filter) >= 0))
                 $scope.credentials.push(credential);
         })

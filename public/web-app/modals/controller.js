@@ -430,7 +430,9 @@ angular.module('Modals').controller('RenewSingleUserController', function ($scop
         };
     }
 
-
+    $scope.isPPSK = function(){
+        return $scope.account.authType === "PPSK";
+    };
 
     $scope.close = function () {
         // Easily hides most recent dialog shown...

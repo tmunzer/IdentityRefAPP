@@ -62,36 +62,35 @@
                         <div layout-gt-sm="row" class="layout-gt-sm-row">
                             <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
                                 <label for="firstName">First Name</label>
-                                <input id="firstName" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
-                                       ng-model="user.firstName"/>
+                                <input id="firstName" type="text" ng-model="user.firstName"/>
 
                                 <div class="md-errors-spacer"></div>
                             </md-input-container>
                             <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
                                 <label for="lastName">Last Name</label>
-                                <input id="lastName" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
-                                       ng-model="user.lastName"/>
+                                <input id="lastName" type="text" ng-model="user.lastName"/>
                             </md-input-container>
                         </div>
 
                         <md-input-container class="md-block flex-gt-sm" ng-show="username.email">
                             <label for="email">Email</label>
-                            <input id="email" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
-                                   ng-model="user.email" ng-pattern="/^.+@.+\..+$/"/>
+                            <input id="email" type="email"
+                                   ng-model="user.email" ng-pattern="/^.+@.+\..+$/"
+                                   ng-required="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'"/>
                         </md-input-container>
 
-
-                        <md-input-container class="md-block flex-gt-sm" ng-show="username.phone">
-                            <label for="phoneNumber">Phone Number</label>
-                            <input id="phoneNumber" class="ng-pristine ng-untouched ng-valid ng-empty"
-                                   ng-model="user.phone"/>
-                        </md-input-container>
-
+                            <label for="phoneNumber" ng-show="username.phone">Phone Number</label>
+                            <md-input-container class="md-block  flex-gt-sm" ng-show="username.phone" style="margin-top: 0;padding-top: 0;">
+                                <input style="left: 50px;padding-left: 0;"
+                                       type="tel" name="user.phone" ng-model="phone" id="phoneNumber"
+                                       ng-class="{'md-input-invalid': user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'}"
+                                       ng-intl-tel-input
+                                       ng-required="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'">
+                            </md-input-container>
 
                         <md-input-container class="md-block">
                             <label for="organization">Organization</label>
-                            <input id="organization" class="ng-valid md-input ng-dirty ng-valid-parse ng-touched"
-                                   ng-model="user.organization"/>
+                            <input id="organization" ng-model="user.organization"/>
                         </md-input-container>
 
 
@@ -227,7 +226,7 @@
                                          md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
                 </md-content>
             </div>
-            </article>
+        </article>
         <article>
             <div md-whiteframe="5">
                 <md-toolbar>

@@ -46,10 +46,10 @@
             </div>
         </md-content>
     </md-dialog-content>
-    <md-dialog-actions ng-show="account">
+    <md-dialog-actions ng-show="account && isPPSK()">
         <md-button class="md-primary md-raised" ng-click="qrcode()" style="width: 100%;">Show QRCode (Android)</md-button>
     </md-dialog-actions>
-    <md-dialog-actions ng-show="account">
+    <md-dialog-actions ng-show="account && isPPSK()">
         <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="width: 100%;">Send Configuration Profile (iOS)</md-button>
     </md-dialog-actions>
     <md-dialog-actions ng-show="account">

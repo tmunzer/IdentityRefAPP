@@ -27,7 +27,7 @@
     </md-dialog-content>
     <md-dialog-actions>
         <md-button class="md-primary md-raised" ng-click="sendBySms()" ng-disabled="!sendBySmsForm.phone.$valid">Send</md-button>
-        <md-button class="md-primary" ng-click="back()" ng-show="back">Back</md-button>
+        <md-button class="md-primary" ng-click="back()" ng-show="back == true">Back</md-button>
         <md-button class="md-primary" ng-click="close()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>
