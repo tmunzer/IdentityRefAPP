@@ -82,12 +82,11 @@
                                    ng-required="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'"/>
                         </md-input-container>
 
-
                             <md-input-container class="md-block flex-gt-sm createPage" ng-show="username.phone" style="margin-top: 0;padding-top: 0;">
-                                <label for="phoneNumber" ng-show="username.phone">
+                                <span ng-show="username.phone" style="position: absolute; bottom: 5px; left: 3px;">
                                     <span ng-show="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color:rgba(33, 150, 243, 0.75)">Phone<span style="color:red">*</span></span>
-                                    <span ng-hide="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'">Phone</span>
-                                </label>
+                                    <span ng-hide="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color: rgba(0,0,0,0.26);">Phone</span>
+                                </span>
                                 <input style="left: 50px;padding-left: 0"
                                        type="tel" name="user.phone" ng-model="phone" id="phoneNumber"
                                        ng-intl-tel-input
