@@ -431,7 +431,7 @@ angular.module('Modals').controller('RenewSingleUserController', function ($scop
     }
 
     $scope.isPPSK = function(){
-        return $scope.account.authType === "PPSK";
+        return $scope.user.authType === "PPSK";
     };
 
     $scope.close = function () {
