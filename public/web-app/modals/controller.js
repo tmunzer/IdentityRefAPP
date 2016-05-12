@@ -169,8 +169,13 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
 });
 
 angular.module("Modals").controller("DialogSendByEmailController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
-    $scope.email = items.user.email;
-    $scope.user = items.user;
+    if (items.user){
+        $scope.email = items.user.email;
+        $scope.user = items.user;
+    } else {
+        $scope.email = items.account.email;
+        $scope.user = items.account;
+    }
     $scope.account = items.account;
     $scope.isWorking = false;
     $scope.success = false;
@@ -223,8 +228,13 @@ angular.module("Modals").controller("DialogSendIosProfileController", function (
 });
 
 angular.module("Modals").controller("DialogSendBySmsController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
-    $scope.phone = items.user.phone;
-    $scope.user = items.user;
+    if (items.user){
+        $scope.email = items.user.phone;
+        $scope.user = items.user;
+    } else {
+        $scope.email = items.account.phone;
+        $scope.user = items.account;
+    }
     $scope.account = items.account;
     $scope.isWorking = false;
     $scope.success = false;

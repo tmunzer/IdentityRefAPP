@@ -16,11 +16,13 @@ angular.module("Modals").factory("connectionStatusService", function ($http, $q)
         if (promise) promise.abort();
         promise = request.then(
             function (response) {
-                if (response.data.error) return response.data;
-                else {
-                    status = response.data;
-                    return status;
-                }
+                if (response.data) {
+                    if (response.data.error) return response.data;
+                    else {
+                        status = response.data;
+                        return status;
+                    }
+                } else return true;
             },
             function (response) {
                 if (response.status >= 0) {
@@ -70,10 +72,13 @@ angular.module("Modals").factory("sendCredentialsService", function ($http, $q) 
         if (promise) promise.abort();
         promise = request.then(
             function (response) {
-                if (response.data.error) return response.data;
-                else {
-                    return response;
-                }
+                if (response.data) {
+                    if (response.data.error) return response.data;
+                    else {
+                        status = response.data;
+                        return status;
+                    }
+                } else return true;
             },
             function (response) {
                 if (response.status >= 0) {
@@ -110,11 +115,11 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
         if (!destEmail) destEmail = userName;
 
         var data = {
-            userName:userName,
-            activeTime:activeTime,
-            ssid:ssid,
-            password:password,
-            destEmail:destEmail
+            userName: userName,
+            activeTime: activeTime,
+            ssid: ssid,
+            password: password,
+            destEmail: destEmail
         };
 
         var canceller = $q.defer();
@@ -128,11 +133,13 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
         if (promise) promise.abort();
         promise = request.then(
             function (response) {
-                if (response.data.error) return response.data;
-                else {
-                    status = response.data;
-                    return status;
-                }
+                if (response.data) {
+                    if (response.data.error) return response.data;
+                    else {
+                        status = response.data;
+                        return status;
+                    }
+                } else return true;
             },
             function (response) {
                 if (response.status >= 0) {

@@ -61,7 +61,7 @@ router.get('/howto/', function (req, res, next) {
 });
 router.get('/logout/', function (req, res, next) {
     req.session.destroy(function (err) {
-        if (err) console.log(err);
+        if (err) logger.error(err);
         else res.redirect('/');
     });
 });
