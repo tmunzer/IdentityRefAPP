@@ -100,7 +100,12 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
         var re = /^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i;
         $scope.bulk.domainIsNotValid = !(re.test($scope.bulk.domain));
     });
-
+    $scope.$watch("username.phone", function(){
+        if (!$scope.username.phone) $scope.user.phone = "";
+    });
+    $scope.$watch("username.email", function(){
+        if (!$scope.username.email) $scope.user.email = "";
+    });
     $scope.isNotValid = function (creationType) {
         if ($scope.user.groupId == 0) return true;
         else {
