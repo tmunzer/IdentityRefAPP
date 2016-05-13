@@ -81,11 +81,13 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
 
 
     $scope.selectAll = function () {
-        $scope.credentials.forEach(function (cred) {
-            cred.selected = $scope.selectAllChecked;
-        });
-        if ($scope.selectAllChecked) $scope.selectedItems = $scope.credentials.length;
-        else $scope.selectedItems = 0;
+        if ($scope.credentials){
+            $scope.credentials.forEach(function (cred) {
+                cred.selected = $scope.selectAllChecked;
+            });
+            if ($scope.selectAllChecked) $scope.selectedItems = $scope.credentials.length;
+            else $scope.selectedItems = 0;
+        }
     };
     $scope.selectOne = function (cred, row) {
         if (row) cred.selected = !cred.selected;
