@@ -128,7 +128,7 @@ var fr = {
             title: "QRCode de configuration pour",
             connectionStatus: "Status de connexion",
             ssid: "SSID",
-            ip: "adresse IP",
+            ip: "Adresse IP",
             radioHealth: "Santé radio",
             networkHealth: "Santé réseau",
             applicationHealth: "Santé applicative",
