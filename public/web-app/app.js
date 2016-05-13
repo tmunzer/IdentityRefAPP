@@ -19,7 +19,9 @@ var identity = angular.module("identity", [
     'Import',
     'Modals',
     'monospaced.qrcode',
-    'ngIntlTelInput']);
+    'ngIntlTelInput',
+    'pascalprecht.translate'
+]);
 
 identity
     .config(function ($mdThemingProvider) {
@@ -44,17 +46,29 @@ identity
         // extra
         $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
         $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
-    }]
-);
-identity.config(function (ngIntlTelInputProvider) {
-    ngIntlTelInputProvider.set({
-        defaultCountry: 'fr',
-        preferredCountries: ["al", "ad", "at", "by", "be", "ba", "bg", "hr", "cz", "dk",
-            "ee", "fo", "fi", "fr", "de", "gi", "gr", "va", "hu", "is", "ie", "it", "lv",
-            "li", "lt", "lu", "mk", "mt", "md", "mc", "me", "nl", "no", "pl", "pt", "ro",
-            "ru", "sm", "rs", "sk", "si", "es", "se", "ch", "ua", "gb"]
+    }]).config(function (ngIntlTelInputProvider) {
+        ngIntlTelInputProvider.set({
+            defaultCountry: 'fr',
+            preferredCountries: ["al", "ad", "at", "by", "be", "ba", "bg", "hr", "cz", "dk",
+                "ee", "fo", "fi", "fr", "de", "gi", "gr", "va", "hu", "is", "ie", "it", "lv",
+                "li", "lt", "lu", "mk", "mt", "md", "mc", "me", "nl", "no", "pl", "pt", "ro",
+                "ru", "sm", "rs", "sk", "si", "es", "se", "ch", "ua", "gb"]
+        });
+    }).config(function ($translateProvider) {
+        $translateProvider.useMissingTranslationHandlerLog();
+        $translateProvider
+            .translations('en', en)
+            .translations('fr', fr)
+            .registerAvailableLanguageKeys(['en', 'fr'], {
+                'en_*': 'en',
+                'fr_*': 'fr'
+            })
+            .determinePreferredLanguage()
+            .fallbackLanguage('en')
+            .usePostCompiling(true)
+            .useSanitizeValueStrategy("escapeParameters");
+
     });
-});
 
 
 identity.factory("userTypesService", function () {
@@ -172,7 +186,7 @@ identity.factory("exportService", function () {
 });
 
 
-identity.controller("UserCtrl", function ($scope, $mdDialog, $mdSidenav, $location) {
+identity.controller("UserCtrl", function ($scope, $mdDialog, $mdSidenav, $location, $translate) {
     var originatorEv;
     this.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
@@ -184,6 +198,9 @@ identity.controller("UserCtrl", function ($scope, $mdDialog, $mdSidenav, $locati
     this.showFab = function () {
         var haveFab = ["/monitor", "/credentials"];
         return (haveFab.indexOf($location.path().toString()) > -1);
+    };
+    this.translate = function (langKey){
+        $translate.use(langKey);
     }
 });
 

@@ -52,6 +52,11 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
 
 
     $scope.$watch("userGroups", function () {
+        $scope.selectAllChecked = false;
+        $scope.selectAll();
+        $scope.refresh();
+    }, true);
+    $scope.$watch('userTypes', function () {
         $scope.refresh();
     }, true);
 

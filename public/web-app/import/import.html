@@ -3,7 +3,7 @@
         <article md-whiteframe="5" flex-gt-md="50">
             <md-toolbar>
                 <div class="md-toolbar-tools">
-                    <h2>User Groups</h2>
+                    <h2 translate="import.userGroup"></h2>
                 </div>
             </md-toolbar>
             <md-content>
@@ -37,21 +37,21 @@
 
             <md-toolbar>
                 <div class="md-toolbar-tools">
-                    <h2>File Upload</h2>
+                    <h2 translate="import.fileUpload"></h2>
                 </div>
             </md-toolbar>
 
             <md-content layout="row">
                 <input class="ng-hide" id="input-file-id" type="file" ng-model="csvFile"
                        file-change="handler($event,files)"/>
-                <label for="input-file-id" class="md-button md-raised md-primary">Choose a CSV File</label>
+                <label for="input-file-id" class="md-button md-raised md-primary" translate="import.chooseCSV"></label>
 
                 <div layout="column" layout-align="center"><span>{{csvFileName}}</span></div>
 
             </md-content>
             <md-content layout="column" layout-padding style="padding-bottom: 0;">
                 <md-input-container class="md-block">
-                    <label for="delimiter">CSV Delimiter</label>
+                    <label for="delimiter" translate="import.csvDelimiter"></label>
                     <input id="delimiter" class="ng-valid md-input ng-dirty ng-valid-parse ng-touched"
                            ng-model="delimiter"/>
                 </md-input-container>
@@ -66,7 +66,7 @@
             <div md-whiteframe="5">
                 <md-toolbar>
                     <div class="md-toolbar-tools">
-                        <h2>File Preview</h2>
+                        <h2 translate="import.filePreview"></h2>
                     </div>
                 </md-toolbar>
                 <md-content>
@@ -97,13 +97,13 @@
             <div md-whiteframe="5">
                 <md-toolbar>
                     <div class="md-toolbar-tools">
-                        <h2>Fields Matching</h2>
+                        <h2 translate="import.fieldsMatching"></h2>
                     </div>
                 </md-toolbar>
                 <md-content layout-padding layout-gt-sm="row" layout="column" style="padding-top: 0;">
 
                     <md-input-container class="md-block flex-gt-sm">
-                        <label for="email">Email:</label>
+                        <label for="email" translate="import.email"></label>
                         <md-select id="email" ng-model="importUsers.email">
                             <md-option ng-repeat="field in fields track by $index" value={{$index}}>
                                 {{field}}
@@ -112,7 +112,7 @@
                     </md-input-container>
 
                     <md-input-container class="md-block flex-gt-sm">
-                        <label for="phone">Phone:</label>
+                        <label for="phone" translate="import.phone"></label>
                         <md-select id="phone" ng-model="importUsers.phone">
                             <md-option ng-repeat="field in fields track by $index" value={{$index}}>
                                 {{field}}
@@ -121,7 +121,7 @@
                     </md-input-container>
 
                     <md-input-container class="md-block flex-gt-sm">
-                        <label for="organization">Organization:</label>
+                        <label for="organization" translate="import.organization"></label>
                         <md-select id="organization" ng-model="importUsers.organization">
                             <md-option ng-repeat="field in fields track by $index" value={{$index}}>
                                 {{field}}
@@ -130,7 +130,7 @@
                     </md-input-container>
 
                     <md-input-container class="md-block flex-gt-sm">
-                        <label for="purpose">Purpose of Visit:</label>
+                        <label for="purpose" translate="import.purpose"></label>
                         <md-select id="purpose" ng-model="importUsers.purpose">
                             <md-option ng-repeat="field in fields track by $index" value={{$index}}>
                                 {{field}}
@@ -139,19 +139,22 @@
                     </md-input-container>
 
                     <md-input-container class="md-block flex-gt-sm">
-                        <label for="deliver">Deliver Method:</label>
+                        <label><span translate="deliverMethod"></span>:</label>
                         <md-select id="deliver" ng-model="importUsers.deliverMethod"
                                    ng-selected="importUsers.deliverMethod">
-                            <md-option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
+                            <md-option value="NO_DELIVERY" class="ng-binding ng-scope" translate="deliverMethod.noDelivery">
                             </md-option>
+
                             <md-option value="EMAIL"
-                                       class="ng-binding ng-scope">Email
+                                       class="ng-binding ng-scope" translate="deliverMethod.email">
                             </md-option>
+
                             <md-option value="SMS"
-                                       class="ng-binding ng-scope">Sms
+                                       class="ng-binding ng-scope" translate="deliverMethod.sms">
                             </md-option>
+
                             <md-option value="EMAIL_AND_SMS"
-                                       class="ng-binding ng-scope">Email and sms
+                                       class="ng-binding ng-scope" translate="deliverMethod.smsAndEmail">
                             </md-option>
                         </md-select>
                     </md-input-container>
@@ -159,10 +162,9 @@
 
 
                 <md-content class="clearfix">
-                    <md-button ng-click="reset()">Reset</md-button>
+                    <md-button ng-click="reset()" aria-label="reset" translate="button.reset"></md-button>
                     <md-button ng-disabled="isNotValid() || importProcessed" class="md-raised md-primary"
-                               ng-click="create()">
-                        Create
+                               ng-click="create()" aria-label="create" translate="button.create">
                     </md-button>
                 </md-content>
 
@@ -174,9 +176,9 @@
             <div md-whiteframe="5">
                 <md-toolbar>
                     <div class="md-toolbar-tools">
-                        <span>Created Accounts: {{accountsDone}} / {{numberOfAccounts}}</span>
+                        <span><span translate="create.createdAccounts"></span>: {{accountsDone}} / {{numberOfAccounts}}</span>
                         <span flex></span>
-                        <span style="float: right">Success: {{bulkResult.length}} | Errors {{bulkError.length}}</span>
+                        <span style="float: right"><span translate="create.success"></span>: {{bulkResult.length}} |  <span translate="create.errors"></span> {{bulkError.length}}</span>
                     </div>
                 </md-toolbar>
                 <md-content>
@@ -187,8 +189,8 @@
                     </md-progress-linear>
                     <md-button class='md-raised md-primary' ng-controller="ModalCtrl"
                                ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
-                               ng-disabled="bulkResult == 0 || importProcessed">
-                        Download
+                               ng-disabled="bulkResult == 0 || importProcessed"
+                               translate="button.download" aria-label="download">>
                     </md-button>
 
                     <md-table-container>
@@ -222,7 +224,7 @@
             <div md-whiteframe="5">
                 <md-toolbar>
                     <div class="md-toolbar-tools">
-                        <h2>Errors</h2>
+                        <h2 translate="import.importErrors"></h2>
                     </div>
                 </md-toolbar>
                 <md-content>
@@ -231,10 +233,10 @@
                             <thead md-head>
                             <tr md-row>
                                 <th md-column style="width: 30%">
-                                    Account
+                                    {{"create.account" | translate}}
                                 </th>
                                 <th md-column>
-                                    Error
+                                    {{"create.error" | translate}}
                                 </th>
                             </tr>
                             </thead>

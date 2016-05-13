@@ -1,13 +1,13 @@
 <md-dialog aria-label="Export">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 class="md-title">Export Accounts</h2>
+            <h2 class="md-title" translate="modal.export.export"></h2>
         </div>
     </md-toolbar>
     <md-dialog-content class="md-dialog-content">
         <div class="md-dialog-content">
 
-            <span>Values to exports</span>
+            <span translate="modal.export.fields"></span>
             <ul>
                 <li ng-repeat="field in exportFields">
                     <label class="checkbox">
@@ -22,9 +22,9 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-primary" ng-click="close()">Close</md-button>
+        <md-button class="md-primary" ng-click="close()" translate="button.close"></md-button>
         <md-button class="md-primary md-raised " ng-csv="export()"
-                   csv-header="getExportHeader()" filename="accounts.csv">Export to CSV
+                   csv-header="getExportHeader()" filename="accounts.csv" translate="button.download">
         </md-button>
     </md-dialog-actions>
 </md-dialog>

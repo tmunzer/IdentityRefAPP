@@ -1,7 +1,7 @@
 <md-dialog aria-label="Renew User">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 class="md-title">Renew Account</h2>
+            <h2 class="md-title" translate="modal.renew.title"></h2>
         </div>
     </md-toolbar>
     <div ng-show="!isWorking"
@@ -10,39 +10,39 @@
                         class="md-accent"></md-progress-linear>
     <md-dialog-content class="md-dialog-content" ng-show="isWorking">
         <md-content>
-            <div>The account {{account.userName}} is beeing renewed.</div>
-            <div>Please wait...</div>
+            <div><span translate="modal.theAccount"></span> {{user.userName}} <span translate="modal.renew.isBeingRenewed"></span>.</div>
+            <div><span translate="modal.pleaseWait"></span></div>
         </md-content>
     </md-dialog-content>
     <md-dialog-content class="md-dialog-content" ng-show="!isWorking">
         <md-content ng-show="success">
-            <div>The validity period for the account {{user.userName}} is extended from {{user.expireTime | date: 'short'}} to {{expireTime | date: 'short'}}.</div>
+            <div><span translate="modal.renew.validity1"></span> {{user.userName}} <span translate="modal.renew.validity2"></span> {{user.expireTime | date: 'short'}} <span translate="modal.renew.validity3"></span> {{expireTime | date: 'short'}}.</div>
             <div class="md-dialog-content">
                 <table style="text-align: left">
                     <tr>
-                        <th style="padding: 10px;">Username:</th>
+                        <th style="padding: 10px;"><span translate="modal.renew.accountName"></span>:</th>
                         <td>{{user.userName}}</td>
                     </tr>
                     <tr>
-                        <th style="padding: 10px;">SSID:</th>
+                        <th style="padding: 10px;"><span translate="modal.renew.ssid"></span>:</th>
                         <td>{{user.ssid | ssidStringFromArray}}</td>
                     </tr>
                       <tr>
-                        <th style="padding: 10px;">Auth Type:</th>
+                        <th style="padding: 10px;"><span translate="modal.renew.authType"></span>:</th>
                         <td>{{user.credentialType}}</td>
                     </tr>
                 </table>
             </div>
         </md-content>
         <md-content  ng-show="failed">
-            <div>It is not possible to renew the account {{user.userName}}...</div>
+            <div><span translate="modal.renew.notPossible"></span> {{user.userName}}...</div>
             <div style="color: red">{{failed}}</div>
         </md-content>
     </md-dialog-content>
     <md-dialog-actions ng-show="success || failed">
-        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="!success">Send by SMS</md-button>
-        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="!success">Send by E-mail</md-button>
-        <md-button class="md-primary" ng-click="close()">Close</md-button>
+        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="!success" translate="button.sendBySmsShort"></md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="!success" translate="button.sendByEmailShort"></md-button>
+        <md-button class="md-primary" ng-click="close()" translate="button.close"></md-button>
     </md-dialog-actions>
 </md-dialog>
 

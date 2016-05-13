@@ -1,7 +1,7 @@
 <md-dialog aria-label="Send By SMS">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 class="md-title">Send By SMS</h2>
+            <h2 class="md-title" translate="button.sendBySms"></h2>
         </div>
     </md-toolbar>
     <div ng-show="!isWorking"
@@ -10,17 +10,17 @@
                         class="md-accent"></md-progress-linear>
     <md-dialog-content class="md-dialog-content">
         <md-content style="width: 500px;">
-            <span ng-show="account.loginName">You can send the account {{account.loginName}} to the Guest phone number, or to anyone else.</span>
-            <span ng-show="account.userName">You can send the account {{account.userName}} to the Guest phone number, or to anyone else.</span>
+            <span ng-show="account.loginName"><span translate="modal.sendBySms.message1"></span> {{account.loginName}} <span translate="modal.sendBySms.message2"></span>.</span>
+            <span ng-show="account.userName"><span translate="modal.sendBySms.message1"></span> {{account.userName}} <span translate="modal.sendBySms.message2"></span>.</span>
             <form name="sendBySmsForm" style="margin-top: 50px;">
-            <label style="left: 50px;">Phone Number</label>
+            <label style="left: 50px;" translate="modal.sendBySms.phone"></label>
             <md-input-container class="md-block flex-gt-sm">
                 <input type="tel" name="phone" ng-model="phone" id="phone" ng-intl-tel-input style="left: 50px;padding-left: 0;" required>
                 <div class="md-errors-spacer"></div>
             </md-input-container>
             </form>
             <div style="text-align: center; color: green; height: 40px; vertical-align: bottom; line-height: 40px;">
-                <span style="color: green" ng-show="success">SMS sent successfully to {{phone}}!</span>
+                <span style="color: green" ng-show="success"><span translate="modal.sendBySms.success"></span> {{phone}}!</span>
                 <span style="color: red" ng-show="failed">{{failed}}</span>
             </div>
         </md-content>
