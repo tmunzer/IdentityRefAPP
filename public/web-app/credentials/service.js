@@ -1,4 +1,4 @@
-angular.module('Credentials').factory("credentialsService", function ($http, $q, userTypesService, userGroupsService) {
+angular.module('Credentials').factory("credentialsService", function ($http, $q, $rootScope, userTypesService, userGroupsService) {
     var dataLoaded = false;
     var promise = null;
 
@@ -33,9 +33,8 @@ angular.module('Credentials').factory("credentialsService", function ($http, $q,
                 }
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -64,7 +63,7 @@ angular.module('Credentials').factory("credentialsService", function ($http, $q,
     }
 });
 
-angular.module('Credentials').factory("deleteUser", function ($http, $q) {
+angular.module('Credentials').factory("deleteUser", function ($http, $q, $rootScope) {
 
     function deleteCredentials(ids) {
 
@@ -81,8 +80,8 @@ angular.module('Credentials').factory("deleteUser", function ($http, $q) {
                 else return response;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });

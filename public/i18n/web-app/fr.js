@@ -31,7 +31,9 @@ var fr = {
         download: "Télécharger",
         send: "Envoyer",
         qrcode: "Afficher le QRCode (Android)",
-        iosProfile: "Envoyer le profile de configuration (iOS)"
+        iosProfile: "Envoyer le profile de configuration (iOS)",
+        cancel: "Annuler",
+        yes: "Oui"
     },
     filter: {
         filterBy: "Filtrer Par",
@@ -70,6 +72,7 @@ var fr = {
     },
     create: {
         single: "Compte Unique",
+        bulk: "Création en masse",
         userGroup: "Groupe Utilisateur",
         userDetails: "Détails du compte",
         username: "Nom d'utilisateur",
@@ -122,7 +125,8 @@ var fr = {
             message: "Message",
             code: "Code",
             reload: "Essayer de recharger la page",
-            other: "Essayer avec d'autres identifiants"
+            other: "Essayer avec d'autres identifiants",
+            reconnect: "Retourner à la page de connexion"
         },
         qrcode: {
             title: "QRCode de configuration pour",
@@ -181,6 +185,14 @@ var fr = {
             startTime: "Date de début",
             expireTime: "Date de fin",
             authType: "Type d'authentification"
+        },
+        confirm: {
+            title: "Demande de confirmation",
+            message1: "Êtes vous sûr de vouloir",
+            delete: 'supprimer',
+            renew: 'renouveler',
+            messageSingle: 'le compte {{userName}}',
+            messageBulk: 'ces {{numberOfAccounts}} comptes'
         }
     }
 };

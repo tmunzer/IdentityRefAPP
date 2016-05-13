@@ -139,6 +139,8 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
     };
     $scope.refresh = function () {
         if (initialized) {
+            $scope.selectAllChecked = false;
+            $scope.selectAll();
             $scope.requestForCredentials = credentialsService.getCredentials();
             $scope.requestForCredentials.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -160,14 +162,16 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
             }
         });
         if (ids.length == 1) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to delete the account ' + userNames[0] + '?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
+            $mdDialog.show({
+                controller: 'DialogConfirmController',
+                templateUrl: 'modals/modalConfirmContent.html',
+                locals: {
+                    items: {
+                        userName: userNames[0],
+                        action: 'delete'
+                    }
+                }
+            }).then(function () {
                 credentialsService.setIsLoaded(false);
                 var deleteCredentials = deleteUser.deleteCredentials(ids);
                 deleteCredentials.then(function (promise) {
@@ -175,17 +179,18 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
                     if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
                     else $scope.refresh();
                 });
-            })
-
+            });
         } else if (ids.length > 1) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to delete these ' + ids.length + ' accounts?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
+            $mdDialog.show({
+                controller: 'DialogConfirmController',
+                templateUrl: 'modals/modalConfirmContent.html',
+                locals: {
+                    items: {
+                        numberOfAccounts: ids.length,
+                        action: 'delete'
+                    }
+                }
+            }).then(function () {
                 credentialsService.setIsLoaded(false);
                 var deleteCredentials = deleteUser.deleteCredentials(ids);
                 deleteCredentials.then(function (promise) {
@@ -204,17 +209,18 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
             }
         });
         if (user) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to renew the account ' + user.userName + '?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
+            $mdDialog.show({
+                controller: 'DialogConfirmController',
+                templateUrl: 'modals/modalConfirmContent.html',
+                locals: {
+                    items: {
+                        userName: user.userName,
+                        action: 'renew'
+                    }
+                }
+            }).then(function () {
                 $rootScope.$broadcast("renewSingleUser", user);
-            })
-
+            });
         }
     };
     $scope.export = function () {

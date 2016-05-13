@@ -91,7 +91,7 @@ identity.factory("userTypesService", function () {
     }
 });
 
-identity.factory("userGroupsService", function ($http, $q) {
+identity.factory("userGroupsService", function ($http, $q, $rootScope) {
     var enableEmailApproval;
     var userGroups = [];
     var isLoaded = false;
@@ -121,6 +121,12 @@ identity.factory("userGroupsService", function ($http, $q) {
                     });
                     isLoaded = true;
                     return {userGroups: userGroups, reqId: response.data.reqId};
+                }
+            },
+            function (response) {
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
+                    return ($q.reject("error"));
                 }
             });
 

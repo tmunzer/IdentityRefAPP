@@ -1,4 +1,4 @@
-angular.module("Modals").factory("connectionStatusService", function ($http, $q) {
+angular.module("Modals").factory("connectionStatusService", function ($http, $q, $rootScope) {
     var status = {};
     var promise = null;
 
@@ -25,9 +25,8 @@ angular.module("Modals").factory("connectionStatusService", function ($http, $q)
                 } else return true;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -49,7 +48,7 @@ angular.module("Modals").factory("connectionStatusService", function ($http, $q)
     }
 });
 
-angular.module("Modals").factory("sendCredentialsService", function ($http, $q) {
+angular.module("Modals").factory("sendCredentialsService", function ($http, $q, $rootScope) {
 
     var promise = null;
 
@@ -81,9 +80,8 @@ angular.module("Modals").factory("sendCredentialsService", function ($http, $q) 
                 } else return true;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -105,7 +103,7 @@ angular.module("Modals").factory("sendCredentialsService", function ($http, $q) 
     }
 });
 
-angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
+angular.module("Modals").factory("iOSProfileService", function ($http, $q, $rootScope) {
     var status = {};
     var promise = null;
 
@@ -142,9 +140,8 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
                 } else return true;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -167,7 +164,7 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
 });
 
 
-angular.module("Modals").factory("renewUserService", function ($http, $q) {
+angular.module("Modals").factory("renewUserService", function ($http, $q, $rootScope) {
 
     function renewCredentials(id) {
 
@@ -187,8 +184,8 @@ angular.module("Modals").factory("renewUserService", function ($http, $q) {
                 else return true;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });

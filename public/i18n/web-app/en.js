@@ -31,7 +31,9 @@ var en = {
         download: "Download",
         send: "Send",
         qrcode: "Show QRCode (Android)",
-        iosProfile: "Send Configuration Profile (iOS)"
+        iosProfile: "Send Configuration Profile (iOS)",
+        cancel: "Cancel",
+        yes: "Yes"
     },
     filter: {
         filterBy: "Filter By",
@@ -69,7 +71,8 @@ var en = {
         }
     },
     create: {
-        single: "Single",
+        single: "Single Account",
+        bulk: "Bulk Creation",
         userGroup: "User Group",
         userDetails: "User Details",
         username: "Username",
@@ -126,7 +129,8 @@ var en = {
             message: "Error Message",
             code: "Error Code",
             reload: "Try to reload the page",
-            other: "Try to use other credentials"
+            other: "Try to use other credentials",
+            reconnect: "Return to login page"
         },
         qrcode: {
             title: "Connection QRCode for",
@@ -184,6 +188,14 @@ var en = {
             startTime: "Start Time",
             expireTime: "Expire Time",
             authType: "Authentication Type"
+        },
+        confirm: {
+            title: "Confirmation request",
+            message1: "Are you sure you want to",
+            delete: 'delete',
+            renew: 'renew',
+            messageSingle: 'the account {{userName}}',
+            messageBulk: 'these {{numberOfAccounts}} accounts'
         }
 
     }

@@ -1,0 +1,21 @@
+<md-dialog aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate="modal.confirm.title"></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <span translate="modal.confirm.message1"></span><span> </span>
+            <span translate="modal.confirm.delete" ng-show="action == 'delete'"></span><span> </span>
+            <span translate="modal.confirm.renew" ng-show="action == 'renew'"></span><span> </span>
+            <span ng-show="userName"><span translate="modal.confirm.messageSingle" translate-values="{userName: userName}"></span>?</span>
+            <span ng-show="numberOfAccounts"><span translate="modal.confirm.messageBulk" translate-values="{numberOfAccounts: numberOfAccounts}"></span>?</span>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="cancel()" translate="button.cancel" aria-label="cancel"></md-button>
+        <md-button ng-click="confirm()" class="md-raised md-primary" translate="button.yes" aria-label="ok"></md-button>
+    </md-dialog-actions>
+</md-dialog>

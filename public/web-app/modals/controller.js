@@ -19,6 +19,24 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
             });
         }
     });
+    $scope.$on('serverError', function (event, serverError) {
+        if (!$rootScope.displayed) {
+            $rootScope.displayed = true;
+            $mdDialog.show({
+                controller: 'DialogController',
+                templateUrl: 'modals/modalServerErrorContent.html',
+                escapeToClose: false,
+                locals: {
+                    items: {
+                        errorStatus: serverError.status,
+                        errorMessage: serverError.data
+                    }
+                }
+            }).then(function () {
+                $rootScope.displayed = false;
+            });
+        }
+    });
     $scope.$on('apiWarning', function (event, apiWarning) {
         if (!$rootScope.displayed) {
             $rootScope.displayed = true;
@@ -111,7 +129,18 @@ angular.module('Modals').controller('DialogController', function ($scope, $mdDia
         $mdDialog.hide();
     };
 });
-
+angular.module('Modals').controller('DialogConfirmController', function ($scope, $mdDialog, items) {
+    // items is injected in the controller, not its scope!
+    $scope.userName = items.userName;
+    $scope.numberOfAccounts = items.numberOfAccounts;
+    $scope.action = items.action;
+    $scope.cancel = function () {
+        $mdDialog.cancel()
+    };
+    $scope.confirm = function () {
+        $mdDialog.hide();
+    }
+});
 angular.module('Modals').controller('DialogSingleController', function ($scope, $rootScope, $mdDialog, items, createService) {
     // items is injected in the controller, not its scope!
     $scope.user = items.user;

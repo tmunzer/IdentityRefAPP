@@ -1,4 +1,4 @@
-angular.module('Create').factory("createService", function ($http, $q) {
+angular.module('Create').factory("createService", function ($http, $q, $rootScope) {
     var userFieldsToDisplay = [
         {name: 'firstName', display: 'First Name'},
         {name: 'lastName', display: 'Last Name'},
@@ -41,9 +41,8 @@ angular.module('Create').factory("createService", function ($http, $q) {
                 }
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
