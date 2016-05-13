@@ -88,7 +88,7 @@
                                     <span ng-hide="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color: rgba(0,0,0,0.26);" translate="create.phone"></span>
                                 </span>
                                 <input style="left: 50px;padding-left: 0"
-                                       type="tel" name="user.phone" ng-model="phone" id="phoneNumber"
+                                       type="tel" name="phone" ng-model="user.phone" id="phoneNumber"
                                        ng-intl-tel-input
                                        ng-required="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'">
                             </md-input-container>
