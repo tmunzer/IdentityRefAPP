@@ -1,6 +1,6 @@
 var en = {
     layout: {
-        details: "Connexion Details",
+        details: "Connection Details",
         hmngServer: "HMNG Server:",
         ownerId: " Owner ID:",
         accessToken: " Access Token:",

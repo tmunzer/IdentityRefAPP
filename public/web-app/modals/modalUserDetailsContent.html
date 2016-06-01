@@ -1,0 +1,64 @@
+<md-dialog aria-label="User Details">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title" translate="modal.user.title"></h2>
+        </div>
+    </md-toolbar>
+    <div ng-show="account"
+         style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+    <md-progress-linear ng-show="!account" md-mode="indeterminate"
+                        class="md-accent"></md-progress-linear>
+    <md-dialog-content class="md-dialog-content" ng-show="!account">
+        <md-content>
+            <div><span translate="modal.single.accountBeingCreated"></span>.</div>
+            <div><span translate="modal.single.pleaseWait"></span></div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-content class="md-dialog-content" ng-show="account">
+        <md-content>
+            <div class="md-dialog-content">
+                <table style="text-align: left">
+                    <tr>
+                        <th style="padding: 10px;">
+                            <span ng-show="isPPSK()" translate="modal.single.accountName"></span>
+                            <span ng-show="!isPPSK()" translate="modal.single.userName"></span>:
+                        </th>
+                        <td>{{account.loginName}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;"><span translate="modal.single.password"></span>:</th>
+                        <td>{{account.password}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;"><span translate="modal.single.ssid"></span>:</th>
+                        <td>{{account.ssid | ssidStringFromArray}}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;"><span translate="modal.single.startTime"></span>:</th>
+                        <td>{{account.activeTime | date : 'short' }}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;"><span translate="modal.single.expireTime"></span>:</th>
+                        <td>{{account.expireTime | date : 'short' }}</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 10px;"><span translate="modal.single.authType"></span>:</th>
+                        <td>{{account.authType}}</td>
+                    </tr>
+                </table>
+            </div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions ng-show="account && isPPSK()">
+        <md-button class="md-primary md-raised" ng-click="qrcode()" style="width: 100%;" translate="button.qrcode"></md-button>
+    </md-dialog-actions>
+    <md-dialog-actions ng-show="account && isPPSK()">
+        <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="width: 100%;" translate="button.iosProfile"></md-button>
+    </md-dialog-actions>
+    <md-dialog-actions ng-show="account">
+        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="false" translate="button.sendBySmsShort"></md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="false" translate="button.sendByEmailShort"></md-button>
+        <md-button class="md-primary" ng-click="close()" translate="button.close"></md-button>
+    </md-dialog-actions>
+</md-dialog>
+

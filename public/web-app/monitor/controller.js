@@ -121,6 +121,9 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
         if (user.clients.length == 0) return "color: #aca5a3";
         else return "color: #75D064";
     };
+    $scope.userConnected = function (user) {
+        return user.clients.length > 0;
+    };
     $scope.clientString = function (client) {
         return '<div style="text-align: left">' + client.hostName + " is currently connected <br>" +
             "Health: " + client.clientHealth + '<br>' +

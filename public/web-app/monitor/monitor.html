@@ -141,9 +141,12 @@
                                                 <md-tooltip md-direction="left">
                                                     {{userString(user)}}
                                                 </md-tooltip>
-                                                <md-icon class="material-icon" style="{{userColor(user)}}">
+                                                <md-icon class="material-icon" style="{{userColor(user)}}" ng-show="userConnected(user) == true">
                                                     signal_wifi_4_bar
                                                 </md-icon>
+                                                  <md-icon class="material-icon" style="{{userColor(user)}}" ng-show="userConnected(user) == false">
+                                                      signal_wifi_off
+                                                  </md-icon>
                                             </span>
                                             </div>
                                         </td>

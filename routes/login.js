@@ -23,7 +23,7 @@ router.get('/', function (req, res, next) {
 });
 router.post('/', function (req, res, next) {
     var ownerIdRegexp = new RegExp("^[0-9]*$");
-    var accessTokenRegexp = new RegExp("^[a-zA-Z0-9]{40}$");
+    var accessTokenRegexp = new RegExp("^[^ ]{40}$");
     var apiServers = ["cloud-va.aerohive.com", "cloud-ie.aerohive.com"];
     if (!(req.body.hasOwnProperty("vpcUrl") && apiServers.indexOf(req.body["vpcUrl"]) >= 0)) {
         res.redirect("/?errorcode=1");
