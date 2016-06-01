@@ -223,12 +223,17 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $r
             });
         }
     };
-    $scope.export = function () {
+    $scope.exportSelectedUsers = function () {
+        var credentials = [];
+        $scope.credentials.forEach(function(cred){
+            if (cred.selected) credentials.push(cred);
+        });
         $mdDialog.show({
-            templateUrl: 'views/modalExportContent.html',
-            controller: 'DialogController',
+            templateUrl: 'modals/modalExportContent.html',
+            controller: 'DialogExportController',
             locals: {
                 items: {
+                    credentials: credentials,
                     exportFields: $scope.exportFields
                 }
             }
