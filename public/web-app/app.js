@@ -61,7 +61,8 @@ identity
             .translations('fr', fr)
             .registerAvailableLanguageKeys(['en', 'fr'], {
                 'en_*': 'en',
-                'fr_*': 'fr'
+                'fr_*': 'fr',
+                '*': 'en'
             })
             .determinePreferredLanguage()
             .fallbackLanguage('en')
