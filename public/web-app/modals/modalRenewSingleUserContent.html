@@ -40,9 +40,9 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions ng-show="success || failed">
-        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="!success" translate="button.sendBySmsShort"></md-button>
-        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="!success" translate="button.sendByEmailShort"></md-button>
-        <md-button class="md-primary" ng-click="close()" translate="button.close"></md-button>
+        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="!success || hmngType != 'public'" translate="button.sendBySmsShort" aria-label="sms"></md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="!success" translate="button.sendByEmailShort" aria-label="email"></md-button>
+        <md-button class="md-primary" ng-click="close()" translate="button.close" aria-label="close"></md-button>
     </md-dialog-actions>
 </md-dialog>
 

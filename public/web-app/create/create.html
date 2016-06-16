@@ -115,11 +115,11 @@
                                 </md-option>
 
                                 <md-option value="SMS"
-                                           class="ng-binding ng-scope" translate="deliverMethod.sms">
+                                           class="ng-binding ng-scope" translate="deliverMethod.sms" ng-show="hmngType == 'public'">
                                 </md-option>
 
                                 <md-option value="EMAIL_AND_SMS"
-                                           class="ng-binding ng-scope" translate="deliverMethod.smsAndEmail">
+                                           class="ng-binding ng-scope" translate="deliverMethod.smsAndEmail" ng-show="hmngType == 'public'">
                                 </md-option>
 
                             </md-select>

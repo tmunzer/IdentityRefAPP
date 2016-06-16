@@ -1,4 +1,6 @@
 angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, $location, userGroupsService, createService, credentialsService) {
+    $scope.hmngType = $rootScope.hmngType;
+
     var requestForUserGroups = null;
     var initialized = false;
     // pagination

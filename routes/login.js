@@ -36,7 +36,8 @@ router.post('/', function (req, res, next) {
             rejectUnauthorized: true,
             vpcUrl: req.body["vpcUrl"],
             ownerId: req.body["ownerID"],
-            accessToken: req.body["accessToken"].trim()
+            accessToken: req.body["accessToken"].trim(),
+            hmngType: "public"
         };
         res.redirect('/web-app/');
     }
@@ -54,7 +55,8 @@ router.post('/op', function (req, res, next) {
             rejectUnauthorized: false,
             vpcUrl: req.body["vpcUrl"],
             ownerId: req.body["ownerID"],
-            accessToken: req.body["accessToken"].trim()
+            accessToken: req.body["accessToken"].trim(),
+            hmngType: "private"
         };
         res.redirect('/web-app/');
     }

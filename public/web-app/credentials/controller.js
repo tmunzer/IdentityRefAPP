@@ -1,4 +1,6 @@
 angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $rootScope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
+    $scope.hmngType = $rootScope.hmngType;
+
     $scope.test = null;
     var requestForUserGroups = null;
     var initialized = false;

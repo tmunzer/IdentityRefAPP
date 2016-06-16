@@ -193,8 +193,10 @@ identity.factory("exportService", function () {
 });
 
 
-identity.controller("UserCtrl", function ($scope, $mdDialog, $mdSidenav, $location, $translate) {
+identity.controller("UserCtrl", function ($scope, $rootScope, $mdDialog, $mdSidenav, $location, $translate) {
     var originatorEv;
+    $rootScope.hmngType = $scope.hmngType;
+    
     this.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
         $mdOpenMenu(ev);

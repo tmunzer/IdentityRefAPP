@@ -56,8 +56,8 @@
         <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="width: 100%;" translate="button.iosProfile"></md-button>
     </md-dialog-actions>
     <md-dialog-actions ng-show="account">
-        <md-button class="md-primary" ng-click="sendBySms()" ng-disabled="false" translate="button.sendBySmsShort"></md-button>
-        <md-button class="md-primary" ng-click="sendByEmail()" ng-disabled="false" translate="button.sendByEmailShort"></md-button>
+        <md-button class="md-primary" ng-click="sendBySms()" translate="button.sendBySmsShort" ng-disabled="hmngType == 'public'"></md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" translate="button.sendByEmailShort"></md-button>
         <md-button class="md-primary" ng-click="close()" translate="button.close"></md-button>
     </md-dialog-actions>
 </md-dialog>

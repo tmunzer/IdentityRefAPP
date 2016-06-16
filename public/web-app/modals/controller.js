@@ -142,6 +142,7 @@ angular.module('Modals').controller('DialogConfirmController', function ($scope,
     }
 });
 angular.module('Modals').controller('DialogSingleController', function ($scope, $rootScope, $mdDialog, items, createService) {
+    $scope.hmngType = $rootScope.hmngType;
     // items is injected in the controller, not its scope!
     $scope.user = items.user;
     $scope.account = items.account;
@@ -429,7 +430,8 @@ angular.module('Modals').controller('DialogExportController', function ($scope, 
 
 
 
-angular.module('Modals').controller('RenewSingleUserController', function ($scope, $mdDialog, renewUserService, items) {
+angular.module('Modals').controller('RenewSingleUserController', function ($scope, $rootScope, $mdDialog, renewUserService, items) {
+    $scope.hmngType = $rootScope.hmngType;
 
     $scope.user = items.user;
 
