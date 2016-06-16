@@ -81,27 +81,29 @@ html
                             md-tab(label="On Premise")
                                 md-toolbar
                                     div.md-toolbar-tools
-                                        h2 You have the HiveManager Virtual Appliance?
+                                        h2(translate="ONPREMISE.TITLE")
                                 md-content(layout="column" layout-padding)
-                                    span This server has to be able to reach the HiveManager NG VA.
+                                    span(translate="ONPREMISE.WARNING")
                                     md-input-container(style="padding-bottom: 0;margin-bottom: 0;")
-                                        md-checkbox(id="rejectUnauthorizedOp" name="rejectUnauthorized" ng-model="tlsOp" style="margin-bottom: 0;") Validate HTTPS certificate
+                                        md-checkbox(id="rejectUnauthorizedOp" name="rejectUnauthorized" ng-model="tlsOp" style="margin-bottom: 0;") {{'ONPREMISE.CERTIFICATE' | translate}}
                                     form(id="ATOp" action="/op" method="post")
                                         input(type="hidden" name="rejectUnauthorized" value='{{tlsOp}}')
                                         md-input-container.md-block.flex-gt-sm
-                                            label(for="vpcUrlOp") HiveManager NG VA hostname
+                                            label(for="vpcUrlOp" translate="ONPREMISE.FQDN")
                                             input(required="required" autocorrect="off" autocapitalize="none" id="vpcUrlOp" name="vpcUrl" type="text")
                                         md-input-container.md-block.flex-gt-sm
-                                            label(for="OwnerIDOp") Owner Id
+                                            label(for="OwnerIDOp" translate="ONPREMISE.OWNERID")
                                             input(required="required" autocorrect="off" autocapitalize="none" id="ownerIDOp" name="ownerID" type="text")
                                         md-input-container.md-block.flex-gt-sm
-                                            label(for="accessTokenOp") Access Token
+                                            label(for="accessTokenOp" translate="ONPREMISE.TOKEN")
                                             input(required="required" id="accessTokenOp" name="accessToken" type="text")
                                         div(style="float: right")
-                                            md-button.md-raised.md-primary(type="submit") Connect
+                                            md-button.md-raised.md-primary(type="submit" translate="ONPREMISE.CONNECT")
                                     div
-                                        span='For more information, a Quick Start Guide is available '
-                                        a.link(href="/howto/" target='_blank') here
+                                        span(translate="ONPREMISE.HOWTO")
+                                        span=" "
+                                        a.link(href="/howto/" target='_blank' translate="ONPREMISE.HERE")
+                                        span .
 
 
 

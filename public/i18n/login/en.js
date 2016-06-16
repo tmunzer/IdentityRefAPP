@@ -14,5 +14,16 @@ var en = {
         CONNECT: "Connect",
         HOWTO: 'For more information, a Quick Start Guide is available ',
         HERE: "here"
+    },
+    ONPREMISE: {
+        TITLE: 'You have the HiveManager Virtual Appliance?',
+        WARNING: "This server has to be able to reach the HiveManager NG VA on TCP443.",
+        CERTIFICATE: "Validate HiveManagerNG HTTPS certificate",
+        FQDN: "HiveManager NG VA FQDN",
+        OWNERID: "Owner Id",
+        TOKEN: " Access Token",
+        CONNECT: "Connect",
+        HOWTO: 'For more information, a Quick Start Guide is available ',
+        HERE: "here"
     }
 };

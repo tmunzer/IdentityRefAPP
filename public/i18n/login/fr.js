@@ -14,5 +14,16 @@ var fr = {
         CONNECT: "Connexion",
         HOWTO: "Pour savoir comment obtenir votre token d'accès, un guide de démarrage est disponible",
         HERE: "ici"
+    },
+    ONPREMISE: {
+        TITLE: 'Utilisation avec un HiveManagerNG VA',
+        WARNING: "Ce serveur doit pouvoir contacter le HiveManagerNG VA en TCP443.",
+        CERTIFICATE: "Valider le certificat HTTPS du HiveManagerNG",
+        FQDN: "FQDN du HiveManagerNG",
+        OWNERID: "Owner Id",
+        TOKEN: " Access Token",
+        CONNECT: "Connexion",
+        HOWTO: "Pour savoir comment obtenir votre token d'accès, un guide de démarrage est disponible",
+        HERE: "ici"
     }
 };
