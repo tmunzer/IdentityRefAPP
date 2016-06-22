@@ -4,7 +4,7 @@
 
 
 #Notice
-This is a Free web app built to work with Aerohive APIs. This app is designed to provide a quick and easy way for teachers to enable or disable Wi-Fi on Aerohive Devices.
+This is a Free web app built to work with Aerohive APIs. This app is designed to provide a user friendly interface to manage/create/remove/renew PPSK or login/pwd account stored on HiveManager NG (Cloud or OnPremise)
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
