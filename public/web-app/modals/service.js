@@ -1,4 +1,4 @@
-angular.module("Modals").factory("connectionStatusService", function ($http, $q) {
+angular.module("Modals").factory("connectionStatusService", function ($http, $q, $rootScope) {
     var status = {};
     var promise = null;
 
@@ -16,16 +16,17 @@ angular.module("Modals").factory("connectionStatusService", function ($http, $q)
         if (promise) promise.abort();
         promise = request.then(
             function (response) {
-                if (response.data.error) return response.data;
-                else {
-                    status = response.data;
-                    return status;
-                }
+                if (response.data) {
+                    if (response.data.error) return response.data;
+                    else {
+                        status = response.data;
+                        return status;
+                    }
+                } else return true;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -47,7 +48,7 @@ angular.module("Modals").factory("connectionStatusService", function ($http, $q)
     }
 });
 
-angular.module("Modals").factory("sendCredentialsService", function ($http, $q) {
+angular.module("Modals").factory("sendCredentialsService", function ($http, $q, $rootScope) {
 
     var promise = null;
 
@@ -70,15 +71,17 @@ angular.module("Modals").factory("sendCredentialsService", function ($http, $q) 
         if (promise) promise.abort();
         promise = request.then(
             function (response) {
-                if (response.data.error) return response.data;
-                else {
-                    return response;
-                }
+                if (response.data) {
+                    if (response.data.error) return response.data;
+                    else {
+                        status = response.data;
+                        return status;
+                    }
+                } else return true;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -100,7 +103,7 @@ angular.module("Modals").factory("sendCredentialsService", function ($http, $q) 
     }
 });
 
-angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
+angular.module("Modals").factory("iOSProfileService", function ($http, $q, $rootScope) {
     var status = {};
     var promise = null;
 
@@ -110,11 +113,11 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
         if (!destEmail) destEmail = userName;
 
         var data = {
-            userName:userName,
-            activeTime:activeTime,
-            ssid:ssid,
-            password:password,
-            destEmail:destEmail
+            userName: userName,
+            activeTime: activeTime,
+            ssid: ssid,
+            password: password,
+            destEmail: destEmail
         };
 
         var canceller = $q.defer();
@@ -128,16 +131,17 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
         if (promise) promise.abort();
         promise = request.then(
             function (response) {
-                if (response.data.error) return response.data;
-                else {
-                    status = response.data;
-                    return status;
-                }
+                if (response.data) {
+                    if (response.data.error) return response.data;
+                    else {
+                        status = response.data;
+                        return status;
+                    }
+                } else return true;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -156,5 +160,49 @@ angular.module("Modals").factory("iOSProfileService", function ($http, $q) {
 
     return {
         sendProfile: sendProfile
+    }
+});
+
+
+angular.module("Modals").factory("renewUserService", function ($http, $q, $rootScope) {
+
+    function renewCredentials(id) {
+
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/identity/credentials/renew",
+            method: "PUT",
+            params: {id: id},
+            timeout: canceller.promise
+        });
+        var promise = request.then(
+            function (response) {
+                if (response) {
+                 if ( response.data && response.data.error) return response.data;
+                 else return response;
+                }
+                else return true;
+            },
+            function (response) {
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
+                    return ($q.reject("error"));
+                }
+            });
+
+        promise.abort = function () {
+            canceller.resolve();
+        };
+        promise.finally(function () {
+            console.info("Cleaning up object references.");
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+        });
+
+        return promise;
+    }
+
+    return {
+        renewCredentials: renewCredentials
     }
 });

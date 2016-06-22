@@ -62,7 +62,7 @@ module.exports.deleteCredential = function (xapi, memberOf, adUser, ids, callbac
 };
 
 module.exports.deliverCredential = function (xapi, memberOf, adUser, hmCredentialDeliveryInfoVo, callback) {
-    var path = "/v1/identity/credentials/deliver?ownerId=" + xapi.ownerId;
+    var path = "/xapi/v1/identity/credentials/deliver?ownerId=" + xapi.ownerId;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
 
@@ -81,7 +81,7 @@ module.exports.deliverCredential = function (xapi, memberOf, adUser, hmCredentia
 };
 
 module.exports.renewCredential = function (xapi, credentialId, memberOf, adUser, callback) {
-    var path ="/v1/identity/credentials/" + credentialId + "/renew?ownerId=" + xapi.ownerId;
+    var path ="/xapi/v1/identity/credentials/" + credentialId + "/renew?ownerId=" + xapi.ownerId;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
     api.PUT(xapi, path, function(err, result){
@@ -96,7 +96,7 @@ module.exports.renewCredential = function (xapi, credentialId, memberOf, adUser,
 };
 
 module.exports.updateCredential = function (xapi, credentialId, memberOf, adUser, hmCredentialUpdateVo, callback) {
-    var path ="/v1/identity/credentials/" + credentialId + "?ownerId=" + xapi.ownerId;
+    var path ="/xapi/v1/identity/credentials/" + credentialId + "?ownerId=" + xapi.ownerId;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
 

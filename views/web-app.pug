@@ -4,6 +4,9 @@ html
         title= title
         meta(name="viewport" content="width=device-width, initial-scale=1")
 
+        script(src="/i18n/web-app/en.js")
+        script(src="/i18n/web-app/fr.js")
+
         link(rel="stylesheet" href="/bower_components/intl-tel-input/build/css/intlTelInput.css")
         link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
         link(rel="stylesheet" href="/bower_components/angular-material-data-table/dist/md-data-table.min.css")
@@ -24,6 +27,7 @@ html
         script(src="/bower_components/angular-material-data-table/dist/md-data-table.min.js")
         script(src="/bower_components/angular-route/angular-route.min.js")
         script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
+        script(src="/bower_components/angular-translate/angular-translate.min.js")
         script(src="/bower_components/angular-qrcode/angular-qrcode.js")
         script(src="/bower_components/qrcode-generator/js/qrcode.js")
         script(src="/bower_components/intl-tel-input/build/js/intlTelInput.min.js")
@@ -47,27 +51,28 @@ html
         script(src="/bower_components/ng-csv/build/ng-csv.min.js")
 
     body(ng-app="identity").icons-docs(ng-controller="UserCtrl as UserCtrl")
+        input(type='hidden' name='hmngType' value=hmngType ng-model="hmngType")
         div.modal.fade.bs-example-modal-lg(ng-controller="ModalCtrl")
             script(type="text/ng-template" id="modalAboutContent.html")
                 md-dialog(aria-label="List dialog")
                     md-toolbar
                         div.md-toolbar-tools
-                            h2Account Details
+                            h2Account(translate="layout.details")
                     md-dialog-content
                         div.md-dialog-content
                             table
                                 tbody
                                     tr
-                                        th(style="padding: 5px 10px;") HMNG Server:
+                                        th(style="padding: 5px 10px;" translate="layout.hmngServer")
                                         td(style="padding: 5px 10px;")= server
                                     tr
-                                        th(style="padding: 5px 10px;") Owner ID:
+                                        th(style="padding: 5px 10px;" translate="layout.ownerId")
                                         td(style="padding: 5px 10px;")= ownerId
                                     tr
-                                        th(style="padding: 5px 10px;") Access Token:
+                                        th(style="padding: 5px 10px;" translate="layout.accessToken")
                                         td(style="padding: 5px 10px;")= accessToken
                     md-dialog-actions(layout="row")
-                        md-button(ng-click="close()") Close
+                        md-button(ng-click="close()" translate="button.close" aria-label="close")
 
 
         header.md-page-header(ng-controller="HeaderCtrl")
@@ -78,40 +83,55 @@ html
                     img(src="/images/logo_nav.png" alt="Aerohive")
                 span(flex)
                 md-menu
-                    md-button(aria-label="menu" ng-click="UserCtrl.openMenu($mdOpenMenu, $event)")
-                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") Menu
+                    md-button(aria-label="language" ng-click="UserCtrl.openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"button.language" | translate}}
+                        md-icon(class="material-icons" aria-label="language") language
+                    md-menu-content
+                        md-menu-item
+                            md-button(ng-controller="ModalCtrl" ng-click="UserCtrl.translate('en')")
+                                span(style="display: inline-flex; margin-right: 5px;")
+                                    div.iti-flag.gb
+                                span English
+                        md-menu-item
+                            md-button(ng-controller="ModalCtrl" ng-click="UserCtrl.translate('fr')")
+                                span(style="display: inline-flex; margin-right: 5px;")
+                                    div.iti-flag.fr
+                                span Francais
+                md-menu
+                    md-button(aria-label="menu" ng-click="UserCtrl.openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"button.menu" | translate}}
                         md-icon(class="material-icons" aria-label="menu") more_vert
                     md-menu-content
                         md-menu-item
                             md-button(ng-controller="ModalCtrl" ng-click="open('about')")
                                 md-icon.material-icons(md-menu-align-target) info
-                                span Account Details
+                                span(translate="layout.accountDetails")
                         md-menu-item
                             md-button(href="/logout/")
-                                md-icon( md-menu-align-target) exit_to_app
-                                span Logout
+                                md-icon(md-menu-align-target) exit_to_app
+                                span(translate="layout.logout")
 
 
 
             md-toolbar.md-menu-toolbar(layout="row")
+
                 md-toolbar-filler(layout layout-align="center center" style="width:250px; background-color: white" hide-xs hide-sm hide-md)
                 md-menu-bar.main-menu
-
                     md-button(href="#/monitor/" ng-class="{cur: nav.isActive('monitor')}")
                         md-icon.material-icons.md-24 recent_actors
-                        div Monitor
+                        div(translate="layout.monitor")
 
                     md-button(href="#/credentials/" ng-class="{cur: nav.isActive('credentials')}")
                         md-icon.material-icons.md-24 contacts
-                        div Credentials
+                        div(translate="layout.credentials")
 
                     md-button(href="#/create/single" ng-class="{cur: nav.isActive('create')}")
                         md-icon.material-icons.md-24 person_add
-                        div Create
+                        div(translate="layout.create")
 
                     md-button(href="#/import/" ng-class="{cur: nav.isActive('import')}")
                         md-icon.material-icons.md-24 file_download
-                        div Import
+                        div(translate="layout.import")
 
 
 

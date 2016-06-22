@@ -1,7 +1,7 @@
 <md-dialog aria-label="List dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>HTTP {{items.apiWarningStatus}}</h2>
+            <h2>HTTP {{items.errorStatus}}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content>
@@ -9,16 +9,13 @@
             <table style="text-align: left">
                 <tr>
                     <th style="padding: 10px;"><span translate="modal.error.message"></span>:</th>
-                    <td>{{items.apiWarningMessage}}</td>
-                </tr>
-                <tr>
-                    <th style="padding: 10px;"><span translate="modal.error.code"></span>:</th>
-                    <td>{{items.apiWarningCode}}</td>
+                    <td>{{items.errorMessage}}</td>
                 </tr>
             </table>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised md-primary" ng-click="close()" translate="button.close"></md-button>
+        <md-button href="/web-app/" translate="modal.error.reload" aria-label="reload"></md-button>
+        <md-button href="/logout/" class="md-raised md-primary" translate="modal.error.reconnect" aria-label="reconnect"></md-button>
     </md-dialog-actions>
 </md-dialog>

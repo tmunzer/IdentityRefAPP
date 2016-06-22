@@ -1,4 +1,4 @@
-angular.module('Monitor').factory("monitorService", function ($http, $q, userTypesService, userGroupsService) {
+angular.module('Monitor').factory("monitorService", function ($http, $q, $rootScope, userTypesService, userGroupsService) {
     var dataLoaded = false;
     var promise = null;
 
@@ -33,9 +33,8 @@ angular.module('Monitor').factory("monitorService", function ($http, $q, userTyp
                 }
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });

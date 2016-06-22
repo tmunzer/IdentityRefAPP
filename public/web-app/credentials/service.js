@@ -1,4 +1,4 @@
-angular.module('Credentials').factory("credentialsService", function ($http, $q, userTypesService, userGroupsService) {
+angular.module('Credentials').factory("credentialsService", function ($http, $q, $rootScope, userTypesService, userGroupsService) {
     var dataLoaded = false;
     var promise = null;
 
@@ -33,9 +33,8 @@ angular.module('Credentials').factory("credentialsService", function ($http, $q,
                 }
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    console.log(response);
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -64,7 +63,7 @@ angular.module('Credentials').factory("credentialsService", function ($http, $q,
     }
 });
 
-angular.module('Credentials').factory("deleteUser", function ($http, $q) {
+angular.module('Credentials').factory("deleteUser", function ($http, $q, $rootScope) {
 
     function deleteCredentials(ids) {
 
@@ -81,8 +80,8 @@ angular.module('Credentials').factory("deleteUser", function ($http, $q) {
                 else return response;
             },
             function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
+                if (response.status && response.status >= 0) {
+                    $rootScope.$broadcast('serverError', response);
                     return ($q.reject("error"));
                 }
             });
@@ -104,43 +103,3 @@ angular.module('Credentials').factory("deleteUser", function ($http, $q) {
     }
 });
 
-
-angular.module('Credentials').factory("renewUser", function ($http, $q) {
-
-    function renewCredentials(ids) {
-
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/identity/credentials/renew",
-            method: "PUT",
-            params: {ids: ids},
-            timeout: canceller.promise
-        });
-        var promise = request.then(
-            function (response) {
-                if (response && response.data && response.data.error) return response.data;
-                else return response;
-            },
-            function (response) {
-                if (response.status >= 0) {
-                    console.log("error");
-                    return ($q.reject("error"));
-                }
-            });
-
-        promise.abort = function () {
-            canceller.resolve();
-        };
-        promise.finally(function () {
-            console.info("Cleaning up object references.");
-            promise.abort = angular.noop;
-            canceller = request = promise = null;
-        });
-
-        return promise;
-    }
-
-    return {
-        renewCredentials: renewCredentials
-    }
-});

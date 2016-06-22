@@ -1,7 +1,7 @@
-<md-dialog aria-label="New User">
+<md-dialog aria-label="User Details">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 class="md-title" translate="modal.single.title"></h2>
+            <h2 class="md-title" translate="modal.user.title"></h2>
         </div>
     </md-toolbar>
     <div ng-show="account"
@@ -50,15 +50,15 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions ng-show="account && isPPSK()">
-        <md-button class="md-primary md-raised" ng-click="qrcode()" style="width: 100%;" translate="button.qrcode" aria-label="qrcode"></md-button>
+        <md-button class="md-primary md-raised" ng-click="qrcode()" style="width: 100%;" translate="button.qrcode"></md-button>
     </md-dialog-actions>
     <md-dialog-actions ng-show="account && isPPSK()">
-        <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="width: 100%;" translate="button.iosProfile" aria-label="iod"></md-button>
+        <md-button class="md-primary md-raised" ng-click="iOSProfile()" style="width: 100%;" translate="button.iosProfile"></md-button>
     </md-dialog-actions>
     <md-dialog-actions ng-show="account">
-        <md-button class="md-primary" ng-click="sendBySms()" translate="button.sendBySmsShort" ng-disabled="hmngType != 'public'" aria-label="sms"></md-button>
-        <md-button class="md-primary" ng-click="sendByEmail()" translate="button.sendByEmailShort" aria-label="email"></md-button>
-        <md-button class="md-primary" ng-click="close()" translate="button.close" aria-label="close"></md-button>
+        <md-button class="md-primary" ng-click="sendBySms()" translate="button.sendBySmsShort" ng-disabled="hmngType == 'public'"></md-button>
+        <md-button class="md-primary" ng-click="sendByEmail()" translate="button.sendByEmailShort"></md-button>
+        <md-button class="md-primary" ng-click="close()" translate="button.close"></md-button>
     </md-dialog-actions>
 </md-dialog>
 

@@ -20,6 +20,8 @@
     "bootstrap": "^3.3.6",
     "material-design-icons": "^2.2.3",
     "angular-qrcode": "monospaced/angular-qrcode#^6.2.1",
-    "ng-intl-tel-input": "^1.4.0"
+    "ng-intl-tel-input": "^1.4.0",
+    "angular-translate-loader-url": "^2.11.0",
+    "angular-translate-loader-static-files": "^2.11.0"
   }
 }

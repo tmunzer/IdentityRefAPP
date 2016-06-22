@@ -1,5 +1,5 @@
 var login = angular.module('login', [
-    'ngMaterial'
+    'ngMaterial', 'ngSanitize', 'pascalprecht.translate'
 ]);
 
 login
@@ -9,6 +9,20 @@ login
             .accentPalette('green', {
                 'default': '400' // by default use shade 400 from the pink palette for primary intentions
             });
+    }).config(function ($translateProvider) {
+        $translateProvider.useMissingTranslationHandlerLog();
+        $translateProvider
+            .translations('en', en)
+            .translations('fr', fr)
+            .registerAvailableLanguageKeys(['en', 'fr'], {
+                'en_*': 'en',
+                'fr_*': 'fr',
+                '*': 'en'
+            })
+            .determinePreferredLanguage()
+            .fallbackLanguage('en')
+            .useSanitizeValueStrategy('sanitize');
+
     });
 
 login.controller('LoginCtrl', function ($scope) {
@@ -17,11 +31,5 @@ login.controller('LoginCtrl', function ($scope) {
     $scope.accessToker = "";
     $scope.tlsOp = true;
 
-    $scope.reset = function () {
-        $scope.vpcUrl = "";
-        $scope.ownerId = "";
-        $scope.accessToken = "";
-        $scope.tlsOp = true;
-    }
 });
 

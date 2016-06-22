@@ -22,8 +22,7 @@ md-button {
 }
 
 md-icon,
-.card
-{
+.card {
     transition: all .2s ease-in-out;
 }
 
@@ -131,4 +130,9 @@ md-input-container.search-tool {
 
 .intl-tel-input {
     display: table-cell;
+}
+
+.createPage .intl-tel-input {
+    display: flex;
+    padding-left: 150px;
 }

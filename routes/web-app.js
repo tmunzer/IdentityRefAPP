@@ -8,7 +8,8 @@ router.get('/', function(req, res, next) {
             title: 'Identity',
             server: req.session.xapi.vpcUrl,
             ownerId: req.session.xapi.ownerId,
-            accessToken: req.session.xapi.accessToken
+            accessToken: req.session.xapi.accessToken,
+            type: req.session.xapi.type
         });
     } else res.redirect("/");
 });

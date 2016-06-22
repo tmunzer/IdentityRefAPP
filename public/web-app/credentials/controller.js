@@ -1,4 +1,6 @@
-angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser, renewUser) {
+angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $rootScope, $mdDialog, userTypesService, userGroupsService, credentialsService, exportService, deleteUser) {
+    $scope.hmngType = $rootScope.hmngType;
+
     $scope.test = null;
     var requestForUserGroups = null;
     var initialized = false;
@@ -52,6 +54,11 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
 
 
     $scope.$watch("userGroups", function () {
+        $scope.selectAllChecked = false;
+        $scope.selectAll();
+        $scope.refresh();
+    }, true);
+    $scope.$watch('userTypes', function () {
         $scope.refresh();
     }, true);
 
@@ -59,8 +66,8 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
         $scope.credentials = [];
         credentials.forEach(function (credential) {
             if ($scope.table.filter == ""
-                || (credential.userName && credential.userName.indexOf($scope.table.filter) >= 0)
-                || (credential.email && credential.email.indexOf($scope.table.filter) >= 0)
+                || (credential.userName && credential.userName.toString().toLowerCase().indexOf($scope.table.filter.toString().toLowerCase()) >= 0)
+                || (credential.email && credential.email.toString().toLowerCase().indexOf($scope.table.filter.toString().toLowerCase()) >= 0)
                 || (credential.phone && credential.phone.indexOf($scope.table.filter) >= 0))
                 $scope.credentials.push(credential);
         })
@@ -76,11 +83,13 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
 
 
     $scope.selectAll = function () {
-        $scope.credentials.forEach(function (cred) {
-            cred.selected = $scope.selectAllChecked;
-        });
-        if ($scope.selectAllChecked) $scope.selectedItems = $scope.credentials.length;
-        else $scope.selectedItems = 0;
+        if ($scope.credentials){
+            $scope.credentials.forEach(function (cred) {
+                cred.selected = $scope.selectAllChecked;
+            });
+            if ($scope.selectAllChecked) $scope.selectedItems = $scope.credentials.length;
+            else $scope.selectedItems = 0;
+        }
     };
     $scope.selectOne = function (cred, row) {
         if (row) cred.selected = !cred.selected;
@@ -132,6 +141,8 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
     };
     $scope.refresh = function () {
         if (initialized) {
+            $scope.selectAllChecked = false;
+            $scope.selectAll();
             $scope.requestForCredentials = credentialsService.getCredentials();
             $scope.requestForCredentials.then(function (promise) {
                 if (promise && promise.error) $scope.$broadcast("apiError", promise.error);
@@ -153,14 +164,16 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
             }
         });
         if (ids.length == 1) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to delete the account ' + userNames[0] + '?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
+            $mdDialog.show({
+                controller: 'DialogConfirmController',
+                templateUrl: 'modals/modalConfirmContent.html',
+                locals: {
+                    items: {
+                        userName: userNames[0],
+                        action: 'delete'
+                    }
+                }
+            }).then(function () {
                 credentialsService.setIsLoaded(false);
                 var deleteCredentials = deleteUser.deleteCredentials(ids);
                 deleteCredentials.then(function (promise) {
@@ -168,17 +181,18 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
                     if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
                     else $scope.refresh();
                 });
-            })
-
+            });
         } else if (ids.length > 1) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to delete these ' + ids.length + ' accounts?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
+            $mdDialog.show({
+                controller: 'DialogConfirmController',
+                templateUrl: 'modals/modalConfirmContent.html',
+                locals: {
+                    items: {
+                        numberOfAccounts: ids.length,
+                        action: 'delete'
+                    }
+                }
+            }).then(function () {
                 credentialsService.setIsLoaded(false);
                 var deleteCredentials = deleteUser.deleteCredentials(ids);
                 deleteCredentials.then(function (promise) {
@@ -190,57 +204,38 @@ angular.module('Credentials').controller("CredentialsCtrl", function ($scope, $m
         }
     };
     $scope.renewCredentials = function (ev) {
-        var ids = [];
-        var userNames = [];
+        var user;
         $scope.credentials.forEach(function (credential) {
             if (credential.selected) {
-                ids.push(credential.id);
-                userNames.push(credential.userName);
+                user = credential;
             }
         });
-        if (ids.length == 1) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to renew the account ' + userNames[0] + '?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
-                credentialsService.setIsLoaded(false);
-                var deleteCredentials = renewUser.renewCredentials(ids);
-                deleteCredentials.then(function (promise) {
-                    credentialsService.setIsLoaded(true);
-                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
-                    else $scope.refresh();
-                });
-            })
-
-        } else if (ids.length > 1) {
-            var confirm = $mdDialog.confirm()
-                .title('Are you sure?')
-                .textContent('Do you want to renew these ' + ids.length + ' accounts?')
-                .ariaLabel('Confirmation')
-                .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {
-                credentialsService.setIsLoaded(false);
-                var deleteCredentials = renewUser.renewCredentials(ids);
-                deleteCredentials.then(function (promise) {
-                    credentialsService.setIsLoaded(true);
-                    if (promise && promise.error) $scope.$broadcast("apiWarning", promise.error);
-                    else $scope.refresh();
-                });
-            })
+        if (user) {
+            $mdDialog.show({
+                controller: 'DialogConfirmController',
+                templateUrl: 'modals/modalConfirmContent.html',
+                locals: {
+                    items: {
+                        userName: user.userName,
+                        action: 'renew'
+                    }
+                }
+            }).then(function () {
+                $rootScope.$broadcast("renewSingleUser", user);
+            });
         }
     };
-    $scope.export = function () {
+    $scope.exportSelectedUsers = function () {
+        var credentials = [];
+        $scope.credentials.forEach(function(cred){
+            if (cred.selected) credentials.push(cred);
+        });
         $mdDialog.show({
-            templateUrl: 'views/modalExportContent.html',
-            controller: 'DialogController',
+            templateUrl: 'modals/modalExportContent.html',
+            controller: 'DialogExportController',
             locals: {
                 items: {
+                    credentials: credentials,
                     exportFields: $scope.exportFields
                 }
             }

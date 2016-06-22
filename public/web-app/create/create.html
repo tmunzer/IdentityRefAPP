@@ -3,7 +3,7 @@
         <article md-whiteframe="5" flex-gt-md="50">
             <md-toolbar>
                 <div class="md-toolbar-tools">
-                    <h2>User Group</h2>
+                    <h2 translate="create.userGroup"></h2>
                 </div>
             </md-toolbar>
             <md-content>
@@ -33,27 +33,27 @@
 
         <article md-whiteframe="5" flex>
             <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="Single">
+                <md-tab label="{{'create.single' | translate}}">
                     <md-toolbar>
                         <div class="md-toolbar-tools">
-                            <h2>User Details</h2>
+                            <h2 translate="create.userDetails"></h2>
                         </div>
                     </md-toolbar>
                     <md-content>
                         <div layout="row" class="md-padding" layout-wrap style="padding-bottom: 0">
                             <div flex="33">
                                 <md-checkbox disabled="" ng-model="username.name">
-                                    Username
+                                    {{ 'create.username' | translate }}
                                 </md-checkbox>
                             </div>
                             <div flex="33">
                                 <md-checkbox ng-disabled="disableEmail" ng-model="username.email">
-                                    Email address
+                                    {{ 'create.email' | translate }}
                                 </md-checkbox>
                             </div>
                             <div flex="33">
                                 <md-checkbox ng-disabled="disablePhone" ng-model="username.phone">
-                                    Phone number
+                                    {{ 'create.phone' | translate }}
                                 </md-checkbox>
                             </div>
                         </div>
@@ -61,81 +61,89 @@
                     <md-content layout-padding layout="column" style="padding-top: 0;">
                         <div layout-gt-sm="row" class="layout-gt-sm-row">
                             <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
-                                <label for="firstName">First Name</label>
-                                <input id="firstName" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
-                                       ng-model="user.firstName"/>
+                                <label for="firstName" translate="create.firstName"></label>
+                                <input id="firstName" type="text" ng-model="user.firstName"/>
 
                                 <div class="md-errors-spacer"></div>
                             </md-input-container>
                             <md-input-container class="md-block flex-gt-sm" ng-show="username.username">
-                                <label for="lastName">Last Name</label>
-                                <input id="lastName" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
-                                       ng-model="user.lastName"/>
+                                <label for="lastName" translate="create.lastName"></label>
+                                <input id="lastName" type="text" ng-model="user.lastName"/>
                             </md-input-container>
                         </div>
 
                         <md-input-container class="md-block flex-gt-sm" ng-show="username.email">
-                            <label for="email">Email</label>
-                            <input id="email" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
-                                   ng-model="user.email" ng-pattern="/^.+@.+\..+$/"/>
+                            <label for="email">
+                                <span ng-show="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color:rgba(33, 150, 243, 0.75)" translate="create.email"><span style="color:red">*</span></span>
+                                <span ng-hide="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'" translate="create.email"></span>
+                            </label>
+                            <input id="email" type="email"
+                                   ng-model="user.email" ng-pattern="/^.+@.+\..+$/"
+                                   ng-required="user.deliverMethod == 'EMAIL' || user.deliverMethod == 'EMAIL_AND_SMS'"/>
                         </md-input-container>
 
-
-                        <md-input-container class="md-block flex-gt-sm" ng-show="username.phone">
-                            <label for="phoneNumber">Phone Number</label>
-                            <input id="phoneNumber" class="ng-pristine ng-untouched ng-valid ng-empty"
-                                   ng-model="user.phone"/>
-                        </md-input-container>
-
+                            <md-input-container class="md-block flex-gt-sm createPage" ng-show="username.phone" style="margin-top: 0;padding-top: 0;">
+                                <span ng-show="username.phone" style="position: absolute; bottom: 5px; left: 3px;">
+                                    <span ng-show="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color:rgba(33, 150, 243, 0.75)" translate="create.phone"><span style="color:red">*</span></span>
+                                    <span ng-hide="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'" style="color: rgba(0,0,0,0.26);" translate="create.phone"></span>
+                                </span>
+                                <input style="left: 50px;padding-left: 0"
+                                       type="tel" name="phone" ng-model="user.phone" id="phoneNumber"
+                                       ng-intl-tel-input
+                                       ng-required="user.deliverMethod == 'SMS' || user.deliverMethod == 'EMAIL_AND_SMS'">
+                            </md-input-container>
 
                         <md-input-container class="md-block">
-                            <label for="organization">Organization</label>
-                            <input id="organization" class="ng-valid md-input ng-dirty ng-valid-parse ng-touched"
-                                   ng-model="user.organization"/>
+                            <label for="organization" translate="create.organization"></label>
+                            <input id="organization" ng-model="user.organization"/>
                         </md-input-container>
 
 
                         <md-input-container class="md-block flex-gt-sm">
-                            <label for="purpose">Purpose of Visit</label>
+                            <label for="purpose" translate="create.purpose"></label>
                             <input id="purpose" class="ng-pristine ng-untouched ng-valid ng-empty"
                                    ng-model="user.purpose"/>
                         </md-input-container>
                         <md-input-container class="md-block flex-gt-sm">
-                            <label>Deliver Method:</label>
+                            <label><span translate="deliverMethod"></span>:</label>
                             <md-select ng-model="user.deliverMethod" ng-selected="user.deliverMethod">
-                                <md-option value="NO_DELIVERY" class="ng-binding ng-scope">No delivery
+                                <md-option value="NO_DELIVERY" class="ng-binding ng-scope" translate="deliverMethod.noDelivery">
                                 </md-option>
 
                                 <md-option value="EMAIL"
-                                           class="ng-binding ng-scope">Email
+                                           class="ng-binding ng-scope" translate="deliverMethod.email">
                                 </md-option>
 
                                 <md-option value="SMS"
-                                           class="ng-binding ng-scope">Sms
+                                           class="ng-binding ng-scope" translate="deliverMethod.sms" ng-show="hmngType == 'public'">
                                 </md-option>
 
                                 <md-option value="EMAIL_AND_SMS"
-                                           class="ng-binding ng-scope">Email and sms
+                                           class="ng-binding ng-scope" translate="deliverMethod.smsAndEmail" ng-show="hmngType == 'public'">
                                 </md-option>
 
                             </md-select>
                         </md-input-container>
                         <div class="clearfix">
-                            <md-button ng-click="reset('single')">Reset</md-button>
-                            <md-button ng-disabled="isNotValid('single')" class="md-primary md-raised"
-                                       ng-click="save('single')">
-                                Create
+                            <md-button ng-click="reset('single')" translate="button.reset" aria-label="reset"></md-button>
+                            <md-button ng-disabled="isNotValid('single')" class="md-primary md-raised" aria-label="create"
+                                       ng-click="save('single')" translate="button.create">
+
                             </md-button>
                         </div>
                     </md-content>
                 </md-tab>
-                <md-tab label="Bulk">
+                <md-tab label="{{'create.bulk' | translate}}">
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <h2 translate="create.bulkParameters"></h2>
+                            </div>
+                        </md-toolbar>
                     <md-content>
-                        <h3 class="title">Bulk Parameters</h3>
                         <md-content layout-padding layout="column" style="padding-top: 0;">
 
                             <md-input-container class="md-block flex-gt-sm">
-                                <label for="prefix">Prefix</label>
+                                <label for="prefix" translate="create.prefix"></label>
                                 <input id="prefix" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
                                        ng-class="{invalid: bulk.prefixIsNotValid}"
                                        ng-model="bulk.prefix"/>
@@ -143,7 +151,7 @@
                                 <div class="md-errors-spacer"></div>
                             </md-input-container>
                             <md-input-container class="md-block flex-gt-sm">
-                                <label for="domain">Domain Name</label>
+                                <label for="domain" translate="create.domainName"></label>
                                 <input id="domain" class="ng-pristine ng-untouched ng-valid ng-empty" type="text"
                                        ng-class="{invalid: bulk.domainIsNotValid}"
                                        ng-model="bulk.domain"/>
@@ -151,7 +159,7 @@
 
 
                             <md-input-container class="md-block flex-gt-sm">
-                                <label for="example" class="ng-binding">Example:</label>
+                                <label for="example" class="ng-binding"><span translate="create.example"></span>:</label>
 
                                 <input disabled="" class="ng-pristine ng-untouched ng-valid ng-empty"
                                        id="example" type="text"
@@ -160,7 +168,7 @@
 
 
                             <md-input-container class="md-block flex-gt-sm">
-                                <label for="numberOfAccounts" class="ng-binding">Number of accounts
+                                <label for="numberOfAccounts" class="ng-binding" translate="create.numberOfAccounts">
                                     (1-{{bulk.maxNumberOfAccounts}}):</label>
 
                                 <input class="ng-pristine ng-untouched ng-valid ng-empty"
@@ -169,9 +177,9 @@
                             </md-input-container>
                             </div>
                             <div class="clearfix">
-                                <md-button ng-click="reset('bulk')">Reset</md-button>
+                                <md-button ng-click="reset('bulk')" translate="button.reset" aria-label="reset"></md-button>
                                 <md-button ng-disabled="isNotValid('bulk')" class="md-raised md-primary "
-                                           ng-click="save('bulk')">Save
+                                           ng-click="save('bulk')" translate="button.create" aria-label="create">
                                 </md-button>
                             </div>
                         </md-content>
@@ -186,9 +194,9 @@
             <div md-whiteframe="5">
                 <md-toolbar>
                     <div class="md-toolbar-tools">
-                        <span>Created Accounts: {{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</span>
+                        <span><span translate="create.createdAccounts"></span>: {{createdAccountsFinished}} / {{bulk.numberOfAccounts}}</span>
                         <span flex></span>
-                        <span style="float: right">Success: {{bulkResult.length}} | Errors {{bulkError.length}}</span>
+                        <span style="float: right"><span translate="create.success"></span>: {{bulkResult.length}} | <span translate="create.errors"></span> {{bulkError.length}}</span>
                     </div>
                 </md-toolbar>
                 <md-progress-linear md-mode="determinate" class="md-accent"
@@ -197,8 +205,9 @@
                 <md-content>
                     <md-button class="md-primary md-raised" ng-controller="ModalCtrl"
                                ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
-                               ng-disabled="createdAccountsFinished || createdAccountsFinished != bulk.numberOfAccounts">
-                        Download
+                               ng-disabled="createdAccountsFinished || createdAccountsFinished != bulk.numberOfAccounts"
+                            translate="button.download" aria-label="download">
+
                     </md-button>
 
                     <md-table-container>
@@ -227,12 +236,12 @@
                                          md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
                 </md-content>
             </div>
-            </article>
+        </article>
         <article>
             <div md-whiteframe="5">
                 <md-toolbar>
                     <div class="md-toolbar-tools">
-                        <h2>Bulk Errors</h2>
+                        <h2 translate="create.bulkErrors"></h2>
                     </div>
                 </md-toolbar>
                 <md-content>
@@ -241,10 +250,10 @@
                             <thead md-head>
                             <tr md-row>
                                 <th md-column style="width: 30%">
-                                    Account
+                                    {{"create.account" | translate}}
                                 </th>
                                 <th md-column>
-                                    Error
+                                    {{"create.error" | translate}}
                                 </th>
                             </tr>
                             </thead>

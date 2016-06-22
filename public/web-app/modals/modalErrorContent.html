@@ -8,18 +8,18 @@
         <div class="md-dialog-content">
             <table style="text-align: left">
                 <tr>
-                    <th style="padding: 10px;">Error Message:</th>
+                    <th style="padding: 10px;"><span translate="modal.error.message"></span>:</th>
                     <td>{{items.apiErrorMessage}}</td>
                 </tr>
                 <tr>
-                    <th style="padding: 10px;">Error Code:</th>
+                    <th style="padding: 10px;"><span translate="modal.error.code"></span>:</th>
                     <td>{{items.apiErrorCode}}</td>
                 </tr>
             </table>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button href="/web-app/"> Try to reload the page</md-button>
-        <md-button href="/logout/" class="md-raised md-primary"> Try to use other credentials</md-button>
+        <md-button href="/web-app/" translate="modal.error.reload" aria-label="reload"></md-button>
+        <md-button href="/logout/" class="md-raised md-primary" translate="modal.error.other" aria-label="other"></md-button>
     </md-dialog-actions>
 </md-dialog>

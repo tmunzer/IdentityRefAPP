@@ -1,4 +1,6 @@
-angular.module('Import').controller("ImportCtrl", function ($scope, userGroupsService, createService, credentialsService) {
+angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, userGroupsService, createService, credentialsService) {
+    $scope.hmngType = $rootScope.hmngType;
+
     $scope.csvFile = [];
     $scope.csvFileName = "No selected file...";
     $scope.csvHeader = [];

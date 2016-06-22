@@ -53,14 +53,14 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
         if (devices) {
             if ($scope.connected == false && $scope.notConnected == false) {
                 devices.forEach(function (device) {
-                    if ($scope.query.filter === "" || device.userName.indexOf($scope.query.filter) >= 0) $scope.devices = angular.copy(devices);
+                    if ($scope.query.filter === "" || device.userName.toString().toLowerCase().indexOf($scope.query.filter.toString().toLowerCase()) >= 0) $scope.devices = angular.copy(devices);
                 });
             } else {
                 $scope.devices = [];
                 if ($scope.connected == true) {
                     devices.forEach(function (device) {
                         if (device.clients.length > 0) {
-                            if ($scope.query.filter === "" || device.userName.indexOf($scope.query.filter) >= 0) $scope.devices.push(device);
+                            if ($scope.query.filter === "" || device.userName.toString().toLowerCase().indexOf($scope.query.filter.toString().toLowerCase()) >= 0) $scope.devices.push(device);
                         }
                     })
                 }
@@ -120,6 +120,9 @@ angular.module('Monitor').controller("MonitorCtrl", function ($scope, monitorSer
     $scope.userColor = function (user) {
         if (user.clients.length == 0) return "color: #aca5a3";
         else return "color: #75D064";
+    };
+    $scope.userConnected = function (user) {
+        return user.clients.length > 0;
     };
     $scope.clientString = function (client) {
         return '<div style="text-align: left">' + client.hostName + " is currently connected <br>" +

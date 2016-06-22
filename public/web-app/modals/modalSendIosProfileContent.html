@@ -1,7 +1,7 @@
 <md-dialog aria-label="Send iOS Profile">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 class="md-title">Send iOS Profile</h2>
+            <h2 class="md-title" translate="modal.ios.title"></h2>
         </div>
     </md-toolbar>
     <div ng-show="!isWorking"
@@ -10,31 +10,28 @@
                         class="md-accent"></md-progress-linear>
     <md-dialog-content class="md-dialog-content">
         <md-content>
+            <div><span translate="modal.ios.message1"></span>.</div>
+            <div><span translate="modal.ios.message2"></span>.</div>
             <form name="sendByEmailForm">
                 <md-input-container class="md-block flex-gt-sm">
-                    <label for="email">Email Address</label>
+                    <label for="email" translate="modal.ios.email"></label>
                     <input id="email" name="email" class="ng-pristine ng-untouched ng-valid ng-empty" type="email"
                            ng-model="email" required/>
 
                     <div class="md-errors-spacer"></div>
                 </md-input-container>
             </form>
-            <div>The iOS profile will be sent to the email address above.</div>
-            <div>The User just has to install the configuration profile included into the email to configure an iOS
-                device.
-            </div>
             <div style="text-align: center; color: green; height: 40px; vertical-align: bottom; line-height: 40px;">
-                <span ng-show="success">Email sent successfully!
+                <span ng-show="success" translate="modal.ios.success">
             </span>
             </div>
         </md-content>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-primary md-raised" ng-click="sendIosProfile()" ng-disabled="!sendByEmailForm.email.$valid || success">
-            Send
+        <md-button class="md-primary md-raised" ng-click="sendIosProfile()" ng-disabled="!sendByEmailForm.email.$valid || success" translate="button.send">
         </md-button>
-        <md-button class="md-primary" ng-click="back()">Back</md-button>
-        <md-button class="md-primary" ng-click="close()">Close</md-button>
+        <md-button class="md-primary" ng-click="back()" translate="button.back"></md-button>
+        <md-button class="md-primary" ng-click="close()" translate="button.close"></md-button>
     </md-dialog-actions>
 </md-dialog>
 
