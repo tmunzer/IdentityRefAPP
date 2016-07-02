@@ -17,7 +17,8 @@ router.get('/reg', function (req, res) {
                         rejectUnauthorized: true,
                         vpcUrl: data.data[owner].vpcUrl.replace("https://", ""),
                         ownerId: data.data[owner].ownerId,
-                        accessToken: data.data[owner].accessToken
+                        accessToken: data.data[owner].accessToken,
+                        hmngType: "public"
                     };
 
                 }
