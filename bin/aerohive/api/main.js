@@ -2,42 +2,42 @@
 
 module.exports.configuration = {
     location: {
-        GET: require(appRoot + "/bin/aerohive/api/configuration/location/location").GET
+        GET: require("./configuration/location/location").GET
     }
 };
 
 module.exports.monitor = {
     device: {
-        GET: require(appRoot + "/bin/aerohive/api/monitor/device").GET
+        GET: require("./monitor/device").GET
     },
     client: {
-        clientsList: require(appRoot + "/bin/aerohive/api/monitor/client").clientsList,
-        clientDetails: require(appRoot + "/bin/aerohive/api/monitor/client").clientDetails
+        clientsList: require("./monitor/client").clientsList,
+        clientDetails: require("./monitor/client").clientDetails
     }
 };
 
 module.exports.clientlocation = {
     clienttimeseries: {
-        GET: require(appRoot + "/bin/aerohive/api/clientlocation/clienttimeseries").GET,
-        GETwithEE: require(appRoot + "/bin/aerohive/api/clientlocation/clienttimeseries").GETwithEE
+        GET: require("./clientlocation/clienttimeseries").GET,
+        GETwithEE: require("./clientlocation/clienttimeseries").GETwithEE
 
     },
     clientcount: {
-        GET: require(appRoot + "/bin/aerohive/api/clientlocation/clientcount").GET,
-        GETwithEE: require(appRoot + "/bin/aerohive/api/clientlocation/clientcount").GETwithEE
+        GET: require("./clientlocation/clientcount").GET,
+        GETwithEE: require("./clientlocation/clientcount").GETwithEE
     }
 };
 
 module.exports.identity = {
     userGroups: {
-        getUserGroups: require(appRoot + "/bin/aerohive/api/identity/userGroups").getUserGroups
+        getUserGroups: require("./identity/userGroups").getUserGroups
     },
     credentials: {
-        getCredentials: require(appRoot + "/bin/aerohive/api/identity/credentials").getCredentials,
-        createCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").createCredential,
-        deleteCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").deleteCredential,
-        deliverCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").deliverCredential,
-        renewCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").renewCredential,
-        updateCredential: require(appRoot + "/bin/aerohive/api/identity/credentials").updateCredential
+        getCredentials: require("./identity/credentials").getCredentials,
+        createCredential: require("./identity/credentials").createCredential,
+        deleteCredential: require("./identity/credentials").deleteCredential,
+        deliverCredential: require("./identity/credentials").deliverCredential,
+        renewCredential: require("./identity/credentials").renewCredential,
+        updateCredential: require("./identity/credentials").updateCredential
     }
 };
