@@ -205,7 +205,7 @@
                 <md-content>
                     <md-button class="md-primary md-raised" ng-controller="ModalCtrl"
                                ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
-                               ng-disabled="createdAccountsFinished || createdAccountsFinished != bulk.numberOfAccounts"
+                               ng-disabled="! createdAccountsFinished || createdAccountsFinished != bulk.numberOfAccounts"
                             translate="button.download" aria-label="download">
 
                     </md-button>
@@ -233,7 +233,7 @@
                     </md-table-container>
                     <md-table-pagination md-limit="itemsByPage" md-limit-options="[10, 20, 50, 100]"
                                          md-page="currentPage"
-                                         md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
+                                         md-total="{{createdAccountsFinished}}"></md-table-pagination>
                 </md-content>
             </div>
         </article>
