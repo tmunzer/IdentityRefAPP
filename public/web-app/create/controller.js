@@ -169,7 +169,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                         }
                         stringAccount = $scope.bulk.prefix + '_' + fillingNumber + currentAccount + '@' + $scope.bulk.domain;
                         credentials.forEach(function (credential) {
-                            if (credential.userName.toLowerCase() === stringAccount.toLowerCase()) {
+                            if (credential.userName && credential.userName.toLowerCase() === stringAccount.toLowerCase()) {
                                 alreadyExists = true;
                                 $scope.bulkError.push({
                                     account: credential.userName,

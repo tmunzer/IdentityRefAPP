@@ -15,12 +15,6 @@ md-sidenav {
     outline: none;
 }
 
-md-tooltip,
-.md-sidenav-left,
-md-button {
-    transition: all .1s ease-in-out;
-}
-
 md-icon,
 .card {
     transition: all .2s ease-in-out;

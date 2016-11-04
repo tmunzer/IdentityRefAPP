@@ -163,7 +163,7 @@
 
                 <md-content class="clearfix">
                     <md-button ng-click="reset()" aria-label="reset" translate="button.reset"></md-button>
-                    <md-button ng-disabled="isNotValid() || importProcessed" class="md-raised md-primary"
+                    <md-button ng-disabled="isNotValid() || importProcessing" class="md-raised md-primary"
                                ng-click="create()" aria-label="create" translate="button.create">
                     </md-button>
                 </md-content>
@@ -189,7 +189,7 @@
                     </md-progress-linear>
                     <md-button class='md-raised md-primary' ng-controller="ModalCtrl"
                                ng-click="open('exportBulk', {credentials: bulkResult, exportFields: bulkResultHeaders})"
-                               ng-disabled="bulkResult == 0 || importProcessed"
+                               ng-disabled="createdAccountsFinished == 0 || importProcessing"
                                translate="button.download" aria-label="download">>
                     </md-button>
 
@@ -216,7 +216,7 @@
                     </md-table-container>
                     <md-table-pagination md-limit="importByPage" md-limit-options="[10, 20, 50, 100]"
                                          md-page="importPage"
-                                         md-total="{{createdAccountsFinished.length}}"></md-table-pagination>
+                                         md-total="{{createdAccountsFinished}}"></md-table-pagination>
                 </md-content>
             </div>
         </article>
