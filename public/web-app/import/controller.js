@@ -34,7 +34,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
     $scope.bulkResult = [];
     $scope.bulkError = [];
 
-    $scope.importProcessed = false;
+    $scope.importProcessing = false;
     $scope.initImport = false;
 
     $scope.diplayPreview = false;
@@ -133,7 +133,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
     $scope.create = function () {
         $scope.displayResult = true;
         $scope.initImport = true;
-        $scope.importProcessed = true;
+        $scope.importProcessing = true;
         $scope.accountsDone = 0;
         var requestForCredentials = credentialsService.getCredentials();
         requestForCredentials.then(function (promise) {
@@ -188,7 +188,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
                             }
                             $scope.accountsDone ++;
                             if ($scope.accountsDone == $scope.csvRows.length){
-                                $scope.importProcessed = false;
+                                $scope.importProcessing = false;
                             }
                         });
                     }
