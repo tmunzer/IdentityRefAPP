@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var devApp = require("../config").aerohiveApp;
+var devAccount = require("../config").devAccount;
 
 /*================================================================
  ROUTES
@@ -16,8 +16,8 @@ router.get('/', function (req, res, next) {
         res.render('login', {
             title: 'Identity',
             errorcode: errorcode,
-            client_id: devApp.clientID,
-            redirect_uri: devApp.redirectUrl
+            client_id: devAccount.clientID,
+            redirect_uri: devAccount.redirectUrl
         });
     }
 });

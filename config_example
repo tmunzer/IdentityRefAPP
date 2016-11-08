@@ -1,7 +1,7 @@
 //move this file to ./config
 
 
-module.exports.aerohiveApp = {
+module.exports.devAccount = {
     redirectUrl: "https://<hostname>/oauth/reg",
     clientSecret: "xxxxxxxxxxxxxxxxxxxxxxxxx",
     clientID: "xxxxx"
