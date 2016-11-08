@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var ApiConf = require(appRoot + "/bin/aerohive/config");
+var devApp = require("../config").aerohiveApp;
 
 /*================================================================
  ROUTES
@@ -16,8 +16,8 @@ router.get('/', function (req, res, next) {
         res.render('login', {
             title: 'Identity',
             errorcode: errorcode,
-            client_id: ApiConf.clientId,
-            redirect_uri: ApiConf.redirectUrl
+            client_id: devApp.clientID,
+            redirect_uri: devApp.redirectUrl
         });
     }
 });

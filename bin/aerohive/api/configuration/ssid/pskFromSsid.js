@@ -1,4 +1,4 @@
-var api = require(appRoot + "/bin/aerohive/api/req");
+var api = require("../../req");
 
 
 module.exports.GET = function (xapi, ssidProfileId, callback) {

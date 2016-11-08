@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var API = require(appRoot + "/bin/aerohive/api/main");
+var API = require("../bin/aerohive/api/main");
 /* GET users listing. */
 router.post('/identity/userGroup', function (req, res, next) {
     if (req.session.xapi) {

@@ -1,6 +1,5 @@
 
 var path = require('path');
-global.appRoot = path.resolve(__dirname);
 
 var express = require('express');
 var parseurl = require('parseurl');
@@ -47,7 +46,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components',  express.static(appRoot + '/bower_components'));
+app.use('/bower_components',  express.static('../bower_components'));
 
 var routes = require('./routes/login');
 var webapp = require('./routes/web-app');

@@ -1,0 +1,8 @@
+//move this file to ./config
+
+
+module.exports.aerohiveApp = {
+    redirectUrl: "https://<hostname>/oauth/reg",
+    clientSecret: "xxxxxxxxxxxxxxxxxxxxxxxxx",
+    clientID: "xxxxx"
+}

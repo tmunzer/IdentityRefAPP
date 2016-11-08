@@ -1,15 +1,14 @@
 var https = require('https');
 
-
-module.exports.getPermanentToken = function(authCode, redirectUrl, secret, clientId, callback){
+module.exports.getPermanentToken = function(authCode, redirectUrl, clientSecret, clientID, callback){
     var options = {
         host: 'cloud.aerohive.com',
         port: 443,
         path: '/services/acct/thirdparty/accesstoken?authCode='+authCode+'&redirectUri='+redirectUrl,
         method: 'POST',
         headers: {
-            'X-AH-API-CLIENT-SECRET' : secret,
-            'X-AH-API-CLIENT-ID':clientId,
+            'X-AH-API-CLIENT-SECRET' : clientSecret,
+            'X-AH-API-CLIENT-ID':clientID,
             'X-AH-API-CLIENT-REDIRECT-URI': redirectUrl
         }
     };

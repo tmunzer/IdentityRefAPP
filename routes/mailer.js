@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var nodemailer = require("nodemailer");
 var smtpTransport = require('nodemailer-smtp-transport');
-var mailerConfig = require(appRoot + "/bin/mailer_config");
+var mailerConfig = require("../mailer_config");
 
 var transporter = nodemailer.createTransport(smtpTransport(mailerConfig.config));
 

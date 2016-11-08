@@ -1,13 +1,13 @@
-var api = require(appRoot + "/bin/aerohive/api/req");
+var api = require("../req");
 
 
-module.exports.getCredentials = function (xapi, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
+module.exports.getCredentials = function (xapi, credentialType, userGroup, memberOf, adUser, creator, userName, firstName, lastName, phone, email, page, pageSize, callback) {
     var path = "/xapi/v1/identity/credentials?ownerId=" + xapi.ownerId;
     if (credentialType && credentialType!="") path += '&credentialType=' + credentialType;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
     if (creator && creator!="") path += '&creator=' + creator;
-    if (loginName && loginName!="") path += '&loginName=' + loginName;
+    if (userName && userName!="") path += '&userName=' + userName;
     if (firstName && firstName!="") path += '&firstName=' + firstName;
     if (lastName && lastName!="") path += '&lastName=' + lastName;
     if (phone && phone!="") path += '&phone=' + phone;
@@ -16,13 +16,7 @@ module.exports.getCredentials = function (xapi, credentialType, userGroup, membe
     if (page && page!="") path += '&page=' + page;
     if (pageSize && pageSize!="") path += '&pageSize=' + pageSize;
     api.GET(xapi, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
+        callback(err, result);        
     })
 };
 
@@ -30,7 +24,6 @@ module.exports.createCredential = function (xapi, memberOf, adUser, hmCredential
     var path = "/xapi/v1/identity/credentials?ownerId=" + xapi.ownerId;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
-
     for (var key in hmCredentialsRequestVo) {
         if (hmCredentialsRequestVo[key] === '') delete hmCredentialsRequestVo[key];
     }
