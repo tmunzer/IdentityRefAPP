@@ -19,11 +19,11 @@ router.get('/identity/credentials', function (req, res, next) {
         var userGroup = [""];
         var credentials = [];
 
-        if (req.query.hasOwnProperty('credentialType')) {
+        if (req.query.credentialType) {
             if (typeof req.query.credentialType === "string") credentialType = [req.query.credentialType];
             else credentialType = req.query.credentialType;
         }
-        if (req.query.hasOwnProperty('userGroup')) {
+        if (req.query.userGroup) {
             if (typeof req.query.userGroup === "string") userGroup = [req.query.userGroup];
             else userGroup = req.query.userGroup;
         }
@@ -53,7 +53,7 @@ router.get('/identity/credentials', function (req, res, next) {
 router.post('/identity/credentials', function (req, res, next) {
     if (req.session.xapi) {
         var hmCredentialsRequestVo = {};
-        if (req.body.hasOwnProperty('hmCredentialsRequestVo')) hmCredentialsRequestVo = req.body.hmCredentialsRequestVo;
+        if (req.body.hmCredentialsRequestVo) hmCredentialsRequestVo = req.body.hmCredentialsRequestVo;
         API.identity.credentials.createCredential(req.session.xapi, null, null, hmCredentialsRequestVo, function (err, result) {
             if (err) res.json({error: err});
             else res.json(result);
@@ -63,7 +63,7 @@ router.post('/identity/credentials', function (req, res, next) {
 router.delete('/identity/credentials', function (req, res, next) {
     if (req.session.xapi) {
         var ids = "";
-        if (req.query.hasOwnProperty("ids")) ids = req.query.ids;
+        if (req.query.ids) ids = req.query.ids;
         API.identity.credentials.deleteCredential(req.session.xapi, null, null, ids, function (err, result) {
             if (err) res.json({error: err});
             else res.json(result);
@@ -73,7 +73,7 @@ router.delete('/identity/credentials', function (req, res, next) {
 router.put('/identity/credentials/renew', function (req, res, next) {
     if (req.session.xapi) {
         var id = "";
-        if (req.query.hasOwnProperty("id")) id = req.query.id;
+        if (req.query.id) id = req.query.id;
         API.identity.credentials.renewCredential(req.session.xapi, id, null, null, function (err, result) {
             if (err) res.json({error: err});
             else res.json(result);
@@ -82,9 +82,9 @@ router.put('/identity/credentials/renew', function (req, res, next) {
 });
 router.post('/identity/credentials/deliver', function (req, res, next) {
     if (req.session.xapi) {
-        if (req.body.hasOwnProperty("hmCredentialDeliveryInfoVo")) {
+        if (req.body.hmCredentialDeliveryInfoVo) {
             var hmCredentialDeliveryInfoVo = req.body.hmCredentialDeliveryInfoVo;
-            if (req.query.hasOwnProperty("id")) id = req.query.id;
+            if (req.query.id) id = req.query.id;
             API.identity.credentials.deliverCredential(req.session.xapi, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
                 if (err) res.json({error: err});
                 else res.json(result);
@@ -98,11 +98,11 @@ router.get('/monitor/devices', function (req, res, next) {
         var userGroup = [""];
         var credentials = [];
 
-        if (req.query.hasOwnProperty('credentialType')) {
+        if (req.query.credentialType) {
             if (typeof req.query.credentialType === "string") credentialType = [req.query.credentialType];
             else credentialType = req.query.credentialType;
         }
-        if (req.query.hasOwnProperty('userGroup')) {
+        if (req.query.userGroup) {
             if (typeof req.query.userGroup === "string") userGroup = [req.query.userGroup];
             else userGroup = req.query.userGroup;
         }
@@ -157,7 +157,7 @@ router.get('/identity/status', function (req, res, next) {
         };
         var userName = "";
 
-        if (req.query.hasOwnProperty('userName')) {
+        if (req.query.userName) {
             userName = req.query.userName;
             API.monitor.client.clientsList(req.session.xapi, function (err, clients) {
                 if (err) res.json(err);
