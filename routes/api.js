@@ -32,7 +32,6 @@ router.get('/identity/credentials', function (req, res, next) {
         var reqMax = credentialType.length * userGroup.length;
         credentialType.forEach(function (credential) {
             userGroup.forEach(function (group) {
-                console.log(group);
                 API.identity.credentials.getCredentials(req.session.xapi, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
                     if (err) res.json({error: err});
                     else {
@@ -74,7 +73,6 @@ router.delete('/identity/credentials', function (req, res, next) {
 router.put('/identity/credentials/renew', function (req, res, next) {
     if (req.session.xapi) {
         var id = "";
-        console.log(req.query);
         if (req.query.hasOwnProperty("id")) id = req.query.id;
         API.identity.credentials.renewCredential(req.session.xapi, id, null, null, function (err, result) {
             if (err) res.json({error: err});
@@ -86,10 +84,8 @@ router.post('/identity/credentials/deliver', function (req, res, next) {
     if (req.session.xapi) {
         if (req.body.hasOwnProperty("hmCredentialDeliveryInfoVo")) {
             var hmCredentialDeliveryInfoVo = req.body.hmCredentialDeliveryInfoVo;
-            console.log(req.query);
             if (req.query.hasOwnProperty("id")) id = req.query.id;
             API.identity.credentials.deliverCredential(req.session.xapi, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
-                console.log(err, result);
                 if (err) res.json({error: err});
                 else res.json(result);
             })
@@ -115,7 +111,6 @@ router.get('/monitor/devices', function (req, res, next) {
         var reqMax = credentialType.length * userGroup.length;
         credentialType.forEach(function (credential) {
             userGroup.forEach(function (group) {
-                console.log(group);
                 API.identity.credentials.getCredentials(req.session.xapi, credential, group, null, null, null, null, null, null, null, null, null, null, function (err, result) {
                     if (err) res.json({error: err});
                     else {

@@ -85,7 +85,6 @@ function httpRequest(options, callback, body){
     result.request = {};
     result.result = {};
 
-    console.info(options);
     result.request.options = options;
     var req = https.request(options, function (res) {
         result.result.status = res.statusCode;
