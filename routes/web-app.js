@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
             server: req.session.xapi.vpcUrl,
             ownerId: req.session.xapi.ownerId,
             accessToken: req.session.xapi.accessToken,
-            type: req.session.xapi.type
+            hmngType: req.session.xapi.hmngType
         });
     } else res.redirect("/");
 });
