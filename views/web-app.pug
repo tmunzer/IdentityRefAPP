@@ -51,7 +51,7 @@ html
         script(src="/bower_components/ng-csv/build/ng-csv.min.js")
 
     body(ng-app="identity").icons-docs(ng-controller="UserCtrl as UserCtrl")
-        input(type='hidden' name='hmngType' value=hmngType ng-model="hmngType")
+        input(type='hidden' id='hmngType' value=hmngType ng-model="hmngType")
         div.modal.fade.bs-example-modal-lg(ng-controller="ModalCtrl")
             script(type="text/ng-template" id="modalAboutContent.html")
                 md-dialog(aria-label="List dialog")
