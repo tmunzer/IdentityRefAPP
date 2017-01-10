@@ -57,7 +57,7 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
         }
     });
     $scope.$on('createSingle', function (event, user, account) {
-        //if (!$rootScope.displayed) {
+        if (!$rootScope.displayed) {
             $rootScope.displayed = true;
             $mdDialog.show({
                 controller: 'DialogSingleController',
@@ -71,7 +71,7 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
             }).then(function () {
                 $rootScope.displayed = false;
             });
-       // }
+        }
     });
     $scope.$on('renewSingleUser', function (event, user, account) {
         if (!$rootScope.displayed) {
