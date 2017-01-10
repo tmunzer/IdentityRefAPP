@@ -176,7 +176,7 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
                 items: {
                     user: $scope.user,
                     account: $scope.account,
-                    back: "createSingle"
+                    backModal: "createSingle"
                 }
             }
         });
@@ -189,7 +189,7 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
                 items: {
                     user: $scope.user,
                     account: $scope.account,
-                    back: "createSingle"
+                    backModal: "createSingle"
                 }
             }
         });
@@ -221,7 +221,7 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
 });
 
 angular.module("Modals").controller("DialogSendByEmailController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
-    $scope.back = items.back;
+    $scope.backModal = items.backModal;
     if (items.user){
         $scope.email = items.user.email;
         $scope.user = items.user;
@@ -243,7 +243,7 @@ angular.module("Modals").controller("DialogSendByEmailController", function ($sc
         });
     };
     $scope.back = function () {
-        $rootScope.$broadcast(items.back, items.user, items.account);
+        $rootScope.$broadcast(items.backModal, items.user, items.account);
     };
     $scope.close = function () {
         // Easily hides most recent dialog shown...
@@ -281,7 +281,7 @@ angular.module("Modals").controller("DialogSendIosProfileController", function (
 });
 
 angular.module("Modals").controller("DialogSendBySmsController", function ($scope, $rootScope, $mdDialog, sendCredentialsService, items) {
-    $scope.back = items.back;
+    $scope.backModal = items.backModal;
     if (items.user){
         $scope.email = items.user.phone;
         $scope.user = items.user;
@@ -302,7 +302,7 @@ angular.module("Modals").controller("DialogSendBySmsController", function ($scop
         });
     };
     $scope.back = function () {
-        $rootScope.$broadcast(items.back, items.user, items.account);
+        $rootScope.$broadcast(items.backModal, items.user, items.account);
     };
     $scope.close = function () {
         // Easily hides most recent dialog shown...
@@ -477,7 +477,7 @@ angular.module('Modals').controller('RenewSingleUserController', function ($scop
                 items: {
                     user: $scope.user,
                     account: $scope.account,
-                    back: "renewSingleUser"
+                    backModal: "renewSingleUser"
                 }
             }
         });
@@ -490,7 +490,7 @@ angular.module('Modals').controller('RenewSingleUserController', function ($scop
                 items: {
                     user: $scope.user,
                     account: $scope.account,
-                    back: "renewSingleUser"
+                    backModal: "renewSingleUser"
                 }
             }
         });
