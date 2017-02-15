@@ -136,6 +136,7 @@ var en = {
             title: "Connection QRCode for",
             connectionStatus: "Connection Status",
             ip: "IP Address",
+            ssid: "SSID",
             radioHealth: "Radio Health",
             networkHealth: "Network Health",
             applicationHealth: "Application Health",
@@ -145,7 +146,7 @@ var en = {
             userProfile: "User Profile",
             macAddress: "MAC Address",
             radioBand: "Radio Band",
-            80211: "802.11 Standard"
+            '80211': "802.11 Standard"
         },
         renew: {
             title: "Account Renewal",

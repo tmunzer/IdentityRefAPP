@@ -142,7 +142,7 @@ var fr = {
             userProfile: "Profil utilisateur",
             macAddress: "Adresse MAC",
             radioBand: "Fréquence",
-            80211: "Standard 802.11"
+            '80211': "Standard 802.11"
         },
         renew: {
             title: "Renouvellement du compte",

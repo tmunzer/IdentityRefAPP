@@ -44,7 +44,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     $scope.deliverMethod = createService.getDeliverMethod();
     $scope.username = {
         name: true,
-        email: true,
+        email: false,
         phone: false
     };
     $scope.disableEmail = false;
