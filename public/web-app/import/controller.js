@@ -170,6 +170,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
                         createdAccountsInitiated++;
                         createService.saveUser({
                             groupId: $scope.importUsers.groupId,
+                            userName: user.userName,
                             email: user.email,
                             phone: user.phone,
                             organization: user.organization,
