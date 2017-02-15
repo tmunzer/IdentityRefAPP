@@ -1,4 +1,6 @@
 .tm-selected, tbody .md-row:hover {
 background-color: #eee;
 }
-
+md-table-container {
+    background-color: white;
+}
