@@ -1,17 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var OAuth = require(appRoot + "/bin/aerohive/api/oauth");
-var ApiConf = require(appRoot + "/bin/aerohive/config");
-var Error = require(appRoot + '/routes/error');
+var OAuth = require("../bin/aerohive/api/oauth");
+var devAccount = require("../config").devAccount;
+var Error = require('../routes/error');
 
 router.get('/reg', function (req, res) {
-    if (req.query.hasOwnProperty('error')) {
+    if (req.query.error) {
         Error.render(req.query.error, "conf", req, res);
-    } else if (req.query.hasOwnProperty("authCode")) {
+    } else if (req.query.authCode) {
         var authCode = req.query.authCode;
-        OAuth.getPermanentToken(authCode, ApiConf.redirectUrl, ApiConf.secret, ApiConf.clientId, function(data){
-            if (data.hasOwnProperty("error")) Error.render(data.error, "conf", req, res);
-            else if (data.hasOwnProperty("data")) {
+        OAuth.getPermanentToken(authCode, devAccount.redirectUrl, devAccount.clientSecret, devAccount.clientID, function(data){
+            if (data.error) Error.render(data.error, "conf", req, res);
+            else if (data.data) {
                 for (var owner in data.data) {
                     req.session.xapi = {
                         rejectUnauthorized: true,
@@ -22,7 +22,6 @@ router.get('/reg', function (req, res) {
                     };
 
                 }
-                console.log(req.session);
                 res.redirect('/web-app/');
             }
         });

@@ -1,0 +1,8 @@
+//move this file to ./config
+
+
+module.exports.devAccount = {
+    redirectUrl: "https://<hostname>/oauth/reg",
+    clientSecret: "xxxxxxxxxxxxxxxxxxxxxxxxx",
+    clientID: "xxxxx"
+}

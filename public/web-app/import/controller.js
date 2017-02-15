@@ -7,6 +7,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
     $scope.csvRows = [];
     $scope.delimiter = ",";
     var masterImportUsers = {
+        userName: "",
         email: "",
         phone: "",
         organization: "",
@@ -122,7 +123,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
 
     $scope.isNotValid = function () {
         if ($scope.importUsers.groupId == 0) return true;
-        else if ($scope.importUsers.email == "" && $scope.importUsers.phone == "") return true;
+        else if ($scope.importUsers.email == "" && $scope.importUsers.phone == "" && $scope.importUsers.userName == "") return true;
         else if ($scope.importUsers.deliverMethod == "EMAIL" && $scope.importUsers.email == "") return true;
         else if ($scope.importUsers.deliverMethod == "SMS" && $scope.importUsers.phone == "") return true;
         else if ($scope.importUsers.deliverMethod == "EMAIL_AND_SMS" && ($scope.importUsers.email == "" || $scope.importUsers.phone == "")) return true;
@@ -148,11 +149,13 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
                 $scope.csvRows.forEach(function (row) {
                     alreadyExists = false;
                     user = {
+                        userName: "",
                         email: "",
                         phone: "",
                         purpose: "",
                         organization: ""
                     };
+                    user.userName = row[$scope.importUsers.userName];
                     user.email = row[$scope.importUsers.email];
                     user.phone = row[$scope.importUsers.phone];
                     user.purpose = row[$scope.importUsers.purpose];
@@ -160,13 +163,14 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
                     credentials.forEach(function (credential) {
                         if (credential.userName === user.email || credential.userName === user.phone) {
                             alreadyExists = true;
-                            $scope.bulkError.push({account: credential.userName, message: "userName already exists"});
+                            $scope.bulkError.push({ account: credential.userName, message: "userName already exists" });
                         }
                     });
                     if (!alreadyExists) {
                         createdAccountsInitiated++;
                         createService.saveUser({
                             groupId: $scope.importUsers.groupId,
+                            userName: user.userName,
                             email: user.email,
                             phone: user.phone,
                             organization: user.organization,
@@ -175,7 +179,9 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
                             'deliverMethod': $scope.importUsers.deliverMethod
                         }).then(function (promise2) {
                             if (promise2 && promise2.error) {
-                                $scope.bulkError.push({account: promise2.error.errorParams.item.replace("credential (", "").replace(")", ""), message: promise2.error.message});
+                                var account ="";
+                                if (promise2.error.errorParams) account = promise2.error.errorParams.item.replace("credential (", "").replace(")", "");
+                                $scope.bulkError.push({ account: account, message: promise2.error.message });
                             } else {
                                 if ($scope.bulkResultHeaders.length == 0) {
                                     for (var key in promise2) {
@@ -186,8 +192,8 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
                                 $scope.createdAccountsFinished++;
 
                             }
-                            $scope.accountsDone ++;
-                            if ($scope.accountsDone == $scope.csvRows.length){
+                            $scope.accountsDone++;
+                            if ($scope.accountsDone == $scope.csvRows.length) {
                                 $scope.importProcessing = false;
                             }
                         });

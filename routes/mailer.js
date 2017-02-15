@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var nodemailer = require("nodemailer");
 var smtpTransport = require('nodemailer-smtp-transport');
-var mailerConfig = require(appRoot + "/bin/mailer_config");
+var mailerConfig = require("../mailer_config");
 
 var transporter = nodemailer.createTransport(smtpTransport(mailerConfig.config));
 
@@ -18,11 +18,11 @@ transporter.verify(function(error, success) {
 router.post("/ios", function (req, res, next) {
 
     var userName, activeTime, ssid, password, destEmail;
-    if (req.body.hasOwnProperty("userName")) userName = req.body.userName;
-    if (req.body.hasOwnProperty("activeTime")) activeTime = req.body.activeTime;
-    if (req.body.hasOwnProperty("ssid")) ssid = req.body.ssid;
-    if (req.body.hasOwnProperty("password")) password = req.body.password;
-    if (req.body.hasOwnProperty("destEmail")) destEmail = req.body.destEmail;
+    if (req.body.userName) userName = req.body.userName;
+    if (req.body.activeTime) activeTime = req.body.activeTime;
+    if (req.body.ssid) ssid = req.body.ssid;
+    if (req.body.password) password = req.body.password;
+    if (req.body.destEmail) destEmail = req.body.destEmail;
     else destEmail = userName;
 
 

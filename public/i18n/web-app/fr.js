@@ -108,6 +108,7 @@ var fr = {
         csvDelimiter: "Délimiteur de champs CSV",
         filePreview: "Prévisualisation de l'importation",
         fieldsMatching: "Choix des champs",
+        userName: "Nom d'utilisateur",
         email: "Adresse e-mail",
         phone: "Numéro de téléphone",
         organization: "Société",
@@ -142,7 +143,7 @@ var fr = {
             userProfile: "Profil utilisateur",
             macAddress: "Adresse MAC",
             radioBand: "Fréquence",
-            80211: "Standard 802.11"
+            '80211': "Standard 802.11"
         },
         renew: {
             title: "Renouvellement du compte",

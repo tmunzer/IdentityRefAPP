@@ -26,8 +26,6 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     var masterBulk = {
         prefix: "",
         prefixIsNotValid: true,
-        domain: "",
-        domainIsNotValid: true,
         result: false,
         numberOfAccounts: 0,
         maxNumberOfAccounts: 1000
@@ -45,8 +43,8 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     $scope.userFields = createService.getUserFieldsToDisplay();
     $scope.deliverMethod = createService.getDeliverMethod();
     $scope.username = {
-        name: false,
-        email: true,
+        name: true,
+        email: false,
         phone: false
     };
     $scope.disableEmail = false;
@@ -98,29 +96,30 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
         var re = /^([0-9a-zA-Z_\-.]{2,})$/i;
         $scope.bulk.prefixIsNotValid = !(re.test($scope.bulk.prefix));
     });
-    $scope.$watch("bulk.domain", function () {
-        var re = /^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i;
-        $scope.bulk.domainIsNotValid = !(re.test($scope.bulk.domain));
+    $scope.$watch("username.name", function () {
+        if (!$scope.username.name) $scope.user.name = "";
     });
-    $scope.$watch("username.phone", function(){
+    $scope.$watch("username.phone", function () {
         if (!$scope.username.phone) $scope.user.phone = "";
     });
-    $scope.$watch("username.email", function(){
+    $scope.$watch("username.email", function () {
         if (!$scope.username.email) $scope.user.email = "";
     });
     $scope.isNotValid = function (creationType) {
         if ($scope.user.groupId == 0) return true;
         else {
-            if (creationType === "single") {
-                if ($scope.user.deliverMethod == "EMAIL") return $scope.user.email == "";
-                if ($scope.user.deliverMethod == "SMS") return $scope.user.phone == "";
-                if ($scope.user.deliverMethod == "EMAIL_AND_SMS") return ($scope.user.email == "" && $scope.user.phone == "");
-                else return ($scope.user.email == "" && $scope.user.phone == "");
+            if (creationType == "single") {
+                if ($scope.user.deliverMethod == "EMAIL" && $scope.user.email == "") return true;
+                else if ($scope.user.deliverMethod == "SMS" && $scope.user.email == "") return true;
+                else if ($scope.user.deliverMethod == "EMAIL_AND_SMS" && ($scope.user.email == "" || $scope.user.phone == "")) return true;
+                else if ($scope.user.userName == undefined) return true;
+                else if ($scope.user.email == "" && $scope.user.phone == "" && $scope.user.userName == "" && $scope.user.firstName == "" && $scope.user.lastName == "") return true;
+                else return false;
             }
-            else if (creationType === "bulk") {
-                return (
-                $scope.bulk.prefixIsNotValid ||
-                $scope.bulk.domainIsNotValid);
+            else if (creationType == "bulk") {
+                if ($scope.bulk.prefix == undefined) return true;
+                else return (
+                    $scope.bulk.prefixIsNotValid);
             }
         }
     };
@@ -144,7 +143,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
         }
     };
     $scope.qrc = function () {
-        $rootScope.$broadcast('createSingle', {loginName: "moi3@ah-lab.fr", password: "p", ssid: ['s']});
+        $rootScope.$broadcast('createSingle', { loginName: "moi3@ah-lab.fr", password: "p", ssid: ['s'] });
     };
     $scope.save = function (creationType) {
         if (creationType === "single") {
@@ -167,7 +166,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                         for (var j = 5; j > currentAccount.toString().length; j--) {
                             fillingNumber += "0";
                         }
-                        stringAccount = $scope.bulk.prefix + '_' + fillingNumber + currentAccount + '@' + $scope.bulk.domain;
+                        stringAccount = $scope.bulk.prefix + '_' + fillingNumber + currentAccount;
                         credentials.forEach(function (credential) {
                             if (credential.userName && credential.userName.toLowerCase() === stringAccount.toLowerCase()) {
                                 alreadyExists = true;
@@ -181,7 +180,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                             createdAccountsInitiated++;
                             createService.saveUser({
                                 groupId: $scope.user.groupId,
-                                email: stringAccount,
+                                userName: stringAccount,
                                 policy: "GUEST",
                                 'deliverMethod': 'NO_DELIVERY'
                             }).then(function (promise2) {
