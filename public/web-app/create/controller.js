@@ -110,12 +110,12 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
         else {
             if (creationType === "single") {
                 var isNotValid = false;
-                if ($scope.user.deliverMethod == "EMAIL") isNotValid = $scope.user.email == "";
-                if ($scope.user.deliverMethod == "SMS") isNotValid = $scope.user.phone == "";
-                if ($scope.user.deliverMethod == "EMAIL_AND_SMS") isNotValid = ($scope.user.email == "" && $scope.user.phone == "");
-                if ($scope.user.userName) isNotValid = $scope.user.userName.length > 32;
-                isNotValid = ($scope.user.email == "" && $scope.user.phone == "" && $scope.user.userName == "" && $scope.user.firstName == "" && $scope.user.lastName == "");
-                return isNotValid;
+                if ($scope.user.deliverMethod == "EMAIL"&& $scope.user.email == "")return true;
+                else if ($scope.user.deliverMethod == "SMS" && $scope.user.email == "") return true;
+                else if ($scope.user.deliverMethod == "EMAIL_AND_SMS" && ($scope.user.email == "" && $scope.user.phone == "")) return true;
+                else if ($scope.user.userName && $scope.user.userName.length > 32) return true;
+                else if ($scope.user.email == "" && $scope.user.phone == "" && $scope.user.userName == "" && $scope.user.firstName == "" && $scope.user.lastName == "")return true;
+                else return false;
             }
             else if (creationType === "bulk") {
                 return (
