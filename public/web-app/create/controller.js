@@ -108,7 +108,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
     $scope.isNotValid = function (creationType) {
         if ($scope.user.groupId == 0) return true;
         else {
-            if (creationType == "single") {
+            if (creationType == "single") {        
                 if ($scope.user.deliverMethod == "EMAIL"&& $scope.user.email == "")return true;
                 else if ($scope.user.deliverMethod == "SMS" && $scope.user.email == "") return true;
                 else if ($scope.user.deliverMethod == "EMAIL_AND_SMS" && ($scope.user.email == "" && $scope.user.phone == "")) return true;
