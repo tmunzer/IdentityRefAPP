@@ -9,7 +9,7 @@
      	"angular": "~1.6.2",
      	"angular-animate": "~1.6.2",
      	"angular-route": "~1.6.2",
-     	"angular-translate": "^2.11.0",
+     	"angular-translate": "^2.14.0",
      	"angular-bootstrap": "^2.5.0",
      	"ng-csv": "^0.3.6",
      	"ngSanitize": "^0.0.2",
@@ -21,7 +21,7 @@
      	"material-design-icons": "^2.2.3",
      	"angular-qrcode": "monospaced/angular-qrcode#^6.2.1",
      	"ng-intl-tel-input": "^1.4.0",
-     	"angular-translate-loader-url": "^2.11.0",
-     	"angular-translate-loader-static-files": "^2.11.0"
+     	"angular-translate-loader-url": "^2.14.0",
+     	"angular-translate-loader-static-files": "^2.14.0"
   }
 }
