@@ -1,5 +1,6 @@
 angular.module('Create').factory("createService", function ($http, $q, $rootScope) {
     var userFieldsToDisplay = [
+        {name: 'userName', display: 'Username'},
         {name: 'firstName', display: 'First Name'},
         {name: 'lastName', display: 'Last Name'},
         {name: 'email', display: 'Email'},
@@ -13,6 +14,7 @@ angular.module('Create').factory("createService", function ($http, $q, $rootScop
 
     function init() {
         user = {
+            'userName': '',
             'firstName': '',
             'lastName': '',
             'email': '',
