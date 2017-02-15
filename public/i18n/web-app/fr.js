@@ -108,6 +108,7 @@ var fr = {
         csvDelimiter: "Délimiteur de champs CSV",
         filePreview: "Prévisualisation de l'importation",
         fieldsMatching: "Choix des champs",
+        userName: "Nom d'utilisateur",
         email: "Adresse e-mail",
         phone: "Numéro de téléphone",
         organization: "Société",

@@ -7,6 +7,7 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
     $scope.csvRows = [];
     $scope.delimiter = ",";
     var masterImportUsers = {
+        userName: "",
         email: "",
         phone: "",
         organization: "",
@@ -148,11 +149,13 @@ angular.module('Import').controller("ImportCtrl", function ($scope, $rootScope, 
                 $scope.csvRows.forEach(function (row) {
                     alreadyExists = false;
                     user = {
+                        userName: "",
                         email: "",
                         phone: "",
                         purpose: "",
                         organization: ""
                     };
+                    user.userName = row[$scope.importUsers.email]; 
                     user.email = row[$scope.importUsers.email];
                     user.phone = row[$scope.importUsers.phone];
                     user.purpose = row[$scope.importUsers.purpose];

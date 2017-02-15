@@ -108,6 +108,7 @@ var en = {
         csvDelimiter: "CSV Delimiter",
         filePreview: "File Preview",
         fieldsMatching: "Fields Matching",
+        userName: "Username",
         email: "Email Address",
         phone: "Phone Number",
         organization: "Organization",

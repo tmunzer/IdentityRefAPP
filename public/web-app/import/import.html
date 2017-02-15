@@ -101,6 +101,14 @@
                     </div>
                 </md-toolbar>
                 <md-content layout-padding layout="column" layout-gt-sm="row" style="padding-top: 0;">
+                    <md-input-container class="md-block flex-gt-sm">
+                        <label for="email" translate="import.userName"></label>
+                        <md-select id="email" ng-model="importUsers.userName">
+                            <md-option ng-repeat="field in fields track by $index" value={{$index}}>
+                                {{field}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
 
                     <md-input-container class="md-block flex-gt-sm">
                         <label for="email" translate="import.email"></label>

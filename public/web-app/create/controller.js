@@ -117,7 +117,8 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                 else return false;
             }
             else if (creationType == "bulk") {
-                return (
+                if ($scope.bulk.prefix == undefined) return true;
+                else return (
                     $scope.bulk.prefixIsNotValid);
             }
         }
