@@ -112,6 +112,7 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                 if ($scope.user.deliverMethod == "EMAIL") return $scope.user.email == "";
                 if ($scope.user.deliverMethod == "SMS") return $scope.user.phone == "";
                 if ($scope.user.deliverMethod == "EMAIL_AND_SMS") return ($scope.user.email == "" && $scope.user.phone == "");
+                if ($scope.user.userName && $scope.user.userName.length > 32) return true;
                 else return ($scope.user.email == "" && $scope.user.phone == "" && $scope.user.userName == "" && $scope.user.firstName == "" && $scope.user.lastName == "");
             }
             else if (creationType === "bulk") {
