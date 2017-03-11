@@ -8,11 +8,9 @@ var transporter = nodemailer.createTransport(smtpTransport(mailerConfig.config))
 
 
 transporter.verify(function(error, success) {
-    if (error) {
-        console.log(error);
-    } else {
-        console.log('Connection to the SMTP server is Ok. I\'m ready to send your messages');
-    }
+    if (error) console.error("\x1b[31mERROR\x1b[0m:", error);
+     else console.info("\x1b[32minfo\x1b[0m:",'Connection to the SMTP server is Ok. I\'m ready to send your messages');
+    
 });
 
 router.post("/ios", function (req, res, next) {
@@ -89,9 +87,9 @@ router.post("/ios", function (req, res, next) {
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            return console.log(error);
+            return console.error("\x1b[31mERROR\x1b[0m:", error);
         }
-        console.log('Message sent: ' + info.response);
+        console.info("\x1b[32minfo\x1b[0m:",'Message sent: ' + info.response);
         res.json({error: error, info: info});
     })
 });
