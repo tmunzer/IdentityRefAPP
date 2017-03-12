@@ -185,8 +185,10 @@ angular.module('Create').controller("CreateCtrl", function ($scope, $rootScope, 
                                 'deliverMethod': 'NO_DELIVERY'
                             }).then(function (promise2) {
                                 if (promise2 && promise2.error) {
+                                    var errorAccount;
+                                    if (promise2.error.errorParams) errorAccount = promise2.error.errorParams.item.replace("credential (", "").replace(")", "");
                                     $scope.bulkError.push({
-                                        account: promise2.error.errorParams.item.replace("credential (", "").replace(")", ""),
+                                        account: errorAccount,
                                         message: promise2.error.message
                                     });
                                 } else {
