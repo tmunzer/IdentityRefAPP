@@ -1,8 +1,5 @@
 # identity
 
-[![GitHub version](https://badge.fury.io/gh/tmunzer%2Fidentity.svg)](https://badge.fury.io/gh/tmunzer%2Fidentity)
-
-
 This is a Free web app built to work with Aerohive APIs. This app is designed to provide a user friendly interface to manage/create/remove/renew PPSK or login/pwd account stored on HiveManager NG (Cloud or OnPremise)
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
