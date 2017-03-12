@@ -1,0 +1,7 @@
+.idea
+config.js
+node_modules/
+bower_components/
+mailer_config.js
+.DS_Store
+
