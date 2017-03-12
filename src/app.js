@@ -2,38 +2,29 @@
 var path = require('path');
 
 var express = require('express');
+var morgan = require('morgan')
 var parseurl = require('parseurl');
 var session = require('express-session');
 var favicon = require('serve-favicon');
 
-
-global.console = require('winston');
 console.level = 'debug';
 
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var events = require('events');
-global.eventEmitter = new events.EventEmitter();
-
-
 var app = express();
+app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
+  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0}
+}));
 
 app.use(session({
-  secret: 'Aerohive Identity Ref APP Secret',
-  resave: false,
+  secret: 'pcYkbd7BSGEk8ySfC7VngbadEadA',
+  resave: true,
   saveUninitialized: true,
-  //defines how long the session will live in milliseconds. After that, the cookie is invalidated and will need to be set again.
-  //duration: 1 * 60 * 1000,
-  // allows users to lengthen their session by interacting with the site
-  //activeDuration: 1 * 60 * 1000,
-  //prevents browser JavaScript from accessing cookies.
-  httpOnly: true,
-  //ensures cookies are only used over HTTPS
-  secure: true,
-  //deletes the cookie when the browser is closed. Ephemeral cookies are particularly important if you your app lends itself to use on public computers.
-  ephemeral: true
-}));
+  cookie: {
+    maxAge: 30 * 60 * 1000 // 30 minutes
+  }
+})); 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
