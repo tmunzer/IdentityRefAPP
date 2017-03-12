@@ -21,7 +21,8 @@ This Reference APP is built over NodeJS.
 #### Deploy the Application
 * Install NodeJS LTS: https://nodejs.org/en/download/.
 * Clone this repo.
-* Configure the API paramerts, in the `src/config.js` file. You will find an example in `src/config_example.js`. To be able to use this application, you will need an account on the [Aerohive Developper Portal](https://developer.aerohive.com/).
+* Configure the API parameters, in the `src/config.js` file. You will find an example in `src/config_example.js`. To be able to use this application, you will need an account on the [Aerohive Developper Portal](https://developer.aerohive.com/).
+* Configure the SMTP server parameters in the `src/mailer_config.js` file. You will find an example in `src/mailer_config_example.js`.
 * Install npm packages (`npm install` from the project folder).
 * Install bower packages (`bower install` from the project folder).
 * Go to `src/bin` folder into the project.
@@ -48,4 +49,4 @@ To use this script, just download it [here](https://github.com/tmunzer/identity/
 #### Manual deployment
 If you are manually deploying this container, you will need to a reverse proxy to manage HTTPS.
 
-`docker create -v <path_to_config.js>/config.js:/app/config.js:ro --name="<container_name>" -p 51362:80 tmunzer/api-test-tool`
+`docker create -v <path_to_config.js>/config.js:/app/config.js:ro -v <path_to_mailer_config.js>/mailer_config.js:/app/mailer_config.js:ro --name="<container_name>" -p 51362:80 tmunzer/api-test-tool`
