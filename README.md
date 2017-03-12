@@ -1,8 +1,5 @@
 # identity
 
-[![GitHub version](https://badge.fury.io/gh/tmunzer%2Fidentity.svg)](https://badge.fury.io/gh/tmunzer%2Fidentity)
-
-
 This is a Free web app built to work with Aerohive APIs. This app is designed to provide a user friendly interface to manage/create/remove/renew PPSK or login/pwd account stored on HiveManager NG (Cloud or OnPremise)
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
@@ -49,4 +46,4 @@ To use this script, just download it [here](https://github.com/tmunzer/identity/
 #### Manual deployment
 If you are manually deploying this container, you will need to a reverse proxy to manage HTTPS.
 
-`docker create -v <path_to_config.js>/config.js:/app/config.js:ro -v <path_to_mailer_config.js>/mailer_config.js:/app/mailer_config.js:ro --name="<container_name>" -p 51362:80 tmunzer/api-test-tool`
+```docker create -v <path_to_config.js>/config.js:/app/config.js:ro -v <path_to_mailer_config.js>/mailer_config.js:/app/mailer_config.js:ro --name="<container_name>" -p 51361:80 tmunzer/identity```
