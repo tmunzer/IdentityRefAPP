@@ -1,14 +1,11 @@
 
 var path = require('path');
-
 var express = require('express');
 var morgan = require('morgan')
 var parseurl = require('parseurl');
 var session = require('express-session');
+var MongoDBStore = require('connect-mongodb-session')(session);
 var favicon = require('serve-favicon');
-
-console.level = 'debug';
-
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -17,9 +14,14 @@ app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":
   skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0}
 }));
 
+var mongoConfig = require('./config').mongoConfig;
 app.use(session({
   secret: 'pcYkbd7BSGEk8ySfC7VngbadEadA',
   resave: true,
+  store: new MongoDBStore({
+    uri: 'mongodb://' + mongoConfig.host + '/express-session',
+    collection: 'identity'
+  }),
   saveUninitialized: true,
   cookie: {
     maxAge: 30 * 60 * 1000 // 30 minutes
@@ -50,18 +52,6 @@ app.use('/api/', api);
 app.use('/oauth', oauth);
 app.use('/mailer', mailer);
 
-
-app.get('/fail', function (req, res, next) {
-  setTimeout(function () {
-    var nu = null;
-    nu.access();
-
-    res.send('Hello World');
-  }, 1000);
-});
-app.get('*', function(req, res) {
-    res.redirect('/');
-});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -74,7 +64,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -82,12 +72,13 @@ if (app.get('env') === 'development') {
     });
   });
 }
-
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
+  if (err.status == 404) err.message = "The requested url "+req.originalUrl+" was not found on this server.";
   res.status(err.status || 500);
   res.render('error', {
+    status: err.status,
     message: err.message,
     error: {}
   });
