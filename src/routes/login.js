@@ -18,7 +18,8 @@ router.get('/', function (req, res, next) {
             title: 'Identity',
             errorcode: errorcode,
             client_id: devAccount.clientID,
-            redirect_uri: devAccount.redirectUrl
+            redirect_uri: devAccount.redirectUrl,
+            apiServers: apiServers
         });
     }
 });

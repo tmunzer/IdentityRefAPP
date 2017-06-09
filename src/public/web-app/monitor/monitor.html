@@ -67,13 +67,13 @@
 
                         <div class="md-toolbar-tools" id='table-search' ng-show="query.show">
                             <md-input-container md-no-float class="md-block search-tool">
-                                <md-icon class="material-icons search-tool">search</md-icon>
+                                <md-icon class="search-tool" md-menu-align-target md-svg-src="/images/icons/ic_search_24px.svg"></md-icon>
                                 <input ng-model="query.filter" class="search-tool"
                                        placeholder="{{'button.search' | translate}}">
                             </md-input-container>
                             <button class="md-icon-button md-button" type="button"
                                     ng-click="removeFilter()" aria-label="close">
-                                <md-icon class="material-icons">close</md-icon>
+                                <md-icon md-menu-align-target md-svg-src="/images/icons/ic_close_24px.svg"></md-icon>
                                 <md-tooltip md-direction="bottom">
                                     {{"button.close" | translate}}
                                 </md-tooltip>
@@ -84,7 +84,7 @@
                             <div flex></div>
                             <button class="md-icon-button md-button" type="button"
                                     ng-click="query.show = true" aria-label="filter_list">
-                                <md-icon class="material-icons">search</md-icon>
+                                <md-icon md-menu-align-target md-svg-src="/images/icons/ic_search_24px.svg"></md-icon>
                                 <md-tooltip md-direction="bottom">
                                     {{"button.search" | translate}}
                                 </md-tooltip>
@@ -92,7 +92,7 @@
                                 <div class="md-ripple-container"></div>
                             </button>
                             <md-button class="md-icon-button" ng-click="refresh()" aria-label="refresh_list">
-                                <md-icon class="material-icon">refresh</md-icon>
+                                <md-icon md-menu-align-target md-svg-src="/images/icons/ic_refresh_24px.svg"></md-icon>
                                 <md-tooltip md-direction="bottom">
                                     {{"button.refresh" | translate}}
                                 </md-tooltip>
