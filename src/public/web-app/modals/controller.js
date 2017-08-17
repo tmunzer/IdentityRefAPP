@@ -360,7 +360,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
         if (!waitingForResponse) {
             this.checkConnection($scope.account.loginName);
         }
-    }.bind(this), 1000);
+    }.bind(this), 5000);
 
     $scope.userString = function (userName, isConnected) {
         if (isConnected) return userName + " is currently not connected.";
