@@ -45,10 +45,9 @@ router.post('/', function (req, res, next) {
 });
 router.post('/op', function (req, res, next) {
     var ownerIdRegexp = new RegExp("^[0-9]*$");    
-    var accessTokenRegexp = new RegExp("^[^ ]{40}$");
     if (!(req.body.vpcUrl && req.body["vpcUrl"] != "")) res.redirect("/?errorcode=1");
     else if (!(req.body.ownerID && ownerIdRegexp.test(req.body['ownerID']))) res.redirect("/?errorcode=2");
-    else if (!(req.body.accessToken && accessTokenRegexp.test(req.body["accessToken"].trim()))) res.redirect("/?errorcode=3");
+    else if (!req.body.accessToken) res.redirect("/?errorcode=3");
     else if (apiServers.indexOf(req.body["vpcUrl"]) >= 0) res.redirect('/?errorcode=4');
     else {
         req.session.xapi = {
