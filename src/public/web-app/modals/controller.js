@@ -56,7 +56,7 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
             });
         }
     });
-    $scope.$on('createSingle', function (user, account) {
+    $scope.$on('createSingle', function (event, user, account) {
         if (!$rootScope.displayed) {
             $rootScope.displayed = true;
             $mdDialog.show({
@@ -374,6 +374,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
     };
 
     $scope.back = function () {
+        $rootScope.displayed = false;
         $interval.cancel(checkStatus);
         $rootScope.$broadcast('createSingle', items.user, items.account);
     };
