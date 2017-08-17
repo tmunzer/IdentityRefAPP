@@ -159,7 +159,7 @@ angular.module('Modals').controller('DialogSingleController', function ($scope, 
     }
 
     $scope.isPPSK = function () {
-        if ($scope.account.authType)
+        if ($scope.account && $scope.account.authType)
             return $scope.account.authType === "PPSK";
         else return false;
     };
