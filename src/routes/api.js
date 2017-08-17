@@ -185,7 +185,7 @@ router.get('/identity/status', function (req, res, next) {
                             clientStatus.clientProtocol = clientDetails.clientProtocol;
                             res.json({ data: clientStatus });
                         });
-                    else res.json({ date: clientStatus });
+                    else res.json({ data: clientStatus });
                 }
             });
         } else res.json({});

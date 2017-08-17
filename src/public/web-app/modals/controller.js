@@ -349,7 +349,7 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
             if (promise && promise.error) $rootScope.$broadcast("apiWarning", promise.error);
             else {
                 $scope.connectionStatus = promise.data;
-                if ($scope.connectionStatus.connected) $interval.cancel(checkStatus);
+                if ($scope.connectionStatus.connected == true) $interval.cancel(checkStatus);
                 $scope.clientConnected = $scope.connectionStatus.connected;
             }
 
