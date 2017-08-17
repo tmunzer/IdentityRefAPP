@@ -62,7 +62,9 @@ h3, .h3 {
     color: white;
     margin: 1px 0;
 }
-
+md-content {
+    background-color: #fff !important;
+}
 .main-menu .md-button {
     padding: 5px !important;
     margin: 0 10px !important;

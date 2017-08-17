@@ -245,6 +245,7 @@ angular.module("Modals").controller("DialogSendByEmailController", function ($sc
         });
     };
     $scope.back = function () {
+        $rootScope.displayed = false;
         $rootScope.$broadcast(items.backModal, items.user, items.account);
     };
     $scope.close = function () {
@@ -273,6 +274,7 @@ angular.module("Modals").controller("DialogSendIosProfileController", function (
         $scope.success = false;
     });
     $scope.back = function () {
+        $rootScope.displayed = false;
         $rootScope.$broadcast('createSingle', items.user, items.account);
     };
     $scope.close = function () {
@@ -304,6 +306,7 @@ angular.module("Modals").controller("DialogSendBySmsController", function ($scop
         });
     };
     $scope.back = function () {
+        $rootScope.displayed = false;
         $rootScope.$broadcast(items.backModal, items.user, items.account);
     };
     $scope.close = function () {
@@ -374,8 +377,8 @@ angular.module('Modals').controller('DialogQrCodeController', function ($scope, 
     };
 
     $scope.back = function () {
-        $rootScope.displayed = false;
         $interval.cancel(checkStatus);
+        $rootScope.displayed = false;
         $rootScope.$broadcast('createSingle', items.user, items.account);
     };
     $scope.close = function () {
