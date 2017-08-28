@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var devAccount = require("../config").devAccount;
 
-var apiServers = ["cloud-va.aerohive.com", "cloud-va2.aerohive.com", "cloud-ie.aerohive.com"];
+var apiServers = ["cloud-va.aerohive.com", "cloud-va2.aerohive.com", "cloud-ie.aerohive.com", "cloud-aus.aerohive.com"];
 /*================================================================
  ROUTES
  ================================================================*/
