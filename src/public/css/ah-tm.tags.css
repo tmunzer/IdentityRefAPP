@@ -111,6 +111,9 @@ md-content {
 md-sidenav {
     padding-top: 70px;
 }
+.md-sidenav-left {
+    height: 100%;
+}
 
 input.search-tool {
     color: white;
